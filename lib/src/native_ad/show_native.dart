@@ -52,18 +52,14 @@ class _MediumNativeState extends State<MediumNative> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.zero,
-      child:
-          LoadMediumNative.instance.nativeObjectLarge.isNotEmpty
-              ? adView()
-              : const SizedBox(),
-    );
+    return LoadMediumNative.instance.nativeObjectLarge.isNotEmpty
+        ? adView()
+        : const SizedBox();
   }
 
   Widget adView() {
     try {
-      return SizedBox(height: 290, child: AdWidget(ad: native));
+      return SizedBox(height: 255, child: Center(child: AdWidget(ad: native)));
     } catch (e) {
       return const SizedBox();
     }
@@ -96,18 +92,14 @@ class _NativeSmallState extends State<NativeSmall> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.zero,
-      child:
-          LoadSmallNative.instance.nativeObjectSmall.isNotEmpty
-              ? adView()
-              : const SizedBox(),
-    );
+    return LoadSmallNative.instance.nativeObjectSmall.isNotEmpty
+        ? adView()
+        : const SizedBox();
   }
 
   Widget adView() {
     try {
-      return SizedBox(height: 160, child: AdWidget(ad: native));
+      return SizedBox(height: 125, child: AdWidget(ad: native));
     } catch (e) {
       return const SizedBox();
     }

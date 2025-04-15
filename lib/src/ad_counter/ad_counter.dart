@@ -17,18 +17,21 @@ class AdCounterWidget extends StatelessWidget {
     return Expanded(
       child: Column(
         children: [
-          Text(title),
+          Text(title, style: TextStyle(fontSize: 11,fontWeight: FontWeight.bold)),
           ValueListenableBuilder<int>(
             valueListenable: load,
-            builder: (_, l, __) => Text('L: $l'),
+            builder:
+                (_, l, __) => Text('L: $l', style: TextStyle(fontSize: 10)),
           ),
           ValueListenableBuilder<int>(
             valueListenable: imp,
-            builder: (_, i, __) => Text('I: $i'),
+            builder:
+                (_, i, __) => Text('I: $i', style: TextStyle(fontSize: 10)),
           ),
           ValueListenableBuilder<int>(
             valueListenable: fail,
-            builder: (_, f, __) => Text('F: $f'),
+            builder:
+                (_, f, __) => Text('F: $f', style: TextStyle(fontSize: 10)),
           ),
         ],
       ),
@@ -56,6 +59,18 @@ class AdCounterWidget extends StatelessWidget {
                   stats.interLoad,
                   stats.interImp,
                   stats.interFailed,
+                ),
+                _buildStatColumn(
+                  "Rewarded",
+                  stats.rewardedLoad,
+                  stats.rewardedImp,
+                  stats.rewardedFailed,
+                ),
+                _buildStatColumn(
+                  "Banner",
+                  stats.bannerLoad,
+                  stats.bannerImp,
+                  stats.bannerFailed,
                 ),
                 _buildStatColumn(
                   "SNative",

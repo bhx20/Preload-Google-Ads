@@ -7,78 +7,34 @@ class ShowBannerAd extends StatefulWidget {
   const ShowBannerAd({super.key});
 
   @override
-  _ShowBannerAdState createState() => _ShowBannerAdState();
+  State<ShowBannerAd> createState() => _ShowBannerAdState();
 }
 
 class _ShowBannerAdState extends State<ShowBannerAd> {
-  BannerAd? _bannerAd;
-  bool _adLoaded = false;
+  late BannerAd banner;
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (_bannerAd != null &&
-        _bannerAd!.adUnitId != PreloadAds.instance.initialData.bannerId) {
-      _bannerAd!.dispose();
+  void initState() {
+    if (LoadBannerAd.instance.bannerAdObject.isNotEmpty &&
+        LoadSmallNative.instance.loading == false) {
+      banner = LoadBannerAd.instance.bannerAdObject.removeAt(0);
+      LoadBannerAd.instance.loadAd();
     }
-    //loadAd();
-  }
-
-  Future<void> loadAd() async {
-    final AnchoredAdaptiveBannerAdSize? size =
-        await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
-          MediaQuery.of(context).size.width.truncate(),
-        );
-
-    if (size == null) {
-      print('Unable to get height of anchored banner.');
-      return;
-    }
-
-    _bannerAd = BannerAd(
-      adUnitId: PreloadAds.instance.initialData.bannerId,
-      size: size,
-      request: const AdRequest(),
-      listener: BannerAdListener(
-        onAdLoaded: (Ad ad) {
-          print('$ad loaded: ${ad.responseInfo}');
-          setState(() {
-            // When the ad is loaded, get the ad size and use it to set
-            // the height of the ad container.
-            _bannerAd = ad as BannerAd;
-            _adLoaded = true;
-          });
-        },
-        onAdFailedToLoad: (Ad ad, LoadAdError error) {
-          print('Anchored adaptive banner failedToLoad: $error');
-          ad.dispose();
-        },
-      ),
-    );
-    return _bannerAd?.load();
-  }
-
-  @override
-  void dispose() {
-    _bannerAd?.dispose();
-    super.dispose();
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (PreloadAds.instance.initialData.showBanner == true &&
-        PreloadAds.instance.initialData.showAd == true) {
-      if (_adLoaded) {
-        return SizedBox(
-          height: MediaQuery.of(context).size.height / 12,
-          width: MediaQuery.of(context).size.width,
-          child: AdWidget(ad: _bannerAd!),
-        );
-      } else {
-        return const SizedBox.shrink();
-      }
-    } else {
-      return const SizedBox.shrink();
+    return LoadBannerAd.instance.bannerAdObject.isNotEmpty
+        ? adView()
+        : const SizedBox();
+  }
+
+  Widget adView() {
+    try {
+      return SizedBox(height: 70, child: AdWidget(ad: banner));
+    } catch (e) {
+      return const SizedBox();
     }
   }
 }

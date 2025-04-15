@@ -57,16 +57,15 @@ PreloadDataModel preData = PreloadDataModel(
   nativeId: AdTestIds.native,
   interstitialId: AdTestIds.interstitial,
   rewardedId: AdTestIds.rewarded,
-  rewardedInterstitialId: AdTestIds.rewardedInterstitial,
   interstitialCounter: 0,
   nativeCounter: 0,
+  rewardedCounter: 0,
   showAd: true,
   showBanner: true,
   showInterstitial: true,
   showNative: true,
   showOpenApp: true,
   showRewarded: true,
-  showRewardedInterstitial: true,
   showSplashAd: true,
 );
 
@@ -85,6 +84,11 @@ class AdStats {
   final ValueNotifier<int> interImp = ValueNotifier(0);
   final ValueNotifier<int> interFailed = ValueNotifier(0);
 
+  // Rewarded
+  final ValueNotifier<int> rewardedLoad = ValueNotifier(0);
+  final ValueNotifier<int> rewardedImp = ValueNotifier(0);
+  final ValueNotifier<int> rewardedFailed = ValueNotifier(0);
+
   // Native Small
   final ValueNotifier<int> nativeLoadS = ValueNotifier(0);
   final ValueNotifier<int> nativeImpS = ValueNotifier(0);
@@ -99,4 +103,9 @@ class AdStats {
   final ValueNotifier<int> openAppLoad = ValueNotifier(0);
   final ValueNotifier<int> openAppImp = ValueNotifier(0);
   final ValueNotifier<int> openAppFailed = ValueNotifier(0);
+
+  // Banner
+  final ValueNotifier<int> bannerLoad = ValueNotifier(0);
+  final ValueNotifier<int> bannerImp = ValueNotifier(0);
+  final ValueNotifier<int> bannerFailed = ValueNotifier(0);
 }

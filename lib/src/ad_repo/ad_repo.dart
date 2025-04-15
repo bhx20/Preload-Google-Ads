@@ -9,21 +9,32 @@ class PlugAd {
 }
 
 abstract class AdRepo {
-  void loadMediumNative();
+  Future<void> loadMediumNative();
 
-  void loadSmallNative();
+  Future<void> loadSmallNative();
 
   Widget showNative({bool isSmall = false});
 
+  Future<void> loadBannerAd();
+
   Widget showBannerAd();
 
-  Widget showAdCounter(bool showCounter);
-
   Future<void> loadAppOpenAd();
+
+  void showOpenAppAd();
 
   showOpenAppOnSplash({required Function() onAdStartAdImpression});
 
   void loadInterAd();
 
   void showInterAd(Function() callBack);
+
+  void loadRewardedAd();
+
+  void showRewardedAd({
+    required Function() callBack,
+    required Function() onReward,
+  });
+
+  Widget showAdCounter(bool showCounter);
 }

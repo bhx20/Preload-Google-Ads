@@ -4,6 +4,14 @@ import '../../preload_ad.dart';
 
 /// Utility class that manages loading and showing app open ads.
 class AppOpenAdManager {
+  static final AppOpenAdManager instance = AppOpenAdManager._internal();
+
+  factory AppOpenAdManager() {
+    return instance;
+  }
+
+  AppOpenAdManager._internal();
+
   /// Maximum duration allowed between loading and showing the ad.
   final Duration maxCacheDuration = const Duration(hours: 4);
 
