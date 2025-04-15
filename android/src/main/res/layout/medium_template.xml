@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.gms.ads.nativead.NativeAdView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/native_ad_attribution_small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:background="#F19938"
+            android:gravity="center"
+            android:padding="2dp"
+            android:text="Ad"
+            android:textColor="#FFFFFF"
+            android:textSize="10sp"
+
+
+            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.google.android.gms.ads.nativead.MediaView
+                android:id="@+id/native_ad_media"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="5dp">
+
+            </com.google.android.gms.ads.nativead.MediaView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/native_ad_icon"
+                    android:layout_width="@dimen/_55sdp"
+                    android:layout_height="@dimen/_55sdp"
+                    android:paddingRight="5dp"
+                    android:scaleType="fitXY"
+                    tools:background="#EDEDED"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="5dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/native_ad_headline"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:ellipsize="end"
+                        android:lines="1"
+                        android:maxLines="1"
+                        android:text="Facebook Lite Master"
+                        android:textColor="#000000"
+                        android:textSize="16dp"
+                        tools:text="Headline"
+                        android:textStyle="bold"
+                        />
+
+                    <TextView
+                        android:id="@+id/native_ad_body"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:ellipsize="end"
+                        android:lines="2"
+                        android:maxLines="2"
+                        android:text="Get instant loan from our end ini 10 minutes with no documentations"
+                        android:textColor="#9B9B9B"
+                        android:textSize="12sp"
+                        tools:text="body" />
+
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
+
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/native_ad_button"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/_7sdp"
+                android:background="@drawable/rounded_button_background"
+                android:padding="10dp"
+                android:radius="15dp"
+                android:text="Install"
+                android:textAllCaps="true"
+                android:textColor="#ffff"
+                android:textScaleX="0.9"
+                android:textSize="@dimen/_12sdp"
+                android:gravity="center"
+                android:textStyle="bold"
+                />
+
+
+        </LinearLayout>
+    </FrameLayout>
+
+
+</com.google.android.gms.ads.nativead.NativeAdView>

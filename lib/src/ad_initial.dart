@@ -60,7 +60,7 @@ class PreloadAds {
 
     if (initialData.showAd == true) {
       _loadSplashAd(onAdStartAdCallBack);
-      //_loadNativeAd();
+      _loadNativeAd();
       _loadOpenAppAd();
       _loadInterAd();
     }

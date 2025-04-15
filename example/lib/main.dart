@@ -77,6 +77,8 @@ class HomeView extends StatelessWidget {
               },
               child: Text(("Show interstitial Ad")),
             ),
+            PreloadAds.instance.showNativeAd(isSmall: true),
+            PreloadAds.instance.showNativeAd(),
           ],
         ),
       ),
