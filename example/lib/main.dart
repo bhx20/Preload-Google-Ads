@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:preload_google_ads/preload_google_ads.dart';
+import 'package:preload_google_ads/preload_ad.dart';
 
 void main() {
   runApp(const MyApp());
@@ -21,7 +21,7 @@ class _MyAppState extends State<MyApp> {
         return Column(
           children: [
             Expanded(child: child ?? SizedBox()),
-            GoogleAdd.getInstance().showAdCounter(true),
+            PreloadAds.instance.showAdCounter(showCounter: true),
           ],
         );
       },
@@ -45,7 +45,7 @@ class _SplashViewState extends State<SplashView> {
 
   getAds() {
     PreloadAds.instance.initialize(
-      onAdStartAdImpression: () {
+      onAdStartAdCallBack: () {
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => HomeView()),

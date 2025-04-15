@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
-import '../../../preload_google_ads.dart';
+import '../../preload_ad.dart';
 
 var nativeCounter = 0;
 
@@ -15,7 +15,7 @@ class ShowNative extends StatelessWidget {
       nativeCounter = 0;
       if (PreloadAds.instance.initialData.showNative == true &&
           PreloadAds.instance.initialData.showAd == true) {
-        return isSmall ? const GoogleNativeSmall() : const GoogleNativeLarge();
+        return isSmall ? const NativeSmall() : const MediumNative();
       } else {
         return const SizedBox.shrink();
       }
@@ -30,22 +30,22 @@ class ShowNative extends StatelessWidget {
 //   ** Large Native ***
 //==============================================================================
 
-class GoogleNativeLarge extends StatefulWidget {
-  const GoogleNativeLarge({super.key});
+class MediumNative extends StatefulWidget {
+  const MediumNative({super.key});
 
   @override
-  State<GoogleNativeLarge> createState() => _GoogleNativeLargeState();
+  State<MediumNative> createState() => _MediumNativeState();
 }
 
-class _GoogleNativeLargeState extends State<GoogleNativeLarge> {
+class _MediumNativeState extends State<MediumNative> {
   late NativeAd native;
 
   @override
   void initState() {
-    if (LoadLargeNative.instance.nativeObjectLarge.isNotEmpty &&
-        LoadLargeNative.instance.loading == false) {
-      native = LoadLargeNative.instance.nativeObjectLarge.removeAt(0);
-      LoadLargeNative.instance.loadAd();
+    if (LoadMediumNative.instance.nativeObjectLarge.isNotEmpty &&
+        LoadMediumNative.instance.loading == false) {
+      native = LoadMediumNative.instance.nativeObjectLarge.removeAt(0);
+      LoadMediumNative.instance.loadAd();
     }
     super.initState();
   }
@@ -55,7 +55,7 @@ class _GoogleNativeLargeState extends State<GoogleNativeLarge> {
     return Container(
       padding: EdgeInsets.zero,
       child:
-          LoadLargeNative.instance.nativeObjectLarge.isNotEmpty
+          LoadMediumNative.instance.nativeObjectLarge.isNotEmpty
               ? adView()
               : const SizedBox(),
     );
@@ -74,14 +74,14 @@ class _GoogleNativeLargeState extends State<GoogleNativeLarge> {
 //   ** Small Native ***
 //==============================================================================
 
-class GoogleNativeSmall extends StatefulWidget {
-  const GoogleNativeSmall({super.key});
+class NativeSmall extends StatefulWidget {
+  const NativeSmall({super.key});
 
   @override
-  State<GoogleNativeSmall> createState() => _GoogleNativeSmallState();
+  State<NativeSmall> createState() => _NativeSmallState();
 }
 
-class _GoogleNativeSmallState extends State<GoogleNativeSmall> {
+class _NativeSmallState extends State<NativeSmall> {
   late NativeAd native;
 
   @override

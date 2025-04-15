@@ -1,15 +1,15 @@
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:preload_google_ads/preload_google_ads.dart';
 
-class GoogleInterstitialAdvertise {
-  static final GoogleInterstitialAdvertise instance =
-      GoogleInterstitialAdvertise._internal();
+import '../../preload_ad.dart';
 
-  factory GoogleInterstitialAdvertise() {
+class InterAd {
+  static final InterAd instance = InterAd._internal();
+
+  factory InterAd() {
     return instance;
   }
 
-  GoogleInterstitialAdvertise._internal();
+  InterAd._internal();
 
   InterstitialAd? _interstitialAd;
   bool _isInterstitialAdLoaded = false;

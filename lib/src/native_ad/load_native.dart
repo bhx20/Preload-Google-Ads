@@ -1,19 +1,19 @@
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
-import '../../../preload_google_ads.dart';
+import '../../preload_ad.dart';
 
 //==============================================================================
 //   ** Large Native ***
 //==============================================================================
 
-class LoadLargeNative {
-  static final LoadLargeNative instance = LoadLargeNative._internal();
+class LoadMediumNative {
+  static final LoadMediumNative instance = LoadMediumNative._internal();
 
-  factory LoadLargeNative() {
+  factory LoadMediumNative() {
     return instance;
   }
 
-  LoadLargeNative._internal();
+  LoadMediumNative._internal();
 
   List<NativeAd> nativeObjectLarge = [];
   int reloadAd = 1;

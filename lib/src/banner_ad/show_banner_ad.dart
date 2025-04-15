@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
-import '../../../preload_google_ads.dart';
-import '../preload_ad.dart';
+import '../../preload_ad.dart';
 
-class GoogleBannerAdvertise extends StatefulWidget {
-  const GoogleBannerAdvertise({super.key});
+class ShowBannerAd extends StatefulWidget {
+  const ShowBannerAd({super.key});
 
   @override
-  _GoogleBannerAdvertiseState createState() => _GoogleBannerAdvertiseState();
+  _ShowBannerAdState createState() => _ShowBannerAdState();
 }
 
-class _GoogleBannerAdvertiseState extends State<GoogleBannerAdvertise> {
+class _ShowBannerAdState extends State<ShowBannerAd> {
   BannerAd? _bannerAd;
   bool _adLoaded = false;
 

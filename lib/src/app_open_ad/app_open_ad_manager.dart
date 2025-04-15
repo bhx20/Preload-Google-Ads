@@ -1,6 +1,6 @@
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
-import '../../../preload_google_ads.dart';
+import '../../preload_ad.dart';
 
 /// Utility class that manages loading and showing app open ads.
 class AppOpenAdManager {

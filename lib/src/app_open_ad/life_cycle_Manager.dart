@@ -1,16 +1,15 @@
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
-import '../../../preload_google_ads.dart';
+import '../../preload_ad.dart';
 
-class GoogleOpenAppAdvertise {
-  static final GoogleOpenAppAdvertise instance =
-      GoogleOpenAppAdvertise._internal();
+class LifeCycleManager {
+  static final LifeCycleManager instance = LifeCycleManager._internal();
 
-  factory GoogleOpenAppAdvertise() {
+  factory LifeCycleManager() {
     return instance;
   }
 
-  GoogleOpenAppAdvertise._internal();
+  LifeCycleManager._internal();
 
   late AppOpenAdManager appOpenAdManager;
   late AppLifecycleReactor _appLifecycleReactor;

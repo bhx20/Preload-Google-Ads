@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 
-import '../../preload_google_ads.dart';
+import '../../preload_ad.dart';
 
 /// A utility class to manage Google AdMob Test Ad Unit IDs for both Android and iOS.
 /// Easily extendable for production IDs later.

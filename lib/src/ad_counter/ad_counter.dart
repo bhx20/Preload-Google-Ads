@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../../../preload_google_ads.dart';
+import '../../preload_ad.dart';
 
 class AdCounterWidget extends StatelessWidget {
   final ValueNotifier<bool> showCounter;
