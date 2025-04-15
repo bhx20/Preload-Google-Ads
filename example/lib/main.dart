@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
-
-import 'package:flutter/services.dart';
 import 'package:preload_google_ads/preload_google_ads.dart';
 
 void main() {
@@ -16,46 +13,71 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String _platformVersion = 'Unknown';
-  final _preloadGoogleAdsPlugin = PreloadGoogleAds();
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: SplashView(),
+      builder: (context, child) {
+        return Column(
+          children: [
+            Expanded(child: child ?? SizedBox()),
+            GoogleAdd.getInstance().showAdCounter(true),
+          ],
+        );
+      },
+    );
+  }
+}
+
+class SplashView extends StatefulWidget {
+  const SplashView({super.key});
 
   @override
+  State<SplashView> createState() => _SplashViewState();
+}
+
+class _SplashViewState extends State<SplashView> {
+  @override
   void initState() {
+    getAds();
     super.initState();
-    initPlatformState();
   }
 
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initPlatformState() async {
-    String platformVersion;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    // We also handle the message potentially returning null.
-    try {
-      platformVersion =
-          await _preloadGoogleAdsPlugin.getPlatformVersion() ?? 'Unknown platform version';
-    } on PlatformException {
-      platformVersion = 'Failed to get platform version.';
-    }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
-
-    setState(() {
-      _platformVersion = platformVersion;
-    });
+  getAds() {
+    PreloadAds.instance.initialize(
+      onAdStartAdImpression: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => HomeView()),
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Plugin example app'),
-        ),
-        body: Center(
-          child: Text('Running on: $_platformVersion\n'),
+    return Scaffold(body: Center(child: CircularProgressIndicator()));
+  }
+}
+
+class HomeView extends StatelessWidget {
+  const HomeView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("PreLoad Google Ads"), centerTitle: true),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                PreloadAds.instance.showAdInterstitialAd(callBack: () {});
+              },
+              child: Text(("Show interstitial Ad")),
+            ),
+          ],
         ),
       ),
     );
