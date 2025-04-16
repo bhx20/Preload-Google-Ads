@@ -27,7 +27,7 @@ abstract class AdRepo {
 
   void loadInterAd();
 
-  void showInterAd(Function() callBack);
+  void showInterAd({required Function() callBack});
 
   void loadRewardedAd();
 

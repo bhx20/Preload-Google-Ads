@@ -41,45 +41,52 @@ class InterAd {
     }
   }
 
-  void showAndNavigate({required Function() callBack}) {
-    if (PreloadGoogleAds.instance.initialData.showInterstitial == true &&
-        PreloadGoogleAds.instance.initialData.showAd == true) {
+  void showInter({required Function() callBack}) {
+    final data = PreloadGoogleAds.instance.initialData;
+
+    if (data.showInterstitial == true && data.showAd == true) {
+      /// Check if interstitial ad is ready and counter limit is reached
       if (_isInterstitialAdLoaded &&
           _interstitialAd != null &&
-          counter >=
-              PreloadGoogleAds.instance.initialData.interstitialCounter) {
+          counter >= data.interstitialCounter) {
         counter = 0;
-        _interstitialAd!.show().then((value) {
-          Future.delayed(const Duration(seconds: 2)).then((value) {
-            callBack();
-          });
-          _interstitialAd!
-              .fullScreenContentCallback = FullScreenContentCallback(
+
+        _interstitialAd!
+          ..fullScreenContentCallback = FullScreenContentCallback(
             onAdDismissedFullScreenContent: (ad) {
+              callBack();
               ad.dispose();
               _interstitialAd = null;
               load();
+
+              /// Reload next interstitial
             },
-            onAdImpression: (value) {
+            onAdImpression: (_) {
               AdStats.instance.interImp.value++;
             },
-            onAdFailedToShowFullScreenContent: (
-              InterstitialAd ad,
-              AdError error,
-            ) async {
+            onAdFailedToShowFullScreenContent: (ad, error) {
+              callBack();
               AppLogger.error('$ad onAdFailedToShowFullScreenContent: $error');
-              _interstitialAd = null;
               ad.dispose();
+              _interstitialAd = null;
               load();
+
+              /// Try loading a new ad
             },
-          );
-        });
+          )
+          ..show();
+
+        /// Show the ad
       } else {
         counter++;
         callBack();
+
+        /// Not ready or below counter threshold
       }
     } else {
       callBack();
+
+      /// Ads disabled
     }
   }
 }

@@ -117,8 +117,8 @@ class PreloadGoogleAds {
     return PlugAd.getInstance().showAdCounter(showCounter ?? true);
   }
 
-  showAdInterstitialAd({Function()? callBack}) {
-    return PlugAd.getInstance().showInterAd(() => callBack);
+  showAdInterstitialAd({required Function() callBack}) {
+    return PlugAd.getInstance().showInterAd(callBack: callBack);
   }
 
   showAdRewardedAd({

@@ -54,14 +54,16 @@ class RewardAd {
 
         _rewardedAd!.fullScreenContentCallback = FullScreenContentCallback(
           onAdDismissedFullScreenContent: (ad) {
+            callBack();
             ad.dispose();
             _rewardedAd = null;
-            load(); // Load the next ad
+            load();
           },
           onAdImpression: (ad) {
             AdStats.instance.rewardedImp.value++;
           },
           onAdFailedToShowFullScreenContent: (ad, error) {
+            callBack();
             AppLogger.error('$ad failed to show: $error');
             _rewardedAd = null;
             ad.dispose();
@@ -78,13 +80,9 @@ class RewardAd {
       } else {
         counter++;
         callBack();
-
-        /// Not ready yet, just continue
       }
     } else {
       callBack();
-
-      /// Ads not enabled
     }
   }
 }

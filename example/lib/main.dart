@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:preload_google_ads/preload_ad.dart';
 
@@ -158,12 +159,25 @@ class _HomeViewState extends State<HomeView> {
 
   showOpenAppAd() => PreloadGoogleAds.instance.showOpenApp();
 
-  showInterAd() =>
-      PreloadGoogleAds.instance.showAdInterstitialAd(callBack: () {});
+  showInterAd() => PreloadGoogleAds.instance.showAdInterstitialAd(
+    callBack: () {
+      if (kDebugMode) {
+        print("Get Inter CallBack");
+      }
+    },
+  );
 
   showRewardedAd() => PreloadGoogleAds.instance.showAdRewardedAd(
-    callBack: () {},
-    onReward: () {},
+    callBack: () {
+      if (kDebugMode) {
+        print("Get Rewarded CallBack");
+      }
+    },
+    onReward: () {
+      if (kDebugMode) {
+        print("Get Rewarded Reward");
+      }
+    },
   );
 
   showMediumNativeAd() => showNative(false);

@@ -35,8 +35,8 @@ class AdRepoImpl extends AdRepo {
   }
 
   @override
-  void showInterAd(Function() callBack) {
-    return InterAd.instance.showAndNavigate(callBack: callBack);
+  void showInterAd({required Function() callBack}) {
+    return InterAd.instance.showInter(callBack: callBack);
   }
 
   @override
