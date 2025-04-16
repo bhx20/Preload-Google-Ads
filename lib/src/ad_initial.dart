@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import '../preload_google_ads.dart';
@@ -16,18 +17,36 @@ class PreloadGoogleAds {
   /// Callback to be executed after splash ad finishes loading/showing
   Function(AppOpenAd? ad, AdError? error)? _splashAdCallback;
 
+  final _channel = MethodChannel('com.plug.preload/adButtonStyle');
+
+  Future<void> sendAdColorsToNative() async {
+    await _channel.invokeMethod('setAdStyle', {
+      "title": "",
+      "description": "",
+      "tag_background": "",
+      "tag_foreground": "",
+      "button_background": "",
+      "button_foreground": "",
+      "button_radius": "",
+      "tag_radius": "",
+      "button_gradients": [],
+    });
+  }
+
   /// Initializes the ad system and loads ads based on the provided config
   void initialize({PreloadDataModel? adConfig}) {
+    sendAdColorsToNative();
     MobileAds.instance.initialize();
+
     initialData = setConfigData(adConfig);
 
     if (initialData.showAd == true) {
-      _loadAndShowSplashAd();
+      // _loadAndShowSplashAd();
       _loadNativeAd();
-      _loadBannerAd();
-      _loadOpenAppAd();
-      _loadInterAd();
-      _loadRewardedAd();
+      //_loadBannerAd();
+      //_loadOpenAppAd();
+      //_loadInterAd();
+      // _loadRewardedAd();
     }
   }
 

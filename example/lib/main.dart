@@ -24,7 +24,7 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(brightness: Brightness.light),
       darkTheme: ThemeData(brightness: Brightness.dark),
       debugShowCheckedModeBanner: false,
-      home: SplashView(),
+      home: HomeView(),
       builder: (context, child) {
         /// Wrap the app with an ad counter overlay
         return Scaffold(
@@ -77,12 +77,7 @@ class _SplashViewState extends State<SplashView> {
       body: Column(
         children: [
           Expanded(child: Center(child: Text("Splash"))),
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: LinearProgressIndicator(),
-            ),
-          ),
+          Center(child: Padding(padding: const EdgeInsets.all(8.0))),
         ],
       ),
     );

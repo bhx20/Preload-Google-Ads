@@ -4,46 +4,63 @@ import android.content.Context;
 
 import androidx.annotation.NonNull;
 
+import java.util.Map;
+
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugins.googlemobileads.GoogleMobileAdsPlugin;
 
 public class PreloadGoogleAdsPlugin implements FlutterPlugin {
-    private Context context; /// Context to access app resources
+    private Context context;
 
-    /**
-     * Called when the plugin is attached to the Flutter engine.
-     * Initializes the plugin by registering native ad factories.
-     */
     @Override
     public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
-        context = flutterPluginBinding.getApplicationContext(); /// Get the application context
+        context = flutterPluginBinding.getApplicationContext();
 
-        /// Register the first native ad factory with a name "listTile" and associate it with the NativeAdFactorySmall class
-        GoogleMobileAdsPlugin.registerNativeAdFactory(
-                flutterPluginBinding.getFlutterEngine(),
-                "listTile", /// Name of the native ad factory in Flutter
-                new android.src.main.java.com.plug.preload.NativeAdFactorySmall(context) /// NativeAdFactory for small ad layout
+        MethodChannel colorChannel = new MethodChannel(
+                flutterPluginBinding.getBinaryMessenger(),
+                "com.plug.preload/adButtonStyle"
         );
 
-        /// Register the second native ad factory with a name "listTileMedium" and associate it with the NativeAdFactoryMedium class
-        GoogleMobileAdsPlugin.registerNativeAdFactory(
-                flutterPluginBinding.getFlutterEngine(),
-                "listTileMedium", /// Name of the native ad factory in Flutter
-                new android.src.main.java.com.plug.preload.NativeAdFactoryMedium(context) /// NativeAdFactory for medium ad layout
-        );
+        colorChannel.setMethodCallHandler((call, result) -> {
+            if (call.method.equals("setAdStyle")) {
+                if (call.arguments instanceof Map) {
+                    Map<String, Object> receivedStyleMap = (Map<String, Object>) call.arguments;
+
+                    // Unregister old factories if they exist (safe re-registering)
+                    GoogleMobileAdsPlugin.unregisterNativeAdFactory(
+                            flutterPluginBinding.getFlutterEngine(), "listTileMedium"
+                    );
+                    GoogleMobileAdsPlugin.unregisterNativeAdFactory(
+                            flutterPluginBinding.getFlutterEngine(), "listTile"
+                    );
+
+                    // Register updated factories with new style
+                    GoogleMobileAdsPlugin.registerNativeAdFactory(
+                            flutterPluginBinding.getFlutterEngine(),
+                            "listTileMedium",
+                            new android.src.main.java.com.plug.preload.NativeAdFactoryMedium(context, receivedStyleMap)
+                    );
+
+                    GoogleMobileAdsPlugin.registerNativeAdFactory(
+                            flutterPluginBinding.getFlutterEngine(),
+                            "listTile",
+                            new android.src.main.java.com.plug.preload.NativeAdFactorySmall(context, receivedStyleMap)
+                    );
+
+                    result.success(null);
+                } else {
+                    result.error("INVALID_ARGUMENT", "Expected a style map", null);
+                }
+            } else {
+                result.notImplemented();
+            }
+        });
     }
 
-    /**
-     * Called when the plugin is detached from the Flutter engine.
-     * Unregisters the native ad factories to clean up resources.
-     */
     @Override
     public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
-        /// Unregister the "listTile" native ad factory
         GoogleMobileAdsPlugin.unregisterNativeAdFactory(binding.getFlutterEngine(), "listTile");
-
-        /// Unregister the "listTileMedium" native ad factory
         GoogleMobileAdsPlugin.unregisterNativeAdFactory(binding.getFlutterEngine(), "listTileMedium");
     }
 }
