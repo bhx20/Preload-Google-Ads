@@ -1,6 +1,7 @@
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../preload_google_ads.dart';
 
@@ -59,7 +60,7 @@ class AdTestIds {
 //              **  Initial Config Data Function  **
 //==============================================================================
 
-PreloadDataModel preData = PreloadDataModel(
+AdConfigData preData = AdConfigData(
   appOpenId: AdTestIds.appOpen,
   bannerId: AdTestIds.banner,
   nativeId: AdTestIds.native,
@@ -81,8 +82,8 @@ PreloadDataModel preData = PreloadDataModel(
 //              **  Set Config Data Function  **
 //==============================================================================
 
-setConfigData(PreloadDataModel? adConfig) {
-  return PreloadDataModel(
+setConfigData(AdConfigData? adConfig) {
+  return AdConfigData(
     appOpenId: adConfig?.appOpenId ?? preData.appOpenId,
     bannerId: adConfig?.bannerId ?? preData.bannerId,
     nativeId: adConfig?.nativeId ?? preData.nativeId,
@@ -100,6 +101,29 @@ setConfigData(PreloadDataModel? adConfig) {
     rewardedCounter: adConfig?.rewardedCounter ?? preData.rewardedCounter,
     showSplashAd: adConfig?.showSplashAd ?? preData.showSplashAd,
   );
+}
+
+//==============================================================================
+//              **  Set Ad Style Data Function  **
+//==============================================================================
+
+Future<void> setAdStyleData(AdStyle? adStyle) async {
+  final channel = MethodChannel('com.plug.preload/adButtonStyle');
+
+  adStyle ??= AdStyle();
+
+  await channel.invokeMethod('setAdStyle', {
+    "title": colorToHex(adStyle.title),
+    "description": colorToHex(adStyle.description),
+    "tag_background": colorToHex(adStyle.tagBackground),
+    "tag_foreground": colorToHex(adStyle.tagForeground),
+    "button_background": colorToHex(adStyle.buttonBackground),
+    "button_foreground": colorToHex(adStyle.buttonForeground),
+    "button_radius": adStyle.buttonRadius,
+    "tag_radius": adStyle.tagRadius,
+    "button_gradients":
+        adStyle.buttonGradients.map((color) => colorToHex(color)).toList(),
+  });
 }
 
 //==============================================================================
@@ -145,4 +169,25 @@ class AdStats {
   final ValueNotifier<int> bannerLoad = ValueNotifier(0);
   final ValueNotifier<int> bannerImp = ValueNotifier(0);
   final ValueNotifier<int> bannerFailed = ValueNotifier(0);
+}
+
+//==============================================================================
+//              **  Hex To Color Function  **
+//==============================================================================
+
+String colorToHex(Color color) {
+  /// Accessing the RGBA components using the new accessors
+  final r = (color.r * 255).toInt();
+  final g = (color.g * 255).toInt();
+  final b = (color.b * 255).toInt();
+  final a = (color.a * 255).toInt();
+
+  /// Convert to hex and pad with leading zeros
+  final rHex = r.toRadixString(16).padLeft(2, '0');
+  final gHex = g.toRadixString(16).padLeft(2, '0');
+  final bHex = b.toRadixString(16).padLeft(2, '0');
+  final aHex = a.toRadixString(16).padLeft(2, '0');
+
+  /// Combine components into hex string
+  return '#${rHex + gHex + bHex}'.toUpperCase();
 }

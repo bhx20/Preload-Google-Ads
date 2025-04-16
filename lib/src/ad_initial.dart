@@ -1,4 +1,3 @@
-import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import '../preload_google_ads.dart';
@@ -12,51 +11,33 @@ class PreloadGoogleAds {
       PreloadGoogleAds._privateConstructor();
 
   /// Holds the configuration data loaded during initialization
-  late PreloadDataModel initialData;
+  late AdConfigData initialData;
 
   /// Callback to be executed after splash ad finishes loading/showing
   Function(AppOpenAd? ad, AdError? error)? _splashAdCallback;
 
-  final _channel = MethodChannel('com.plug.preload/adButtonStyle');
-
-  Future<void> sendAdColorsToNative() async {
-    await _channel.invokeMethod('setAdStyle', {
-      "title": "",
-      "description": "",
-      "tag_background": "",
-      "tag_foreground": "",
-      "button_background": "",
-      "button_foreground": "",
-      "button_radius": "",
-      "tag_radius": "",
-      "button_gradients": [],
-    });
-  }
-
   /// Initializes the ad system and loads ads based on the provided config
-  void initialize({PreloadDataModel? adConfig}) {
-    sendAdColorsToNative();
+  void initialize({AdConfigData? adConfig, AdStyle? adStyle}) {
     MobileAds.instance.initialize();
-
     initialData = setConfigData(adConfig);
-
+    setAdStyleData(adStyle);
     if (initialData.showAd == true) {
-      // _loadAndShowSplashAd();
+      _loadAndShowSplashAd();
       _loadNativeAd();
-      //_loadBannerAd();
-      //_loadOpenAppAd();
-      //_loadInterAd();
-      // _loadRewardedAd();
+      _loadBannerAd();
+      _loadOpenAppAd();
+      _loadInterAd();
+      _loadRewardedAd();
     }
   }
 
   /// Loads and shows the splash screen ad if enabled in config
   void _loadAndShowSplashAd() {
-    if (initialData.showSplashAd) {
+    if (initialData.showSplashAd == true && initialData.showAd == true) {
       PlugAd.getInstance().showOpenAppOnSplash(
         callBack: ({AppOpenAd? ad, AdError? error}) {
           _splashAdCallback?.call(ad, error);
-          _splashAdCallback = null; // Clear after use
+          _splashAdCallback = null;
         },
       );
     } else {

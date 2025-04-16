@@ -25,8 +25,9 @@ class AppOpenAdManager {
   void loadAd() {
     try {
       AppOpenAd.load(
-        adUnitId: PreloadGoogleAds.instance.initialData.appOpenId,
-
+        adUnitId:
+            PreloadGoogleAds.instance.initialData.appOpenId ??
+            AdTestIds.appOpen,
         request: const AdRequest(),
         adLoadCallback: AppOpenAdLoadCallback(
           onAdLoaded: (ad) {

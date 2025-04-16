@@ -27,7 +27,9 @@ class LoadMediumNative {
         loading = true;
         nativeAd = NativeAd(
           factoryId: "listTileMedium",
-          adUnitId: PreloadGoogleAds.instance.initialData.nativeId,
+          adUnitId:
+              PreloadGoogleAds.instance.initialData.nativeId ??
+              AdTestIds.native,
           listener: NativeAdListener(
             onAdLoaded: (ad) async {
               AppLogger.log('$NativeAd loaded.');
@@ -92,7 +94,9 @@ class LoadSmallNative {
       try {
         nativeAd = NativeAd(
           factoryId: "listTile",
-          adUnitId: PreloadGoogleAds.instance.initialData.nativeId,
+          adUnitId:
+              PreloadGoogleAds.instance.initialData.nativeId ??
+              AdTestIds.native,
           listener: NativeAdListener(
             onAdLoaded: (ad) async {
               if (nativeAd != null) {

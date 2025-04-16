@@ -5,7 +5,13 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
   /// Initialize the PreloadGoogleAds plugin
-  PreloadGoogleAds.instance.initialize();
+  PreloadGoogleAds.instance.initialize(
+    adConfig: AdConfigData(),
+    adStyle: AdStyle(
+      buttonBackground: Colors.black,
+      tagBackground: Colors.black,
+    ),
+  );
   runApp(const MyApp());
 }
 
@@ -24,7 +30,7 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(brightness: Brightness.light),
       darkTheme: ThemeData(brightness: Brightness.dark),
       debugShowCheckedModeBanner: false,
-      home: HomeView(),
+      home: SplashView(),
       builder: (context, child) {
         /// Wrap the app with an ad counter overlay
         return Scaffold(

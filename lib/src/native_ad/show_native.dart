@@ -11,7 +11,9 @@ class ShowNative extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (nativeCounter >= PreloadGoogleAds.instance.initialData.nativeCounter) {
+    final dataCounter =
+        PreloadGoogleAds.instance.initialData.nativeCounter ?? 0;
+    if (nativeCounter >= dataCounter) {
       nativeCounter = 0;
       if (PreloadGoogleAds.instance.initialData.showNative == true &&
           PreloadGoogleAds.instance.initialData.showAd == true) {

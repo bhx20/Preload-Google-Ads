@@ -19,7 +19,9 @@ class InterAd {
     try {
       _isInterstitialAdLoaded = false;
       InterstitialAd.load(
-        adUnitId: PreloadGoogleAds.instance.initialData.interstitialId,
+        adUnitId:
+            PreloadGoogleAds.instance.initialData.interstitialId ??
+            AdTestIds.interstitial,
         request: const AdRequest(),
         adLoadCallback: InterstitialAdLoadCallback(
           onAdLoaded: (InterstitialAd ad) {
@@ -45,12 +47,12 @@ class InterAd {
     required Function({InterstitialAd? ad, AdError? error}) callBack,
   }) {
     final data = PreloadGoogleAds.instance.initialData;
-
+    final dataCounter = data.interstitialCounter ?? 0;
     if (data.showInterstitial == true && data.showAd == true) {
       /// Check if interstitial ad is ready and counter limit is reached
       if (_isInterstitialAdLoaded &&
           _interstitialAd != null &&
-          counter >= data.interstitialCounter) {
+          counter >= dataCounter) {
         counter = 0;
 
         _interstitialAd!
