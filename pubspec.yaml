@@ -1,7 +1,7 @@
 name: preload_google_ads
-description: "A new Flutter project."
-version: 0.0.1
-homepage: https://github.com/bhx20/preload_google_ads
+description: "Preloading Google Ads in Flutter loads ads in the background for quick display."
+version: 0.0.2
+homepage: https://github.com/bhx20/Preload-Google-Ads
 
 environment:
   sdk: ^3.7.2
@@ -23,7 +23,7 @@ flutter:
   plugin:
     platforms:
       android:
-        package: com.plug.preload.preload_google_ads
+        package: com.plug.preload
         pluginClass: PreloadGoogleAdsPlugin
 
 

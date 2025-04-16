@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:preload_google_ads/src/rewarded_ad/rewarded_ad.dart';
 
-import '../../preload_ad.dart';
+import '../../preload_google_ads.dart';
 
 class AdRepoImpl extends AdRepo {
   @override

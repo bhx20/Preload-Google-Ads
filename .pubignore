@@ -1,0 +1,4 @@
+android/src/main/java/com/plug/preload/preload_google_ads/NativeAdFactoryMedium.java
+android/src/main/java/com/plug/preload/preload_google_ads/NativeAdFactorySmall.java
+android/src/main/java/com/plug/preload/preload_google_ads/PreloadGoogleAdsPlugin.java
+example/android/app/src/main/kotlin/com/plug/preload/preload_google_ads_example/MainActivity.kt

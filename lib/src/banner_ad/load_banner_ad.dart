@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
-import '../../preload_ad.dart';
+import '../../preload_google_ads.dart';
 
 class LoadBannerAd {
   static final LoadBannerAd instance = LoadBannerAd._internal();
@@ -22,9 +22,9 @@ class LoadBannerAd {
     if (bannerAdObject.length <= 2) {
       try {
         loading = true;
+        final view = PlatformDispatcher.instance.implicitView!;
         final double logicalScreenWidth =
-            WidgetsBinding.instance.window.physicalSize.width /
-            WidgetsBinding.instance.window.devicePixelRatio;
+            view.physicalSize.width / view.devicePixelRatio;
 
         final AnchoredAdaptiveBannerAdSize? size =
             await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(

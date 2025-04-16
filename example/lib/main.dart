@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:preload_google_ads/preload_ad.dart';
+import 'package:preload_google_ads/preload_google_ads.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+
+  /// Initialize the PreloadGoogleAds plugin
   PreloadGoogleAds.instance.initialize();
   runApp(const MyApp());
 }
@@ -24,6 +26,7 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       home: SplashView(),
       builder: (context, child) {
+        /// Wrap the app with an ad counter overlay
         return Scaffold(
           body: Column(
             children: [
@@ -37,9 +40,9 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
-//==============================================================================
-//                            **  Splash View  **
-//==============================================================================
+///==============================================================================
+///                            **  Splash View  **
+///==============================================================================
 
 class SplashView extends StatefulWidget {
   const SplashView({super.key});
@@ -55,9 +58,12 @@ class _SplashViewState extends State<SplashView> {
     super.initState();
   }
 
+  /// Set a callback for the splash ad finish event
   setSplashAdCallBack() {
     PreloadGoogleAds.instance.setSplashAdCallback((ad, error) {
-      debugPrint("Ad callback triggered");
+      debugPrint("Ad callback triggered, ${ad?.adUnitId}");
+
+      /// Navigate to HomeView after splash ad completes
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => const HomeView()),
@@ -83,9 +89,9 @@ class _SplashViewState extends State<SplashView> {
   }
 }
 
-//==============================================================================
-//                            **  Home View  **
-//==============================================================================
+///==============================================================================
+///                            **  Home View  **
+///==============================================================================
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -100,14 +106,17 @@ class _HomeViewState extends State<HomeView> {
   @override
   void initState() {
     ad = SizedBox();
+
+    /// Placeholder for dynamic ad widget
     super.initState();
   }
 
+  /// Show native ad (small or medium based on flag)
   showNative(bool isSmall) {
     setState(() {
       ad = Container(
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey.withValues(alpha: 0.5)),
+          border: Border.all(color: Colors.grey..withValues(alpha: 0.5)),
           borderRadius: BorderRadius.circular(5),
         ),
         padding: EdgeInsets.all(5),
@@ -117,12 +126,14 @@ class _HomeViewState extends State<HomeView> {
     });
   }
 
+  /// Show banner ad
   showBanner() {
     setState(() {
       ad = PreloadGoogleAds.instance.showBannerAd();
     });
   }
 
+  /// Reusable button widget
   Widget _button({
     required String text,
     required VoidCallback onPressed,
@@ -157,20 +168,22 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
+  /// Show Open App Ad
   showOpenAppAd() => PreloadGoogleAds.instance.showOpenApp();
 
+  /// Show Interstitial Ad with callback
   showInterAd() => PreloadGoogleAds.instance.showAdInterstitialAd(
     callBack: (ad, error) {
       if (ad != null) {
         debugPrint("Inter AD loaded successfully!");
         debugPrint(ad.adUnitId);
-        debugPrint("Inter AD loaded successfully!");
       } else {
         debugPrint("Inter Ad failed to load: ${error?.message}");
       }
     },
   );
 
+  /// Show Rewarded Ad with callback and reward handler
   showRewardedAd() => PreloadGoogleAds.instance.showAdRewardedAd(
     callBack: (ad, error) {
       if (ad != null) {
@@ -184,10 +197,13 @@ class _HomeViewState extends State<HomeView> {
     },
   );
 
+  /// Show Medium Native Ad
   showMediumNativeAd() => showNative(false);
 
+  /// Show Small Native Ad
   showSmallNativeAd() => showNative(true);
 
+  /// Show Banner Ad
   showBannerAd() => showBanner();
 
   @override

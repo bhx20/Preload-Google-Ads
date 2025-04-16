@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
-import '../../preload_ad.dart';
+import '../../preload_google_ads.dart';
 
 class GoogleAppOpenOnSplash {
   static final GoogleAppOpenOnSplash instance =

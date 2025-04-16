@@ -1,4 +1,4 @@
-group = "com.plug.preload.preload_google_ads"
+group = "com.plug.preload"
 version = "1.0-SNAPSHOT"
 
 buildscript {
@@ -25,7 +25,7 @@ apply plugin: "com.android.library"
 apply plugin: "kotlin-android"
 
 android {
-    namespace = "com.plug.preload.preload_google_ads"
+    namespace = "com.plug.preload"
 
     compileSdk = 35
 
@@ -64,6 +64,7 @@ android {
         }
     }
 }
+
 dependencies {
     implementation 'com.intuit.sdp:sdp-android:1.1.0'
 }

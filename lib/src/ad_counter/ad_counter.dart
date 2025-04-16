@@ -1,12 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../../preload_ad.dart';
+import '../../preload_google_ads.dart';
 
 class AdCounterWidget extends StatelessWidget {
   final ValueNotifier<bool> showCounter;
 
-  /// Constructor to receive a ValueNotifier<bool> to control whether the counter should be shown
+  /// Constructor to receive a ValueNotifier to control whether the counter should be shown
   const AdCounterWidget({super.key, required this.showCounter});
 
   /// Define custom colors for different themes (light or dark)
