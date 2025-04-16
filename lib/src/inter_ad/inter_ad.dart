@@ -19,7 +19,7 @@ class InterAd {
     try {
       _isInterstitialAdLoaded = false;
       InterstitialAd.load(
-        adUnitId: PreloadAds.instance.initialData.interstitialId,
+        adUnitId: PreloadGoogleAds.instance.initialData.interstitialId,
         request: const AdRequest(),
         adLoadCallback: InterstitialAdLoadCallback(
           onAdLoaded: (InterstitialAd ad) {
@@ -42,11 +42,12 @@ class InterAd {
   }
 
   void showAndNavigate({required Function() callBack}) {
-    if (PreloadAds.instance.initialData.showInterstitial == true &&
-        PreloadAds.instance.initialData.showAd == true) {
+    if (PreloadGoogleAds.instance.initialData.showInterstitial == true &&
+        PreloadGoogleAds.instance.initialData.showAd == true) {
       if (_isInterstitialAdLoaded &&
           _interstitialAd != null &&
-          counter >= PreloadAds.instance.initialData.interstitialCounter) {
+          counter >=
+              PreloadGoogleAds.instance.initialData.interstitialCounter) {
         counter = 0;
         _interstitialAd!.show().then((value) {
           Future.delayed(const Duration(seconds: 2)).then((value) {

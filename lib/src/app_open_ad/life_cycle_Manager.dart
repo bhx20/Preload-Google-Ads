@@ -36,8 +36,8 @@ class AppLifecycleReactor {
 
   void _onAppStateChanged(AppState appState) {
     AppLogger.log('New AppState state: $appState');
-    if (PreloadAds.instance.initialData.showOpenApp == true &&
-        PreloadAds.instance.initialData.showAd == true) {
+    if (PreloadGoogleAds.instance.initialData.showOpenApp == true &&
+        PreloadGoogleAds.instance.initialData.showAd == true) {
       if (appState == AppState.foreground) {
         appOpenAdManager.showAdIfAvailable();
       }

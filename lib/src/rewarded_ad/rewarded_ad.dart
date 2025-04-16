@@ -19,7 +19,7 @@ class RewardAd {
     try {
       _isRewardedAdLoaded = false;
       RewardedAd.load(
-        adUnitId: PreloadAds.instance.initialData.rewardedId,
+        adUnitId: PreloadGoogleAds.instance.initialData.rewardedId,
         request: const AdRequest(),
         rewardedAdLoadCallback: RewardedAdLoadCallback(
           onAdLoaded: (ad) {
@@ -45,11 +45,11 @@ class RewardAd {
     required Function() callBack,
     required Function() onReward,
   }) {
-    if (PreloadAds.instance.initialData.showRewarded == true &&
-        PreloadAds.instance.initialData.showAd == true) {
+    if (PreloadGoogleAds.instance.initialData.showRewarded == true &&
+        PreloadGoogleAds.instance.initialData.showAd == true) {
       if (_isRewardedAdLoaded &&
           _rewardedAd != null &&
-          counter >= PreloadAds.instance.initialData.rewardedCounter) {
+          counter >= PreloadGoogleAds.instance.initialData.rewardedCounter) {
         counter = 0;
 
         _rewardedAd!.fullScreenContentCallback = FullScreenContentCallback(

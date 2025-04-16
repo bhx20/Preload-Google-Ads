@@ -11,10 +11,10 @@ class ShowNative extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (nativeCounter >= PreloadAds.instance.initialData.nativeCounter) {
+    if (nativeCounter >= PreloadGoogleAds.instance.initialData.nativeCounter) {
       nativeCounter = 0;
-      if (PreloadAds.instance.initialData.showNative == true &&
-          PreloadAds.instance.initialData.showAd == true) {
+      if (PreloadGoogleAds.instance.initialData.showNative == true &&
+          PreloadGoogleAds.instance.initialData.showAd == true) {
         return isSmall ? const NativeSmall() : const MediumNative();
       } else {
         return const SizedBox.shrink();

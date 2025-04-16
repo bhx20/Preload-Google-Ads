@@ -35,7 +35,7 @@ class GoogleAppOpenOnSplash {
     });
     try {
       AppOpenAd.load(
-        adUnitId: PreloadAds.instance.initialData.appOpenId,
+        adUnitId: PreloadGoogleAds.instance.initialData.appOpenId,
         request: const AdRequest(),
         adLoadCallback: AppOpenAdLoadCallback(
           onAdLoaded: (ad) {

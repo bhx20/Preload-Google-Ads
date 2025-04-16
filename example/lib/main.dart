@@ -16,13 +16,19 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      themeMode: ThemeMode.system,
+      theme: ThemeData(brightness: Brightness.light),
+      darkTheme: ThemeData(brightness: Brightness.dark),
+      debugShowCheckedModeBanner: false,
       home: SplashView(),
       builder: (context, child) {
-        return Column(
-          children: [
-            Expanded(child: child ?? SizedBox()),
-            PreloadAds.instance.showAdCounter(showCounter: true),
-          ],
+        return Scaffold(
+          body: Column(
+            children: [
+              Expanded(child: child ?? SizedBox()),
+              PreloadGoogleAds.instance.showAdCounter(showCounter: true),
+            ],
+          ),
         );
       },
     );
@@ -48,7 +54,7 @@ class _SplashViewState extends State<SplashView> {
   }
 
   getAds() {
-    PreloadAds.instance.initialize(
+    PreloadGoogleAds.instance.initialize(
       onAdStartAdCallBack: () {
         Navigator.push(
           context,
@@ -105,14 +111,14 @@ class _HomeViewState extends State<HomeView> {
         ),
         padding: EdgeInsets.all(5),
         margin: EdgeInsets.all(5),
-        child: PreloadAds.instance.showNativeAd(isSmall: isSmall),
+        child: PreloadGoogleAds.instance.showNativeAd(isSmall: isSmall),
       );
     });
   }
 
   showBanner() {
     setState(() {
-      ad = PreloadAds.instance.showBannerAd();
+      ad = PreloadGoogleAds.instance.showBannerAd();
     });
   }
 
@@ -150,12 +156,15 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
-  showOpenAppAd() => PreloadAds.instance.showOpenApp();
+  showOpenAppAd() => PreloadGoogleAds.instance.showOpenApp();
 
-  showInterAd() => PreloadAds.instance.showAdInterstitialAd(callBack: () {});
+  showInterAd() =>
+      PreloadGoogleAds.instance.showAdInterstitialAd(callBack: () {});
 
-  showRewardedAd() =>
-      PreloadAds.instance.showAdRewardedAd(callBack: () {}, onReward: () {});
+  showRewardedAd() => PreloadGoogleAds.instance.showAdRewardedAd(
+    callBack: () {},
+    onReward: () {},
+  );
 
   showMediumNativeAd() => showNative(false);
 
@@ -170,7 +179,7 @@ class _HomeViewState extends State<HomeView> {
         backgroundColor: Colors.blue,
         leading: SizedBox(),
         title: Text(
-          "PreLoad Google Ads",
+          "PreLoad Google Ads".toUpperCase(),
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -185,18 +194,18 @@ class _HomeViewState extends State<HomeView> {
           Wrap(
             alignment: WrapAlignment.center,
             children: [
-              _button(onPressed: showOpenAppAd, text: "Show Open App Ad"),
-              _button(onPressed: showInterAd, text: "Show interstitial Ad"),
-              _button(onPressed: showRewardedAd, text: "Show Rewarded Ad"),
+              _button(onPressed: showOpenAppAd, text: "Show Open App AD"),
+              _button(onPressed: showInterAd, text: "Show Interstitial AD"),
+              _button(onPressed: showRewardedAd, text: "Show Rewarded AD"),
               _button(
                 onPressed: showMediumNativeAd,
-                text: "Show Medium Native Ad",
+                text: "Show Medium Native AD",
               ),
               _button(
                 onPressed: showSmallNativeAd,
-                text: "Show Small Native Ad",
+                text: "Show Small Native AD",
               ),
-              _button(onPressed: showBannerAd, text: "Show Banner Ad"),
+              _button(onPressed: showBannerAd, text: "Show Banner AD"),
             ],
           ),
           Expanded(

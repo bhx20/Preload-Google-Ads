@@ -2,10 +2,11 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import '../preload_ad.dart';
 
-class PreloadAds {
-  PreloadAds._privateConstructor();
+class PreloadGoogleAds {
+  PreloadGoogleAds._privateConstructor();
 
-  static final PreloadAds instance = PreloadAds._privateConstructor();
+  static final PreloadGoogleAds instance =
+      PreloadGoogleAds._privateConstructor();
 
   //==============================================================================
   //              **  Ads Properties  **

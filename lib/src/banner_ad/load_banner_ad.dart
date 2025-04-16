@@ -35,7 +35,7 @@ class LoadBannerAd {
           return;
         }
         bannerAd = BannerAd(
-          adUnitId: PreloadAds.instance.initialData.bannerId,
+          adUnitId: PreloadGoogleAds.instance.initialData.bannerId,
           size: size,
           request: const AdRequest(),
           listener: BannerAdListener(
