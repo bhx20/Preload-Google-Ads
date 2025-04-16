@@ -42,8 +42,8 @@ class RewardAd {
   }
 
   void showRewarded({
-    required Function() callBack,
-    required Function() onReward,
+    required Function({RewardedAd? ad, AdError? error}) callBack,
+    required Function(AdWithoutView ad, RewardItem reward) onReward,
   }) {
     if (PreloadGoogleAds.instance.initialData.showRewarded == true &&
         PreloadGoogleAds.instance.initialData.showAd == true) {
@@ -54,7 +54,7 @@ class RewardAd {
 
         _rewardedAd!.fullScreenContentCallback = FullScreenContentCallback(
           onAdDismissedFullScreenContent: (ad) {
-            callBack();
+            callBack(ad: ad);
             ad.dispose();
             _rewardedAd = null;
             load();
@@ -63,7 +63,7 @@ class RewardAd {
             AdStats.instance.rewardedImp.value++;
           },
           onAdFailedToShowFullScreenContent: (ad, error) {
-            callBack();
+            callBack(ad: ad, error: error);
             AppLogger.error('$ad failed to show: $error');
             _rewardedAd = null;
             ad.dispose();
@@ -73,8 +73,7 @@ class RewardAd {
 
         _rewardedAd!.show(
           onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
-            /// ✅ Give the reward to the user
-            onReward();
+            onReward(ad, reward);
           },
         );
       } else {

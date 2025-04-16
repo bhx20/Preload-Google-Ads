@@ -1,8 +1,9 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:preload_google_ads/preload_ad.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  PreloadGoogleAds.instance.initialize();
   runApp(const MyApp());
 }
 
@@ -50,19 +51,18 @@ class SplashView extends StatefulWidget {
 class _SplashViewState extends State<SplashView> {
   @override
   void initState() {
-    getAds();
+    setSplashAdCallBack();
     super.initState();
   }
 
-  getAds() {
-    PreloadGoogleAds.instance.initialize(
-      onAdStartAdCallBack: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => HomeView()),
-        );
-      },
-    );
+  setSplashAdCallBack() {
+    PreloadGoogleAds.instance.setSplashAdCallback((ad, error) {
+      debugPrint("Ad callback triggered");
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const HomeView()),
+      );
+    });
   }
 
   @override
@@ -160,23 +160,27 @@ class _HomeViewState extends State<HomeView> {
   showOpenAppAd() => PreloadGoogleAds.instance.showOpenApp();
 
   showInterAd() => PreloadGoogleAds.instance.showAdInterstitialAd(
-    callBack: () {
-      if (kDebugMode) {
-        print("Get Inter CallBack");
+    callBack: (ad, error) {
+      if (ad != null) {
+        debugPrint("Inter AD loaded successfully!");
+        debugPrint(ad.adUnitId);
+        debugPrint("Inter AD loaded successfully!");
+      } else {
+        debugPrint("Inter Ad failed to load: ${error?.message}");
       }
     },
   );
 
   showRewardedAd() => PreloadGoogleAds.instance.showAdRewardedAd(
-    callBack: () {
-      if (kDebugMode) {
-        print("Get Rewarded CallBack");
+    callBack: (ad, error) {
+      if (ad != null) {
+        debugPrint("Ad loaded successfully!");
+      } else {
+        debugPrint("Ad failed to load: ${error?.message}");
       }
     },
-    onReward: () {
-      if (kDebugMode) {
-        print("Get Rewarded Reward");
-      }
+    onReward: (ad, reward) {
+      debugPrint("User earned reward: ${reward.amount} ${reward.type}");
     },
   );
 

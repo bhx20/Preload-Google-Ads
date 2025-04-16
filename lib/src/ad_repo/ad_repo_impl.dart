@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:preload_google_ads/src/rewarded_ad/rewarded_ad.dart';
 
 import '../../preload_ad.dart';
@@ -35,7 +36,9 @@ class AdRepoImpl extends AdRepo {
   }
 
   @override
-  void showInterAd({required Function() callBack}) {
+  void showInterAd({
+    required Function({InterstitialAd? ad, AdError? error}) callBack,
+  }) {
     return InterAd.instance.showInter(callBack: callBack);
   }
 
@@ -45,9 +48,11 @@ class AdRepoImpl extends AdRepo {
   }
 
   @override
-  showOpenAppOnSplash({required Function() onAdStartAdImpression}) {
+  showOpenAppOnSplash({
+    required Function({AppOpenAd? ad, AdError? error}) callBack,
+  }) {
     return GoogleAppOpenOnSplash.instance.loadAndShowSplashAd(
-      onAdStartAdImpression: onAdStartAdImpression,
+      callBack: callBack,
     );
   }
 
@@ -68,8 +73,8 @@ class AdRepoImpl extends AdRepo {
 
   @override
   void showRewardedAd({
-    required Function() callBack,
-    required Function() onReward,
+    required Function({RewardedAd? ad, AdError? error}) callBack,
+    required Function(AdWithoutView ad, RewardItem reward) onReward,
   }) {
     return RewardAd.instance.showRewarded(
       callBack: callBack,

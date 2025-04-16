@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import '../../preload_ad.dart';
 
@@ -23,17 +24,21 @@ abstract class AdRepo {
 
   void showOpenAppAd();
 
-  showOpenAppOnSplash({required Function() onAdStartAdImpression});
+  showOpenAppOnSplash({
+    required Function({AppOpenAd? ad, AdError? error}) callBack,
+  });
 
   void loadInterAd();
 
-  void showInterAd({required Function() callBack});
+  void showInterAd({
+    required Function({InterstitialAd? ad, AdError? error}) callBack,
+  });
 
   void loadRewardedAd();
 
   void showRewardedAd({
-    required Function() callBack,
-    required Function() onReward,
+    required Function({RewardedAd? ad, AdError? error}) callBack,
+    required Function(AdWithoutView ad, RewardItem reward) onReward,
   });
 
   Widget showAdCounter(bool showCounter);

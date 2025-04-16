@@ -41,7 +41,9 @@ class InterAd {
     }
   }
 
-  void showInter({required Function() callBack}) {
+  void showInter({
+    required Function({InterstitialAd? ad, AdError? error}) callBack,
+  }) {
     final data = PreloadGoogleAds.instance.initialData;
 
     if (data.showInterstitial == true && data.showAd == true) {
@@ -54,39 +56,29 @@ class InterAd {
         _interstitialAd!
           ..fullScreenContentCallback = FullScreenContentCallback(
             onAdDismissedFullScreenContent: (ad) {
-              callBack();
+              callBack(ad: ad);
               ad.dispose();
               _interstitialAd = null;
               load();
-
-              /// Reload next interstitial
             },
             onAdImpression: (_) {
               AdStats.instance.interImp.value++;
             },
             onAdFailedToShowFullScreenContent: (ad, error) {
-              callBack();
+              callBack(ad: ad, error: error);
               AppLogger.error('$ad onAdFailedToShowFullScreenContent: $error');
               ad.dispose();
               _interstitialAd = null;
               load();
-
-              /// Try loading a new ad
             },
           )
           ..show();
-
-        /// Show the ad
       } else {
         counter++;
         callBack();
-
-        /// Not ready or below counter threshold
       }
     } else {
       callBack();
-
-      /// Ads disabled
     }
   }
 }

@@ -4,6 +4,10 @@ import 'package:flutter/foundation.dart';
 
 import '../../preload_ad.dart';
 
+//==============================================================================
+//              **  AD Test ID Class  **
+//==============================================================================
+
 /// A utility class to manage Google AdMob Test Ad Unit IDs for both Android and iOS.
 /// Easily extendable for production IDs later.
 class AdTestIds {
@@ -51,6 +55,10 @@ class AdTestIds {
   }
 }
 
+//==============================================================================
+//              **  Initial Config Data Function  **
+//==============================================================================
+
 PreloadDataModel preData = PreloadDataModel(
   appOpenId: AdTestIds.appOpen,
   bannerId: AdTestIds.banner,
@@ -68,6 +76,35 @@ PreloadDataModel preData = PreloadDataModel(
   showRewarded: true,
   showSplashAd: true,
 );
+
+//==============================================================================
+//              **  Set Config Data Function  **
+//==============================================================================
+
+setConfigData(PreloadDataModel? adConfig) {
+  return PreloadDataModel(
+    appOpenId: adConfig?.appOpenId ?? preData.appOpenId,
+    bannerId: adConfig?.bannerId ?? preData.bannerId,
+    nativeId: adConfig?.nativeId ?? preData.nativeId,
+    interstitialId: adConfig?.interstitialId ?? preData.interstitialId,
+    rewardedId: adConfig?.rewardedId ?? preData.rewardedId,
+    interstitialCounter:
+        adConfig?.interstitialCounter ?? preData.interstitialCounter,
+    nativeCounter: adConfig?.nativeCounter ?? preData.nativeCounter,
+    showAd: adConfig?.showAd ?? preData.showAd,
+    showBanner: adConfig?.showBanner ?? preData.showBanner,
+    showInterstitial: adConfig?.showInterstitial ?? preData.showInterstitial,
+    showNative: adConfig?.showNative ?? preData.showNative,
+    showOpenApp: adConfig?.showOpenApp ?? preData.showOpenApp,
+    showRewarded: adConfig?.showRewarded ?? preData.showRewarded,
+    rewardedCounter: adConfig?.rewardedCounter ?? preData.rewardedCounter,
+    showSplashAd: adConfig?.showSplashAd ?? preData.showSplashAd,
+  );
+}
+
+//==============================================================================
+//              **  Ad Stats Function  **
+//==============================================================================
 
 class AdStats {
   // Private constructor

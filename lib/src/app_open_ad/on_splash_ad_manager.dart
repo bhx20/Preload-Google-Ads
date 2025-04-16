@@ -27,11 +27,11 @@ class GoogleAppOpenOnSplash {
 
   /// Load an [AppOpenAd].
   Future<void> loadAndShowSplashAd({
-    required Function() onAdStartAdImpression,
+    required Function({AppOpenAd? ad, AdError? error}) callBack,
   }) async {
     _timer = Timer.periodic(const Duration(seconds: 15), (Timer t) async {
       _timer.cancel();
-      await onAdStartAdImpression();
+      await callBack();
     });
     try {
       AppOpenAd.load(
@@ -44,21 +44,25 @@ class GoogleAppOpenOnSplash {
             AppLogger.log('$ad loaded');
             _appOpenLoadTime = DateTime.now();
             _appOpenAd = ad;
-            showAdIfAvailable(onAdStartAdImpression);
+            showAdIfAvailable(
+              callBack: ({AppOpenAd? ad, AdError? error}) {
+                callBack(ad: ad, error: error);
+              },
+            );
           },
           onAdFailedToLoad: (error) async {
             AdStats.instance.openAppFailed.value++;
-            await onAdStartAdImpression();
+            await callBack();
             AppLogger.error('AppOpenAd failed to load: $error');
           },
         ),
       );
     } on PlatformException {
       _timer.cancel();
-      await onAdStartAdImpression();
+      await callBack();
     } catch (error) {
       _timer.cancel();
-      await onAdStartAdImpression();
+      await callBack();
     }
   }
 
@@ -71,10 +75,16 @@ class GoogleAppOpenOnSplash {
   ///
   /// If the previously cached ad has expired, this just loads and caches a
   /// new ad.
-  void showAdIfAvailable(Function() onAdStartAdImpression) {
+  void showAdIfAvailable({
+    required Function({AppOpenAd? ad, AdError? error}) callBack,
+  }) {
     if (!isAdAvailable) {
       AppLogger.log('Tried to show ad before available.');
-      loadAndShowSplashAd(onAdStartAdImpression: onAdStartAdImpression);
+      loadAndShowSplashAd(
+        callBack: ({AppOpenAd? ad, AdError? error}) {
+          callBack(ad: ad, error: error);
+        },
+      );
       return;
     }
     if (_isShowingAd) {
@@ -85,7 +95,11 @@ class GoogleAppOpenOnSplash {
       AppLogger.error('Maximum cache duration exceeded. Loading another ad.');
       _appOpenAd!.dispose();
       _appOpenAd = null;
-      loadAndShowSplashAd(onAdStartAdImpression: onAdStartAdImpression);
+      loadAndShowSplashAd(
+        callBack: ({AppOpenAd? ad, AdError? error}) {
+          callBack(ad: ad, error: error);
+        },
+      );
       return;
     }
     // Set the fullScreenContentCallback and show the ad.
@@ -95,6 +109,7 @@ class GoogleAppOpenOnSplash {
         AppLogger.log('$ad onAdShowedFullScreenContent');
       },
       onAdFailedToShowFullScreenContent: (ad, error) {
+        callBack(ad: ad, error: error);
         AppLogger.error('$ad onAdFailedToShowFullScreenContent: $error');
         _isShowingAd = false;
         ad.dispose();
@@ -103,12 +118,12 @@ class GoogleAppOpenOnSplash {
       onAdImpression: (value) {
         AdStats.instance.openAppImp.value++;
       },
-      onAdDismissedFullScreenContent: (ad) async {
+      onAdDismissedFullScreenContent: (ad) {
+        callBack(ad: ad);
         AppLogger.log('$ad onAdDismissedFullScreenContent');
         _isShowingAd = false;
         ad.dispose();
         _appOpenAd = null;
-        await onAdStartAdImpression();
       },
     );
     _appOpenAd!.show();
