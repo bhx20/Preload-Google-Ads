@@ -1,7 +1,10 @@
-import 'package:flutter/foundation.dart';
+import '../../preload_google_ads.dart';
 
+/// A simple logger utility for debugging purposes.
+/// Logs messages only when the app is running in debug mode.
 class AppLogger {
-  /// Logs only in debug mode
+  /// Logs a general message with a timestamp.
+  /// Only prints in debug mode.
   static void log(String message) {
     if (kDebugMode) {
       final time = DateTime.now().toIso8601String();
@@ -9,6 +12,8 @@ class AppLogger {
     }
   }
 
+  /// Logs a warning message with a timestamp and ⚠️ symbol.
+  /// Only prints in debug mode.
   static void warn(String message) {
     if (kDebugMode) {
       final time = DateTime.now().toIso8601String();
@@ -16,6 +21,8 @@ class AppLogger {
     }
   }
 
+  /// Logs an error message with a timestamp and ❌ symbol.
+  /// Only prints in debug mode.
   static void error(String message) {
     if (kDebugMode) {
       final time = DateTime.now().toIso8601String();
@@ -23,6 +30,8 @@ class AppLogger {
     }
   }
 
+  /// Logs a raw debug message without a timestamp.
+  /// Useful for quick inline checks. Only prints in debug mode.
   static void debug(String message) {
     if (kDebugMode) {
       print(message);

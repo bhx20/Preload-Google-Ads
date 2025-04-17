@@ -1,31 +1,38 @@
-import 'dart:async';
-
-import 'package:flutter/services.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
-
 import '../../preload_google_ads.dart';
 
+/// A utility class that manages loading and showing app open ads on splash screens.
 class GoogleAppOpenOnSplash {
+  /// Singleton instance of GoogleAppOpenOnSplash.
   static final GoogleAppOpenOnSplash instance =
       GoogleAppOpenOnSplash._internal();
 
+  /// Factory constructor to return the singleton instance.
   factory GoogleAppOpenOnSplash() {
     return instance;
   }
 
+  /// Private constructor to prevent external instantiation.
   GoogleAppOpenOnSplash._internal();
 
   /// Maximum duration allowed between loading and showing the ad.
   final Duration maxCacheDuration = const Duration(hours: 4);
 
-  /// Keep track of load time so we don't show an expired ad.
+  /// Track the load time to avoid showing an expired ad.
   DateTime? _appOpenLoadTime;
 
+  /// The loaded AppOpenAd instance.
   AppOpenAd? _appOpenAd;
+
+  /// Flag to track if an ad is being shown.
   bool _isShowingAd = false;
+
+  /// A timer used to delay the callback execution for splash ad loading.
   late Timer _timer;
 
-  /// Load an [AppOpenAd].
+  /// Load and show an AppOpenAd on the splash screen.
+  ///
+  /// If the ad is successfully loaded, it will be shown immediately.
+  /// If the ad fails to load, a fallback callback is invoked.
   Future<void> loadAndShowSplashAd({
     required Function({AppOpenAd? ad, AdError? error}) callBack,
   }) async {
@@ -34,10 +41,9 @@ class GoogleAppOpenOnSplash {
       await callBack();
     });
     try {
+      // Load the AppOpenAd using the provided ad unit ID and request.
       AppOpenAd.load(
-        adUnitId:
-            PreloadGoogleAds.instance.initialData.appOpenId ??
-            AdTestIds.appOpen,
+        adUnitId: unitIDAppOpen,
         request: const AdRequest(),
         adLoadCallback: AppOpenAdLoadCallback(
           onAdLoaded: (ad) {
@@ -68,15 +74,14 @@ class GoogleAppOpenOnSplash {
     }
   }
 
-  /// Whether an ad is available to be shown.
+  /// Checks whether an ad is available to be shown.
   bool get isAdAvailable {
     return _appOpenAd != null;
   }
 
-  /// Shows the ad, if one exists and is not already being shown.
+  /// Shows the app open ad if available and not already being shown.
   ///
-  /// If the previously cached ad has expired, this just loads and caches a
-  /// new ad.
+  /// If the previously cached ad has expired, a new ad will be loaded and shown.
   void showAdIfAvailable({
     required Function({AppOpenAd? ad, AdError? error}) callBack,
   }) {
@@ -104,7 +109,8 @@ class GoogleAppOpenOnSplash {
       );
       return;
     }
-    // Set the fullScreenContentCallback and show the ad.
+
+    // Set the full-screen content callback and show the ad.
     _appOpenAd!.fullScreenContentCallback = FullScreenContentCallback(
       onAdShowedFullScreenContent: (ad) {
         _isShowingAd = true;

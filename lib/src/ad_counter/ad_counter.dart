@@ -1,6 +1,3 @@
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-
 import '../../preload_google_ads.dart';
 
 class AdCounterWidget extends StatelessWidget {
@@ -97,7 +94,8 @@ class AdCounterWidget extends StatelessWidget {
         children: [
           /// Title cell with the given title (like "Inter")
           _buildTitleCell(context, title),
-          // Stat values for Load, Imp, and Failed
+
+          /// Stat values for Load, Imp, and Failed
           _buildStatValue(context, load),
           const Divider(height: 1),
           _buildStatValue(context, imp),

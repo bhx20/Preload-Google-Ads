@@ -29,22 +29,22 @@ public class PreloadGoogleAdsPlugin implements FlutterPlugin {
 
                     // Unregister old factories if they exist (safe re-registering)
                     GoogleMobileAdsPlugin.unregisterNativeAdFactory(
-                            flutterPluginBinding.getFlutterEngine(), "listTileMedium"
+                            flutterPluginBinding.getFlutterEngine(), "medium_native"
                     );
                     GoogleMobileAdsPlugin.unregisterNativeAdFactory(
-                            flutterPluginBinding.getFlutterEngine(), "listTile"
+                            flutterPluginBinding.getFlutterEngine(), "small_native"
                     );
 
                     // Register updated factories with new style
                     GoogleMobileAdsPlugin.registerNativeAdFactory(
                             flutterPluginBinding.getFlutterEngine(),
-                            "listTileMedium",
+                            "medium_native",
                             new android.src.main.java.com.plug.preload.NativeAdFactoryMedium(context, receivedStyleMap)
                     );
 
                     GoogleMobileAdsPlugin.registerNativeAdFactory(
                             flutterPluginBinding.getFlutterEngine(),
-                            "listTile",
+                            "small_native",
                             new android.src.main.java.com.plug.preload.NativeAdFactorySmall(context, receivedStyleMap)
                     );
 

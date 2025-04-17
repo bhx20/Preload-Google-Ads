@@ -6,11 +6,7 @@ void main() {
 
   /// Initialize the PreloadGoogleAds plugin
   PreloadGoogleAds.instance.initialize(
-    adConfig: AdConfigData(),
-    adStyle: AdStyle(
-      buttonBackground: Colors.black,
-      tagBackground: Colors.black,
-    ),
+    adConfig: AdConfigData(adStyle: AdStyle(titleColor: Colors.orange)),
   );
   runApp(const MyApp());
 }

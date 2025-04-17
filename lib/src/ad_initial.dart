@@ -1,135 +1,67 @@
-import 'package:google_mobile_ads/google_mobile_ads.dart';
-
 import '../preload_google_ads.dart';
 
+/// Singleton wrapper class to manage ad interactions via [AdManager].
 class PreloadGoogleAds {
-  /// Private constructor for singleton
+  /// Private constructor for singleton pattern
   PreloadGoogleAds._privateConstructor();
 
   /// Singleton instance
   static final PreloadGoogleAds instance =
       PreloadGoogleAds._privateConstructor();
 
-  /// Holds the configuration data loaded during initialization
-  late AdConfigData initialData;
+  /// Reference to the internal AdManager instance
+  final AdManager _adManager = AdManager.instance;
 
-  /// Callback to be executed after splash ad finishes loading/showing
-  Function(AppOpenAd? ad, AdError? error)? _splashAdCallback;
-
-  /// Initializes the ad system and loads ads based on the provided config
-  void initialize({AdConfigData? adConfig, AdStyle? adStyle}) {
-    MobileAds.instance.initialize();
-    initialData = setConfigData(adConfig);
-    setAdStyleData(adStyle);
-    if (initialData.showAd == true) {
-      _loadAndShowSplashAd();
-      _loadNativeAd();
-      _loadBannerAd();
-      _loadOpenAppAd();
-      _loadInterAd();
-      _loadRewardedAd();
-    }
+  /// Initializes the ad system with optional [adConfig].
+  /// Loads and prepares ads if configuration allows.
+  Future<void> initialize({AdConfigData? adConfig}) async {
+    AdManager.instance.initialize(adConfig);
   }
 
-  /// Loads and shows the splash screen ad if enabled in config
-  void _loadAndShowSplashAd() {
-    if (initialData.showSplashAd == true && initialData.showAd == true) {
-      PlugAd.getInstance().showOpenAppOnSplash(
-        callBack: ({AppOpenAd? ad, AdError? error}) {
-          _splashAdCallback?.call(ad, error);
-          _splashAdCallback = null;
-        },
-      );
-    } else {
-      _splashAdCallback?.call(null, null);
-      _splashAdCallback = null;
-    }
-  }
-
-  /// Loads both small and medium native ads
-  _loadNativeAd() {
-    if (initialData.showNative == true && initialData.showAd == true) {
-      PlugAd.getInstance().loadMediumNative();
-      PlugAd.getInstance().loadSmallNative();
-    }
-  }
-
-  /// Loads banner ad
-  _loadBannerAd() {
-    if (initialData.showBanner == true && initialData.showAd == true) {
-      PlugAd.getInstance().loadBannerAd();
-    }
-  }
-
-  /// Loads open app ad (used for background/resume events)
-  _loadOpenAppAd() {
-    if (initialData.showOpenApp == true && initialData.showAd == true) {
-      PlugAd.getInstance().loadAppOpenAd();
-    }
-  }
-
-  /// Loads interstitial ad
-  _loadInterAd() {
-    if (initialData.showInterstitial == true && initialData.showAd == true) {
-      PlugAd.getInstance().loadInterAd();
-    }
-  }
-
-  /// Loads rewarded ad
-  _loadRewardedAd() {
-    if (initialData.showRewarded == true && initialData.showAd == true) {
-      PlugAd.getInstance().loadRewardedAd();
-    }
-  }
-
-  /// Sets the callback for splash ad. Should be set before loading splash.
+  /// Sets the splash ad callback.
+  /// This should be set before calling initialize if you want a callback
+  /// when splash ad loads or fails.
   void setSplashAdCallback(Function(AppOpenAd? ad, AdError? error) callback) {
-    _splashAdCallback = callback;
+    _adManager.setSplashAdCallback(callback);
   }
 
-  /// Displays native ad (choose small or medium via isSmall)
+  /// Displays a native ad.
+  /// Pass [isSmall] as true for small ad, false for medium. Defaults to medium.
   showNativeAd({bool? isSmall}) {
-    return PlugAd.getInstance().showNative(isSmall: isSmall ?? false);
+    return _adManager.showNativeAd(isSmall: isSmall);
   }
 
-  /// Displays open app ad (not splash)
+  /// Displays the open app ad (not the splash ad).
   showOpenApp() {
-    return PlugAd.getInstance().showOpenAppAd();
+    return _adManager.showOpenApp();
   }
 
-  /// Displays banner ad
+  /// Displays a banner ad if available.
   showBannerAd() {
-    return PlugAd.getInstance().showBannerAd();
+    return _adManager.showBannerAd();
   }
 
-  /// Shows debug ad counter (for dev/testing stats)
+  /// Shows the ad counter, typically for debugging or development.
+  /// Defaults to showing the counter.
   showAdCounter({bool? showCounter}) {
-    return PlugAd.getInstance().showAdCounter(showCounter ?? true);
+    return _adManager.showAdCounter(showCounter: showCounter);
   }
 
-  /// Shows interstitial ad and returns ad or error via callback
+  /// Displays an interstitial ad.
+  /// Returns the [InterstitialAd] or [AdError] through the [callBack].
   showAdInterstitialAd({
     required Function(InterstitialAd? ad, AdError? error) callBack,
   }) {
-    return PlugAd.getInstance().showInterAd(
-      callBack: ({InterstitialAd? ad, AdError? error}) {
-        callBack(ad, error);
-      },
-    );
+    return _adManager.showAdInterstitialAd(callBack: callBack);
   }
 
-  /// Shows rewarded ad, returns ad or error, and handles reward grant
+  /// Displays a rewarded ad.
+  /// Returns the [RewardedAd] or [AdError] via [callBack],
+  /// and handles the reward logic via [onReward].
   showAdRewardedAd({
     required void Function(RewardedAd? ad, AdError? error) callBack,
     required void Function(AdWithoutView ad, RewardItem reward) onReward,
   }) {
-    return PlugAd.getInstance().showRewardedAd(
-      callBack: ({RewardedAd? ad, AdError? error}) {
-        callBack(ad, error);
-      },
-      onReward: (AdWithoutView ad, RewardItem reward) {
-        onReward(ad, reward);
-      },
-    );
+    return _adManager.showAdRewardedAd(callBack: callBack, onReward: onReward);
   }
 }
