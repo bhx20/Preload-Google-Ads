@@ -12,10 +12,11 @@ class AdConfigData {
   final AdFlag? adFlag;
 
   /// Styling preferences for ads.
-  final AdStyle? adStyle;
+  final NativeAdStyle? adStyle;
 
+  final NativeAdLayout nativeAdLayout;
   /// Constructor for [AdConfigData].
-  AdConfigData({this.adIDs, this.adCounter, this.adFlag, this.adStyle});
+  AdConfigData({this.adIDs, this.adCounter, this.adFlag, this.adStyle,this.nativeAdLayout=NativeAdLayout.nativeLayout});
 }
 
 /// Contains Ad Unit IDs for different ad types.
@@ -99,8 +100,13 @@ class AdFlag {
   });
 }
 
+
+
+
+
+
 /// Styling configuration for ad components.
-class AdStyle {
+class NativeAdStyle {
   /// Color of the ad title text.
   Color titleColor;
 
@@ -128,8 +134,8 @@ class AdStyle {
   /// Optional gradient colors for ad buttons.
   List<Color> buttonGradients;
 
-  /// Constructor for [AdStyle] with default styling values.
-  AdStyle({
+  /// Constructor for [NativeAdStyle] with default styling values.
+  NativeAdStyle({
     this.titleColor = const Color(0xFF000000),
     this.bodyColor = const Color(0xFF808080),
     this.tagBackground = const Color(0xFFF19938),

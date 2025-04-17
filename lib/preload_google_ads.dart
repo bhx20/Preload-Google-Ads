@@ -23,4 +23,5 @@ export 'src/banner_ad/show_banner_ad.dart';
 export 'src/inter_ad/inter_ad.dart';
 export 'src/native_ad/load_native.dart';
 export 'src/native_ad/show_native.dart';
+export 'src/native_ad/native_ad_style.dart';
 export 'src/rewarded_ad/rewarded_ad.dart';

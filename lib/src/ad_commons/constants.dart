@@ -54,3 +54,9 @@ class AdTestIds {
     throw UnsupportedError('Unsupported platform');
   }
 }
+
+
+enum NativeAdLayout {
+  flutterLayout,
+  nativeLayout,
+}

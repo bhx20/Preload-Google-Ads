@@ -80,11 +80,11 @@ setConfigData(AdConfigData? adConfig) async {
 
 /// Sets the ad style data by invoking a method on the native platform.
 /// This method adjusts the appearance of various ad components like buttons and text.
-Future<void> setAdStyleData(AdStyle? adStyle) async {
+Future<void> setAdStyleData(NativeAdStyle? adStyle) async {
   final channel = MethodChannel(nativeChannel);
 
   /// Fallback to default ad style if none is provided
-  adStyle ??= AdStyle();
+  adStyle ??= NativeAdStyle();
 
   /// Passes ad style data to the native platform.
   await channel.invokeMethod(nativeMethod, {
