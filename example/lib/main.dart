@@ -123,11 +123,20 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   late Widget ad;
 
+
+  List<AdTypList>  adTypes = [];
+
   @override
   void initState() {
     ad = SizedBox();
-
-    /// Placeholder for dynamic ad widget
+    adTypes = [
+      AdTypList(onPressed:showOpenAppAd,title:"Show Open App AD"  ),
+      AdTypList(onPressed:showInterAd,title:"Show Interstitial AD"  ),
+      AdTypList(onPressed:showRewardedAd,title:"Show Rewarded AD"  ),
+      AdTypList(onPressed:showMediumNativeAd,title:"Show Medium Native AD" ),
+      AdTypList(onPressed:showSmallNativeAd,title:"Show Small Native AD"  ),
+      AdTypList(onPressed:showBannerAd,title: "Show Banner AD"  ),
+    ];
     super.initState();
   }
 
@@ -153,40 +162,6 @@ class _HomeViewState extends State<HomeView> {
     });
   }
 
-  /// Reusable button widget
-  Widget _button({
-    required String text,
-    required VoidCallback onPressed,
-    double width = 180,
-    Color backgroundColor = Colors.blue,
-    Color textColor = Colors.white,
-    double borderRadius = 8.0,
-    EdgeInsetsGeometry padding = const EdgeInsets.symmetric(vertical: 12.0),
-    EdgeInsetsGeometry margin = const EdgeInsets.all(8.0),
-  }) {
-    return Container(
-      width: width,
-      margin: margin,
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: backgroundColor,
-          padding: padding,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(borderRadius),
-          ),
-        ),
-        onPressed: onPressed,
-        child: Text(
-          text,
-          style: TextStyle(
-            color: textColor,
-            fontWeight: FontWeight.bold,
-            fontSize: 12,
-          ),
-        ),
-      ),
-    );
-  }
 
   /// Show Open App Ad
   showOpenAppAd() => PreloadGoogleAds.instance.showOpenApp();
@@ -267,22 +242,43 @@ class _HomeViewState extends State<HomeView> {
       ),
       body: Column(
         children: [
-          SizedBox(height: 20),
-          Column(
-            children: [
-              _button(onPressed: showOpenAppAd, text: "Show Open App AD"),
-              _button(onPressed: showInterAd, text: "Show Interstitial AD"),
-              _button(onPressed: showRewardedAd, text: "Show Rewarded AD"),
-              _button(
-                onPressed: showMediumNativeAd,
-                text: "Show Medium Native AD",
+          Container(
+            
+            decoration: BoxDecoration(
+              color: Colors.blue,
+            borderRadius: BorderRadius.vertical(bottom: Radius.circular(20))
+            ),
+            child: GridView.builder(
+              padding: EdgeInsets.symmetric(horizontal: 10).copyWith(bottom: 20,top: 10),
+              itemCount: adTypes.length,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 5,
+                mainAxisSpacing: 5,
+                childAspectRatio: 5,
               ),
-              _button(
-                onPressed: showSmallNativeAd,
-                text: "Show Small Native AD",
-              ),
-              _button(onPressed: showBannerAd, text: "Show Banner AD"),
-            ],
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemBuilder: (context, index) {
+                return ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                  ),
+                  onPressed: adTypes[index].onPressed,
+                  child: Text(
+                    adTypes[index].title,
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 11,
+                    ),
+                  ),
+                );
+              },
+            ),
           ),
           Expanded(
             child: Column(
@@ -298,13 +294,5 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
-  //
-  // List<AdTypList>  adTypes = [
-  //   AdTypList(onPressed:showOpenAppAd,title:"Show Open App AD"  ),
-  //   AdTypList(onPressed:showInterAd,title:"Show Interstitial AD"  ),
-  //   AdTypList(onPressed:showRewardedAd,title:"Show Rewarded AD"  ),
-  //   AdTypList(onPressed:showMediumNativeAd,title:"Show Medium Native AD" ),
-  //   AdTypList(onPressed:showSmallNativeAd,title:"Show Small Native AD"  ),
-  //   AdTypList(onPressed:showBannerAd,title: "Show Banner AD"  ),
-  // ];
+
 }
