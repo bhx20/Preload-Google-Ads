@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:preload_google_ads/preload_google_ads.dart';
 
 void main() {
@@ -27,17 +26,6 @@ class _MyAppState extends State<MyApp> {
       darkTheme: ThemeData(brightness: Brightness.dark),
       debugShowCheckedModeBanner: false,
       home: SplashView(),
-      builder: (context, child) {
-        /// Wrap the app with an ad counter overlay
-        return Scaffold(
-          body: Column(
-            children: [
-              Expanded(child: child ?? SizedBox()),
-              PreloadGoogleAds.instance.showAdCounter(showCounter: true),
-            ],
-          ),
-        );
-      },
     );
   }
 }
@@ -76,10 +64,38 @@ class _SplashViewState extends State<SplashView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.blue,
       body: Column(
         children: [
-          Expanded(child: Center(child: Text("Splash"))),
-          Center(child: Padding(padding: const EdgeInsets.all(8.0))),
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Image.asset("assets/pub-dev-logo.png", height: 35),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20),
+                  child: Text(
+                    "preload_google_ads: ^0.0.3",
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: LinearProgressIndicator(color: Colors.blue[300]),
+            ),
+          ),
         ],
       ),
     );
@@ -89,6 +105,13 @@ class _SplashViewState extends State<SplashView> {
 ///==============================================================================
 ///                            **  Home View  **
 ///==============================================================================
+
+class AdTypList {
+  final void Function() onPressed;
+  final String title;
+
+  AdTypList({required this.onPressed, required this.title});
+}
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -208,22 +231,44 @@ class _HomeViewState extends State<HomeView> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
-        leading: SizedBox(),
-        title: Text(
-          "PreLoad Google Ads".toUpperCase(),
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
+        leading: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: Image.asset("assets/pub-dev-logo.png"),
         ),
-        centerTitle: true,
+        leadingWidth: 120,
+        actions: [
+          Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  "preload_google_ads 0.0.3",
+                  style: TextStyle(fontSize: 14, color: Colors.white),
+                ),
+              ),
+              IconButton(
+                onPressed: () {
+                  Clipboard.setData(
+                    ClipboardData(text: "preload_google_ads: ^0.0.3"),
+                  ).then((_) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: const Text('Pub copied to clipboard'),
+                        duration: const Duration(seconds: 2),
+                      ),
+                    );
+                  });
+                },
+                icon: Icon(Icons.copy, color: Colors.white, size: 15),
+              ),
+            ],
+          ),
+        ],
       ),
       body: Column(
         children: [
           SizedBox(height: 20),
-          Wrap(
-            alignment: WrapAlignment.center,
+          Column(
             children: [
               _button(onPressed: showOpenAppAd, text: "Show Open App AD"),
               _button(onPressed: showInterAd, text: "Show Interstitial AD"),
@@ -242,11 +287,24 @@ class _HomeViewState extends State<HomeView> {
           Expanded(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
-              children: [ad],
+              children: [
+                ad,
+                PreloadGoogleAds.instance.showAdCounter(showCounter: true),
+              ],
             ),
           ),
         ],
       ),
     );
   }
+
+  //
+  // List<AdTypList>  adTypes = [
+  //   AdTypList(onPressed:showOpenAppAd,title:"Show Open App AD"  ),
+  //   AdTypList(onPressed:showInterAd,title:"Show Interstitial AD"  ),
+  //   AdTypList(onPressed:showRewardedAd,title:"Show Rewarded AD"  ),
+  //   AdTypList(onPressed:showMediumNativeAd,title:"Show Medium Native AD" ),
+  //   AdTypList(onPressed:showSmallNativeAd,title:"Show Small Native AD"  ),
+  //   AdTypList(onPressed:showBannerAd,title: "Show Banner AD"  ),
+  // ];
 }
