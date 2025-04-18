@@ -5,7 +5,13 @@ void main() {
 
   /// Initialize the PreloadGoogleAds plugin
   PreloadGoogleAds.instance.initialize(
-    adConfig: AdConfigData(adStyle: NativeAdStyle(titleColor: Colors.orange)),
+    adConfig: AdConfigData(
+      nativeADLayout: NativeADLayout(
+        adLayout: AdLayout.nativeLayout,
+        customNativeADStyle: CustomNativeADStyle(),
+        flutterNativeADStyle: FlutterNativeADStyle(),
+      ),
+    ),
   );
   runApp(const MyApp());
 }
@@ -123,35 +129,26 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   late Widget ad;
 
-
-  List<AdTypList>  adTypes = [];
+  List<AdTypList> adTypes = [];
 
   @override
   void initState() {
     ad = SizedBox();
     adTypes = [
-      AdTypList(onPressed:showOpenAppAd,title:"Show Open App AD"  ),
-      AdTypList(onPressed:showInterAd,title:"Show Interstitial AD"  ),
-      AdTypList(onPressed:showRewardedAd,title:"Show Rewarded AD"  ),
-      AdTypList(onPressed:showMediumNativeAd,title:"Show Medium Native AD" ),
-      AdTypList(onPressed:showSmallNativeAd,title:"Show Small Native AD"  ),
-      AdTypList(onPressed:showBannerAd,title: "Show Banner AD"  ),
+      AdTypList(onPressed: showOpenAppAd, title: "Show Open App AD"),
+      AdTypList(onPressed: showInterAd, title: "Show Interstitial AD"),
+      AdTypList(onPressed: showRewardedAd, title: "Show Rewarded AD"),
+      AdTypList(onPressed: showMediumNativeAd, title: "Show Medium Native AD"),
+      AdTypList(onPressed: showSmallNativeAd, title: "Show Small Native AD"),
+      AdTypList(onPressed: showBannerAd, title: "Show Banner AD"),
     ];
     super.initState();
   }
 
   /// Show native ad (small or medium based on flag)
-  showNative(bool isSmall) {
+  showNative({NativeADType nativeADType = NativeADType.medium}) {
     setState(() {
-      ad = Container(
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey..withValues(alpha: 0.5)),
-          borderRadius: BorderRadius.circular(5),
-        ),
-        padding: EdgeInsets.all(5),
-        margin: EdgeInsets.all(5),
-        child: PreloadGoogleAds.instance.showNativeAd(isSmall: isSmall),
-      );
+      ad = PreloadGoogleAds.instance.showNativeAd(nativeADType: nativeADType);
     });
   }
 
@@ -161,7 +158,6 @@ class _HomeViewState extends State<HomeView> {
       ad = PreloadGoogleAds.instance.showBannerAd();
     });
   }
-
 
   /// Show Open App Ad
   showOpenAppAd() => PreloadGoogleAds.instance.showOpenApp();
@@ -193,10 +189,10 @@ class _HomeViewState extends State<HomeView> {
   );
 
   /// Show Medium Native Ad
-  showMediumNativeAd() => showNative(false);
+  showMediumNativeAd() => showNative();
 
   /// Show Small Native Ad
-  showSmallNativeAd() => showNative(true);
+  showSmallNativeAd() => showNative(nativeADType: NativeADType.small);
 
   /// Show Banner Ad
   showBannerAd() => showBanner();
@@ -243,13 +239,14 @@ class _HomeViewState extends State<HomeView> {
       body: Column(
         children: [
           Container(
-            
             decoration: BoxDecoration(
               color: Colors.blue,
-            borderRadius: BorderRadius.vertical(bottom: Radius.circular(20))
+              borderRadius: BorderRadius.vertical(bottom: Radius.circular(20)),
             ),
             child: GridView.builder(
-              padding: EdgeInsets.symmetric(horizontal: 10).copyWith(bottom: 20,top: 10),
+              padding: EdgeInsets.symmetric(
+                horizontal: 10,
+              ).copyWith(bottom: 20, top: 10),
               itemCount: adTypes.length,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
@@ -293,6 +290,4 @@ class _HomeViewState extends State<HomeView> {
       ),
     );
   }
-
-
 }

@@ -27,8 +27,8 @@ class PreloadGoogleAds {
 
   /// Displays a native ad.
   /// Pass [isSmall] as true for small ad, false for medium. Defaults to medium.
-  showNativeAd({bool? isSmall}) {
-    return _adManager.showNativeAd(isSmall: isSmall);
+  showNativeAd({NativeADType nativeADType = NativeADType.medium}) {
+    return _adManager.showNativeAd(nativeADType: nativeADType);
   }
 
   /// Displays the open app ad (not the splash ad).

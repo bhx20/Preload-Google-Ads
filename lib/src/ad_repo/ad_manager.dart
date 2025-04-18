@@ -105,8 +105,8 @@ class AdManager {
   /// Below methods are used to show various types of ads
 
   /// Shows a native ad. Optionally specify if it is a small or medium-sized ad.
-  showNativeAd({bool? isSmall}) {
-    return PlugAd.getInstance().showNative(isSmall: isSmall ?? false);
+  showNativeAd({NativeADType nativeADType = NativeADType.medium}) {
+    return PlugAd.getInstance().showNative(nativeADType: nativeADType);
   }
 
   /// Shows the open app ad.

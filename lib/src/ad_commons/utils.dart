@@ -27,6 +27,19 @@ AdConfigData preData = AdConfigData(
     showRewarded: true,
     showSplashAd: true,
   ),
+
+  nativeADLayout: NativeADLayout(
+    padding: EdgeInsets.all(5),
+    margin: EdgeInsets.all(5),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      border: Border.all(color: Colors.grey.withValues(alpha: 0.5)),
+      borderRadius: BorderRadius.circular(5),
+    ),
+    adLayout: AdLayout.nativeLayout,
+    customNativeADStyle: CustomNativeADStyle(),
+    flutterNativeADStyle: FlutterNativeADStyle(),
+  ),
 );
 
 ///==============================================================================
@@ -36,7 +49,7 @@ AdConfigData preData = AdConfigData(
 /// Sets the configuration data for ads, allowing custom values for each ad type.
 /// Uses default values from [preData] if no configuration is provided.
 setConfigData(AdConfigData? adConfig) async {
-  await setAdStyleData(adConfig?.adStyle);
+  await setAdStyleData(adConfig?.nativeADLayout?.customNativeADStyle);
   return AdConfigData(
     adIDs: AdIDS(
       appOpenId: adConfig?.adIDs?.appOpenId ?? preData.adIDs?.appOpenId,
@@ -71,6 +84,25 @@ setConfigData(AdConfigData? adConfig) async {
       showSplashAd:
           adConfig?.adFlag?.showSplashAd ?? preData.adFlag?.showSplashAd,
     ),
+
+    nativeADLayout: NativeADLayout(
+      decoration:
+          adConfig?.nativeADLayout?.decoration ??
+          preData.nativeADLayout?.decoration,
+      margin:
+          adConfig?.nativeADLayout?.padding ?? preData.nativeADLayout?.padding,
+      padding:
+          adConfig?.nativeADLayout?.margin ?? preData.nativeADLayout?.margin,
+      adLayout:
+          adConfig?.nativeADLayout?.adLayout ??
+          preData.nativeADLayout?.adLayout,
+      customNativeADStyle:
+          adConfig?.nativeADLayout?.customNativeADStyle ??
+          preData.nativeADLayout?.customNativeADStyle,
+      flutterNativeADStyle:
+          adConfig?.nativeADLayout?.flutterNativeADStyle ??
+          preData.nativeADLayout?.flutterNativeADStyle,
+    ),
   );
 }
 
@@ -80,11 +112,11 @@ setConfigData(AdConfigData? adConfig) async {
 
 /// Sets the ad style data by invoking a method on the native platform.
 /// This method adjusts the appearance of various ad components like buttons and text.
-Future<void> setAdStyleData(NativeAdStyle? adStyle) async {
+Future<void> setAdStyleData(CustomNativeADStyle? adStyle) async {
   final channel = MethodChannel(nativeChannel);
 
   /// Fallback to default ad style if none is provided
-  adStyle ??= NativeAdStyle();
+  adStyle ??= CustomNativeADStyle();
 
   /// Passes ad style data to the native platform.
   await channel.invokeMethod(nativeMethod, {
@@ -227,3 +259,7 @@ int get getNativeCounter => config.adCounter?.nativeCounter ?? 0;
 
 /// Gets the rewarded ad counter.
 int get getRewardedCounter => config.adCounter?.rewardedCounter ?? 0;
+
+/// Gets the Layout Type
+bool get isFlutterLayout =>
+    config.nativeADLayout?.adLayout == AdLayout.flutterLayout;

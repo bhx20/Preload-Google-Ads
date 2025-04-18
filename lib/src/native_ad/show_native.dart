@@ -6,13 +6,15 @@ var nativeCounter = 0;
 /// A widget that determines which type of native ad (small or medium) to show
 /// based on the `isSmall` flag and the counter logic.
 class ShowNative extends StatelessWidget {
-  final bool isSmall;
+  final NativeADType nativeADType;
 
-  const ShowNative({super.key, required this.isSmall});
+  const ShowNative({super.key, required this.nativeADType});
 
   @override
   Widget build(BuildContext context) {
     /// If the counter exceeds the native ad display limit, reset it and show the ad if allowed.
+
+    bool isSmall = nativeADType == NativeADType.small;
     if (nativeCounter >= getNativeCounter) {
       nativeCounter = 0;
       if (shouldShowNativeAd) {
@@ -67,10 +69,16 @@ class _MediumNativeState extends State<MediumNative> {
   /// Returns a widget to display the ad.
   Widget adView() {
     try {
-      // Show the native ad with a specific height.
-      return SizedBox(height: 255, child: Center(child: AdWidget(ad: native)));
+      /// Show the native ad with a specific height.
+
+      return Container(
+        decoration: NativeADStyle.instance.decoration,
+        constraints: NativeADStyle.instance.mediumConstraintsSize,
+        margin: NativeADStyle.instance.margin,
+        padding: NativeADStyle.instance.padding,
+        child: Center(child: AdWidget(ad: native)),
+      );
     } catch (e) {
-      // If there is an error, return an empty space.
       return const SizedBox();
     }
   }
@@ -114,7 +122,13 @@ class _NativeSmallState extends State<NativeSmall> {
   Widget adView() {
     try {
       // Show the small native ad with a specific height.
-      return SizedBox(height: 125, child: AdWidget(ad: native));
+      return Container(
+        decoration: NativeADStyle.instance.decoration,
+        constraints: NativeADStyle.instance.smallConstraintsSize,
+        margin: NativeADStyle.instance.margin,
+        padding: NativeADStyle.instance.padding,
+        child: Center(child: AdWidget(ad: native)),
+      );
     } catch (e) {
       // If there is an error, return an empty space.
       return const SizedBox();

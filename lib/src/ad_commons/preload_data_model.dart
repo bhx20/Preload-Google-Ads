@@ -12,11 +12,10 @@ class AdConfigData {
   final AdFlag? adFlag;
 
   /// Styling preferences for ads.
-  final NativeAdStyle? adStyle;
+  final NativeADLayout? nativeADLayout;
 
-  final NativeAdLayout nativeAdLayout;
   /// Constructor for [AdConfigData].
-  AdConfigData({this.adIDs, this.adCounter, this.adFlag, this.adStyle,this.nativeAdLayout=NativeAdLayout.nativeLayout});
+  AdConfigData({this.adIDs, this.adCounter, this.adFlag, this.nativeADLayout});
 }
 
 /// Contains Ad Unit IDs for different ad types.
@@ -100,13 +99,37 @@ class AdFlag {
   });
 }
 
+class NativeADLayout {
+  final AdLayout adLayout;
+  final CustomNativeADStyle? customNativeADStyle;
+  final FlutterNativeADStyle? flutterNativeADStyle;
+  BoxDecoration decoration;
 
+  EdgeInsets padding;
 
+  EdgeInsets margin;
 
-
+  NativeADLayout({
+    AdLayout? adLayout,
+    this.customNativeADStyle,
+    this.flutterNativeADStyle,
+    EdgeInsets? padding,
+    EdgeInsets? margin,
+    BoxDecoration? decoration,
+  }) : adLayout = adLayout ?? AdLayout.nativeLayout,
+       decoration =
+           decoration ??
+           BoxDecoration(
+             color: Colors.white,
+             border: Border.all(color: Colors.grey.withValues(alpha: 0.5)),
+             borderRadius: BorderRadius.circular(5),
+           ),
+       padding = padding ?? EdgeInsets.all(5),
+       margin = margin ?? EdgeInsets.all(5);
+}
 
 /// Styling configuration for ad components.
-class NativeAdStyle {
+class CustomNativeADStyle {
   /// Color of the ad title text.
   Color titleColor;
 
@@ -134,8 +157,12 @@ class NativeAdStyle {
   /// Optional gradient colors for ad buttons.
   List<Color> buttonGradients;
 
-  /// Constructor for [NativeAdStyle] with default styling values.
-  NativeAdStyle({
+  BoxConstraints mediumBoxConstrain;
+
+  BoxConstraints smallBoxConstrain;
+
+  /// Constructor for [CustomNativeADStyle] with default styling values.
+  CustomNativeADStyle({
     this.titleColor = const Color(0xFF000000),
     this.bodyColor = const Color(0xFF808080),
     this.tagBackground = const Color(0xFFF19938),
@@ -145,5 +172,113 @@ class NativeAdStyle {
     this.buttonRadius = 5,
     this.tagRadius = 5,
     List<Color>? buttonGradients,
-  }) : buttonGradients = buttonGradients ?? [];
+
+    BoxConstraints? mediumBoxConstrain,
+    BoxConstraints? smallBoxConstrain,
+  }) : buttonGradients = buttonGradients ?? [],
+
+       mediumBoxConstrain = BoxConstraints(
+         minWidth: 320,
+         minHeight: 210,
+         maxWidth: 400,
+         maxHeight: 265,
+       ),
+       smallBoxConstrain = BoxConstraints(
+         minWidth: 320,
+         minHeight: 57,
+         maxWidth: 400,
+         maxHeight: 135,
+       );
+}
+
+/// Styling configuration for Flutter native ad templates.
+class FlutterNativeADStyle {
+  /// Text style for the call-to-action button (e.g., "Install", "Learn More").
+  ///
+  /// Uses white text on a blue background by default, with bold font styling.
+  NativeTemplateTextStyle? callToActionTextStyle;
+
+  /// Text style for the primary title or headline of the ad.
+  ///
+  /// Defaults to black color, normal font, size 16.
+  NativeTemplateTextStyle? primaryTextStyle;
+
+  /// Text style for the secondary text (typically body or rating info).
+  ///
+  /// Defaults to grey color, normal font, size 14.
+  NativeTemplateTextStyle? secondaryTextStyle;
+
+  /// Text style for tertiary text (e.g., store name or additional info).
+  ///
+  /// Defaults to grey color, italic font, size 12.
+  NativeTemplateTextStyle? tertiaryTextStyle;
+
+  /// Background color for the entire ad template.
+  ///
+  /// Defaults to white.
+  Color? mainBackgroundColor;
+
+  /// Corner radius for call-to-action and icon elements (iOS only).
+  ///
+  /// Defaults to 5.0, matching `CustomNativeADStyle.buttonRadius`.
+  double? cornerRadius;
+
+  BoxConstraints mediumBoxConstrain;
+
+  BoxConstraints smallBoxConstrain;
+
+  /// Constructor that applies default styling similar to [CustomNativeADStyle].
+  FlutterNativeADStyle({
+    NativeTemplateTextStyle? callToActionTextStyle,
+    NativeTemplateTextStyle? primaryTextStyle,
+    NativeTemplateTextStyle? secondaryTextStyle,
+    NativeTemplateTextStyle? tertiaryTextStyle,
+    Color? mainBackgroundColor,
+    double? cornerRadius,
+    BoxConstraints? mediumBoxConstrain,
+
+    BoxConstraints? smallBoxConstrain,
+  }) : callToActionTextStyle =
+           callToActionTextStyle ??
+           NativeTemplateTextStyle(
+             textColor: Colors.white,
+             backgroundColor: Colors.blue,
+             style: NativeTemplateFontStyle.bold,
+             size: 14.0,
+           ),
+       primaryTextStyle =
+           primaryTextStyle ??
+           NativeTemplateTextStyle(
+             textColor: Colors.black,
+             style: NativeTemplateFontStyle.normal,
+             size: 16.0,
+           ),
+       secondaryTextStyle =
+           secondaryTextStyle ??
+           NativeTemplateTextStyle(
+             textColor: Colors.grey,
+             style: NativeTemplateFontStyle.normal,
+             size: 14.0,
+           ),
+       tertiaryTextStyle =
+           tertiaryTextStyle ??
+           NativeTemplateTextStyle(
+             textColor: Colors.grey,
+             style: NativeTemplateFontStyle.normal,
+             size: 12.0,
+           ),
+       mainBackgroundColor = mainBackgroundColor ?? Colors.white,
+       cornerRadius = cornerRadius ?? 5.0,
+       mediumBoxConstrain = BoxConstraints(
+         minWidth: 320,
+         minHeight: 280,
+         maxWidth: 400,
+         maxHeight: 365,
+       ),
+       smallBoxConstrain = BoxConstraints(
+         minWidth: 320,
+         minHeight: 88,
+         maxWidth: 400,
+         maxHeight: 120,
+       );
 }

@@ -1,7 +1,7 @@
 import '../../preload_google_ads.dart';
 
 ///==============================================================================
-///   ** Large Native ***
+///   ** Medium Native ***
 ///==============================================================================
 
 /// A singleton class that loads large native ads.
@@ -35,8 +35,9 @@ class LoadMediumNative {
         loading = true;
         // Create a new native ad.
         nativeAd = NativeAd(
-          factoryId: factoryIdMediumNative,
+          factoryId: NativeADStyle.instance.mediumNativeFactoryId,
           adUnitId: unitIDNative,
+          nativeTemplateStyle: NativeADStyle.instance.nativeMediumTemplateStyle,
           listener: NativeAdListener(
             /// Called when the ad is loaded.
             onAdLoaded: (ad) async {
@@ -117,8 +118,9 @@ class LoadSmallNative {
       try {
         // Create a new native ad.
         nativeAd = NativeAd(
-          factoryId: factoryIdSmallNative,
+          factoryId: NativeADStyle.instance.smallNativeFactoryId,
           adUnitId: unitIDNative,
+          nativeTemplateStyle: NativeADStyle.instance.nativeSmallTemplateStyle,
           listener: NativeAdListener(
             /// Called when the ad is loaded.
             onAdLoaded: (ad) async {

@@ -55,8 +55,6 @@ class AdTestIds {
   }
 }
 
+enum AdLayout { flutterLayout, nativeLayout }
 
-enum NativeAdLayout {
-  flutterLayout,
-  nativeLayout,
-}
+enum NativeADType { medium, small }

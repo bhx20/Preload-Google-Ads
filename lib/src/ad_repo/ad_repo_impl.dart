@@ -47,8 +47,8 @@ class AdRepoImpl extends AdRepo {
 
   /// Displays the native ad, where [isSmall] determines if it is small or large.
   @override
-  Widget showNative({bool isSmall = false}) {
-    return ShowNative(isSmall: isSmall);
+  Widget showNative({NativeADType nativeADType = NativeADType.medium}) {
+    return ShowNative(nativeADType: nativeADType);
   }
 
   /// Displays the app open ad on splash screen using GoogleAppOpenOnSplash instance

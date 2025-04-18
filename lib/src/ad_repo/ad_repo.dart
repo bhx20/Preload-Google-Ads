@@ -18,7 +18,7 @@ abstract class AdRepo {
 
   /// Displays a native ad.
   /// You can specify whether it's a small ad by passing [isSmall] as true or false.
-  Widget showNative({bool isSmall = false});
+  Widget showNative({NativeADType nativeADType = NativeADType.medium});
 
   /// Loads the banner ad.
   Future<void> loadBannerAd();
