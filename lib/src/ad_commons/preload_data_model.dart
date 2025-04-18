@@ -116,16 +116,15 @@ class NativeADLayout {
     EdgeInsets? padding,
     EdgeInsets? margin,
     BoxDecoration? decoration,
-  }) : adLayout = adLayout ?? AdLayout.nativeLayout,
-       decoration =
-           decoration ??
-           BoxDecoration(
-             color: Colors.white,
-             border: Border.all(color: Colors.grey.withValues(alpha: 0.5)),
-             borderRadius: BorderRadius.circular(5),
-           ),
-       padding = padding ?? EdgeInsets.all(5),
-       margin = margin ?? EdgeInsets.all(5);
+  })  : adLayout = adLayout ?? AdLayout.nativeLayout,
+        decoration = decoration ??
+            BoxDecoration(
+              color: Colors.white,
+              border: Border.all(color: Colors.grey.withValues(alpha: 0.5)),
+              borderRadius: BorderRadius.circular(5),
+            ),
+        padding = padding ?? EdgeInsets.all(5),
+        margin = margin ?? EdgeInsets.all(5);
 }
 
 /// Styling configuration for ad components.
@@ -172,23 +171,21 @@ class CustomNativeADStyle {
     this.buttonRadius = 5,
     this.tagRadius = 5,
     List<Color>? buttonGradients,
-
     BoxConstraints? mediumBoxConstrain,
     BoxConstraints? smallBoxConstrain,
-  }) : buttonGradients = buttonGradients ?? [],
-
-       mediumBoxConstrain = BoxConstraints(
-         minWidth: 320,
-         minHeight: 210,
-         maxWidth: 400,
-         maxHeight: 265,
-       ),
-       smallBoxConstrain = BoxConstraints(
-         minWidth: 320,
-         minHeight: 57,
-         maxWidth: 400,
-         maxHeight: 135,
-       );
+  })  : buttonGradients = buttonGradients ?? [],
+        mediumBoxConstrain = BoxConstraints(
+          minWidth: 320,
+          minHeight: 210,
+          maxWidth: 400,
+          maxHeight: 265,
+        ),
+        smallBoxConstrain = BoxConstraints(
+          minWidth: 320,
+          minHeight: 57,
+          maxWidth: 400,
+          maxHeight: 135,
+        );
 }
 
 /// Styling configuration for Flutter native ad templates.
@@ -236,49 +233,44 @@ class FlutterNativeADStyle {
     Color? mainBackgroundColor,
     double? cornerRadius,
     BoxConstraints? mediumBoxConstrain,
-
     BoxConstraints? smallBoxConstrain,
-  }) : callToActionTextStyle =
-           callToActionTextStyle ??
-           NativeTemplateTextStyle(
-             textColor: Colors.white,
-             backgroundColor: Colors.blue,
-             style: NativeTemplateFontStyle.bold,
-             size: 14.0,
-           ),
-       primaryTextStyle =
-           primaryTextStyle ??
-           NativeTemplateTextStyle(
-             textColor: Colors.black,
-             style: NativeTemplateFontStyle.normal,
-             size: 16.0,
-           ),
-       secondaryTextStyle =
-           secondaryTextStyle ??
-           NativeTemplateTextStyle(
-             textColor: Colors.grey,
-             style: NativeTemplateFontStyle.normal,
-             size: 14.0,
-           ),
-       tertiaryTextStyle =
-           tertiaryTextStyle ??
-           NativeTemplateTextStyle(
-             textColor: Colors.grey,
-             style: NativeTemplateFontStyle.normal,
-             size: 12.0,
-           ),
-       mainBackgroundColor = mainBackgroundColor ?? Colors.white,
-       cornerRadius = cornerRadius ?? 5.0,
-       mediumBoxConstrain = BoxConstraints(
-         minWidth: 320,
-         minHeight: 280,
-         maxWidth: 400,
-         maxHeight: 365,
-       ),
-       smallBoxConstrain = BoxConstraints(
-         minWidth: 320,
-         minHeight: 88,
-         maxWidth: 400,
-         maxHeight: 120,
-       );
+  })  : callToActionTextStyle = callToActionTextStyle ??
+            NativeTemplateTextStyle(
+              textColor: Colors.white,
+              backgroundColor: Colors.blue,
+              style: NativeTemplateFontStyle.bold,
+              size: 14.0,
+            ),
+        primaryTextStyle = primaryTextStyle ??
+            NativeTemplateTextStyle(
+              textColor: Colors.black,
+              style: NativeTemplateFontStyle.normal,
+              size: 16.0,
+            ),
+        secondaryTextStyle = secondaryTextStyle ??
+            NativeTemplateTextStyle(
+              textColor: Colors.grey,
+              style: NativeTemplateFontStyle.normal,
+              size: 14.0,
+            ),
+        tertiaryTextStyle = tertiaryTextStyle ??
+            NativeTemplateTextStyle(
+              textColor: Colors.grey,
+              style: NativeTemplateFontStyle.normal,
+              size: 12.0,
+            ),
+        mainBackgroundColor = mainBackgroundColor ?? Colors.white,
+        cornerRadius = cornerRadius ?? 5.0,
+        mediumBoxConstrain = BoxConstraints(
+          minWidth: 320,
+          minHeight: 280,
+          maxWidth: 400,
+          maxHeight: 365,
+        ),
+        smallBoxConstrain = BoxConstraints(
+          minWidth: 320,
+          minHeight: 88,
+          maxWidth: 400,
+          maxHeight: 120,
+        );
 }

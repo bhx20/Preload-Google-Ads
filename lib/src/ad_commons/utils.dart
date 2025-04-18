@@ -25,9 +25,8 @@ AdConfigData preData = AdConfigData(
     showNative: true,
     showOpenApp: true,
     showRewarded: true,
-    showSplashAd: true,
+    showSplashAd: false,
   ),
-
   nativeADLayout: NativeADLayout(
     padding: EdgeInsets.all(5),
     margin: EdgeInsets.all(5),
@@ -60,47 +59,37 @@ setConfigData(AdConfigData? adConfig) async {
       rewardedId: adConfig?.adIDs?.rewardedId ?? preData.adIDs?.rewardedId,
     ),
     adCounter: AdCounter(
-      interstitialCounter:
-          adConfig?.adCounter?.interstitialCounter ??
+      interstitialCounter: adConfig?.adCounter?.interstitialCounter ??
           preData.adCounter?.interstitialCounter,
-      nativeCounter:
-          adConfig?.adCounter?.nativeCounter ??
+      nativeCounter: adConfig?.adCounter?.nativeCounter ??
           preData.adCounter?.nativeCounter,
-      rewardedCounter:
-          adConfig?.adCounter?.rewardedCounter ??
+      rewardedCounter: adConfig?.adCounter?.rewardedCounter ??
           preData.adCounter?.rewardedCounter,
     ),
     adFlag: AdFlag(
       showAd: adConfig?.adFlag?.showAd ?? preData.adFlag?.showAd,
       showBanner: adConfig?.adFlag?.showBanner ?? preData.adFlag?.showBanner,
-      showInterstitial:
-          adConfig?.adFlag?.showInterstitial ??
+      showInterstitial: adConfig?.adFlag?.showInterstitial ??
           preData.adFlag?.showInterstitial,
       showNative: adConfig?.adFlag?.showNative ?? preData.adFlag?.showNative,
       showOpenApp: adConfig?.adFlag?.showOpenApp ?? preData.adFlag?.showOpenApp,
       showRewarded:
           adConfig?.adFlag?.showRewarded ?? preData.adFlag?.showRewarded,
-
       showSplashAd:
           adConfig?.adFlag?.showSplashAd ?? preData.adFlag?.showSplashAd,
     ),
-
     nativeADLayout: NativeADLayout(
-      decoration:
-          adConfig?.nativeADLayout?.decoration ??
+      decoration: adConfig?.nativeADLayout?.decoration ??
           preData.nativeADLayout?.decoration,
       margin:
           adConfig?.nativeADLayout?.padding ?? preData.nativeADLayout?.padding,
       padding:
           adConfig?.nativeADLayout?.margin ?? preData.nativeADLayout?.margin,
-      adLayout:
-          adConfig?.nativeADLayout?.adLayout ??
+      adLayout: adConfig?.nativeADLayout?.adLayout ??
           preData.nativeADLayout?.adLayout,
-      customNativeADStyle:
-          adConfig?.nativeADLayout?.customNativeADStyle ??
+      customNativeADStyle: adConfig?.nativeADLayout?.customNativeADStyle ??
           preData.nativeADLayout?.customNativeADStyle,
-      flutterNativeADStyle:
-          adConfig?.nativeADLayout?.flutterNativeADStyle ??
+      flutterNativeADStyle: adConfig?.nativeADLayout?.flutterNativeADStyle ??
           preData.nativeADLayout?.flutterNativeADStyle,
     ),
   );

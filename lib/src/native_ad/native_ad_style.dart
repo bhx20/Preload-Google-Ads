@@ -26,63 +26,59 @@ class NativeADStyle {
   FlutterNativeADStyle? flutterStyle =
       config.nativeADLayout?.flutterNativeADStyle;
 
-  NativeTemplateStyle? get nativeMediumTemplateStyle =>
-      isFlutterLayout
-          ? NativeTemplateStyle(
-            templateType: TemplateType.medium,
-            mainBackgroundColor: flutterStyle?.mainBackgroundColor,
-            cornerRadius: flutterStyle?.cornerRadius,
-            callToActionTextStyle: flutterStyle?.callToActionTextStyle,
-            primaryTextStyle: flutterStyle?.primaryTextStyle,
-            secondaryTextStyle: flutterStyle?.secondaryTextStyle,
-            tertiaryTextStyle: flutterStyle?.tertiaryTextStyle,
+  NativeTemplateStyle? get nativeMediumTemplateStyle => isFlutterLayout
+      ? NativeTemplateStyle(
+          templateType: TemplateType.medium,
+          mainBackgroundColor: flutterStyle?.mainBackgroundColor,
+          cornerRadius: flutterStyle?.cornerRadius,
+          callToActionTextStyle: flutterStyle?.callToActionTextStyle,
+          primaryTextStyle: flutterStyle?.primaryTextStyle,
+          secondaryTextStyle: flutterStyle?.secondaryTextStyle,
+          tertiaryTextStyle: flutterStyle?.tertiaryTextStyle,
+        )
+      : null;
+
+  NativeTemplateStyle? get nativeSmallTemplateStyle => isFlutterLayout
+      ? NativeTemplateStyle(
+          templateType: TemplateType.small,
+          mainBackgroundColor: flutterStyle?.mainBackgroundColor,
+          cornerRadius: flutterStyle?.cornerRadius,
+          callToActionTextStyle: flutterStyle?.callToActionTextStyle,
+          primaryTextStyle: flutterStyle?.primaryTextStyle,
+          secondaryTextStyle: flutterStyle?.secondaryTextStyle,
+          tertiaryTextStyle: flutterStyle?.tertiaryTextStyle,
+        )
+      : null;
+
+  BoxConstraints get mediumConstraintsSize => isFlutterLayout
+      ? flutterStyle?.mediumBoxConstrain ??
+          BoxConstraints(
+            minWidth: 320,
+            minHeight: 280,
+            maxWidth: 400,
+            maxHeight: 365,
           )
-          : null;
+      : customStyle?.mediumBoxConstrain ??
+          BoxConstraints(
+            minWidth: 320,
+            minHeight: 210,
+            maxWidth: 400,
+            maxHeight: 265,
+          );
 
-  NativeTemplateStyle? get nativeSmallTemplateStyle =>
-      isFlutterLayout
-          ? NativeTemplateStyle(
-            templateType: TemplateType.small,
-            mainBackgroundColor: flutterStyle?.mainBackgroundColor,
-            cornerRadius: flutterStyle?.cornerRadius,
-            callToActionTextStyle: flutterStyle?.callToActionTextStyle,
-            primaryTextStyle: flutterStyle?.primaryTextStyle,
-            secondaryTextStyle: flutterStyle?.secondaryTextStyle,
-            tertiaryTextStyle: flutterStyle?.tertiaryTextStyle,
+  BoxConstraints get smallConstraintsSize => isFlutterLayout
+      ? flutterStyle?.smallBoxConstrain ??
+          BoxConstraints(
+            minWidth: 320,
+            minHeight: 88,
+            maxWidth: 400,
+            maxHeight: 120,
           )
-          : null;
-
-  BoxConstraints get mediumConstraintsSize =>
-      isFlutterLayout
-          ? flutterStyle?.mediumBoxConstrain ??
-              BoxConstraints(
-                minWidth: 320,
-                minHeight: 280,
-                maxWidth: 400,
-                maxHeight: 365,
-              )
-          : customStyle?.mediumBoxConstrain ??
-              BoxConstraints(
-                minWidth: 320,
-                minHeight: 210,
-                maxWidth: 400,
-                maxHeight: 265,
-              );
-
-  BoxConstraints get smallConstraintsSize =>
-      isFlutterLayout
-          ? flutterStyle?.smallBoxConstrain ??
-              BoxConstraints(
-                minWidth: 320,
-                minHeight: 88,
-                maxWidth: 400,
-                maxHeight: 120,
-              )
-          : customStyle?.smallBoxConstrain ??
-              BoxConstraints(
-                minWidth: 320,
-                minHeight: 57,
-                maxWidth: 400,
-                maxHeight: 135,
-              );
+      : customStyle?.smallBoxConstrain ??
+          BoxConstraints(
+            minWidth: 320,
+            minHeight: 57,
+            maxWidth: 400,
+            maxHeight: 135,
+          );
 }

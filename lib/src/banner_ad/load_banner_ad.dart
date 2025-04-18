@@ -39,8 +39,8 @@ class LoadBannerAd {
         // Get the appropriate size for the banner ad based on the screen width.
         final AnchoredAdaptiveBannerAdSize? size =
             await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
-              logicalScreenWidth.toInt(),
-            );
+          logicalScreenWidth.toInt(),
+        );
 
         if (size == null) {
           return;
@@ -69,7 +69,6 @@ class LoadBannerAd {
               // Track ad impressions.
               AdStats.instance.bannerImp.value++;
             },
-
             onAdFailedToLoad: (Ad ad, LoadAdError error) {
               // Handle failed ad load and retry logic.
               loading = false;

@@ -211,7 +211,7 @@ class _HomeViewState extends State<HomeView> {
           Padding(
             padding: const EdgeInsets.all(15.0),
             child: Text(
-              "preload_google_ads 0.0.3",
+              "preload_google_ads 0.0.4",
               style: TextStyle(fontSize: 14, color: Colors.white),
             ),
           ),

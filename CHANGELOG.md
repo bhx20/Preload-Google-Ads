@@ -13,3 +13,10 @@
 - Introduced **stable ad callback mechanism** to consistently handle ad events like load, fail, show, and click.
 - Added **ad flags** to manage ad behavior and visibility more effectively.
 - Improved handling of both **custom and Flutter-native ad layouts**, allowing better integration in various UI scenarios.
+
+## 0.0.4
+
+- Fixed Dart analysis issues to ensure clean and error-free code.
+- Marked the plugin as **stable** with better code structure and consistency.
+- Improved internal architecture for better plugin maintainability.
+- Ready for production use with Android platform support.

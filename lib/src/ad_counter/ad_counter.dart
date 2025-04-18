@@ -39,10 +39,9 @@ class AdCounterWidget extends StatelessWidget {
   Widget _buildTitleCell(BuildContext context, String title) {
     /// Get the title color and background color based on the current theme
     final titleColor = _getTitleColor(context);
-    final backgroundColor =
-        Theme.of(context).brightness == Brightness.dark
-            ? Colors.blueGrey
-            : Colors.blue;
+    final backgroundColor = Theme.of(context).brightness == Brightness.dark
+        ? Colors.blueGrey
+        : Colors.blue;
 
     /// Return a container with title text and background
     return Container(
@@ -72,11 +71,10 @@ class AdCounterWidget extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 5),
       child: ValueListenableBuilder<int>(
         valueListenable: notifier,
-        builder:
-            (_, value, __) => Text(
-              value.toString(),
-              style: TextStyle(fontSize: 10, color: textColor),
-            ),
+        builder: (_, value, __) => Text(
+          value.toString(),
+          style: TextStyle(fontSize: 10, color: textColor),
+        ),
       ),
     );
   }

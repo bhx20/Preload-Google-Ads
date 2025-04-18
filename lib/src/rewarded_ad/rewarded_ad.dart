@@ -34,9 +34,7 @@ class RewardAd {
           },
           // Called if the ad fails to load.
           onAdFailedToLoad: (LoadAdError error) {
-            AdStats
-                .instance
-                .rewardedFailed
+            AdStats.instance.rewardedFailed
                 .value++; // Increment ad load failure count.
             _rewardedAd = null;
             _isRewardedAdLoaded = false;
