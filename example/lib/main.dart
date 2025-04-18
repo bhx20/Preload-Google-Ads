@@ -208,31 +208,12 @@ class _HomeViewState extends State<HomeView> {
         ),
         leadingWidth: 120,
         actions: [
-          Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  "preload_google_ads 0.0.3",
-                  style: TextStyle(fontSize: 14, color: Colors.white),
-                ),
-              ),
-              IconButton(
-                onPressed: () {
-                  Clipboard.setData(
-                    ClipboardData(text: "preload_google_ads: ^0.0.3"),
-                  ).then((_) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: const Text('Pub copied to clipboard'),
-                        duration: const Duration(seconds: 2),
-                      ),
-                    );
-                  });
-                },
-                icon: Icon(Icons.copy, color: Colors.white, size: 15),
-              ),
-            ],
+          Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Text(
+              "preload_google_ads 0.0.3",
+              style: TextStyle(fontSize: 14, color: Colors.white),
+            ),
           ),
         ],
       ),
