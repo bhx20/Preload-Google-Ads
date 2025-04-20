@@ -119,15 +119,14 @@ You can replace the default app navigation in the callback with your custom navi
 
 ```dart
 PreloadGoogleAds.instance.setSplashAdCallback((ad, error) {
-debugPrint("Ad callback triggered, ${ad?.adUnitId}");
+  debugPrint("Ad callback triggered, ${ad?.adUnitId}");
 
-/// Replace this navigation logic with your desired navigation after splash ad completes
-Navigator.pushReplacement(
-context,
-MaterialPageRoute(builder: (_) => const HomeView()),
-);
+  // Replace this navigation logic with your desired navigation after the splash ad completes
+  Navigator.pushReplacement(
+    context,
+    MaterialPageRoute(builder: (_) => const HomeView()),
+  );
 });
-
 ```
 ### Show Ads Counter
 
@@ -175,14 +174,14 @@ To show an interstitial ad, use the method below. It handles the loading and pro
 
 ```dart
 PreloadGoogleAds.instance.showInterstitialAd(
-callBack: (ad, error) {
-if (ad != null) {
-debugPrint("Inter AD loaded successfully!");
-debugPrint(ad.adUnitId);
-} else {
-debugPrint("Inter Ad failed to load: ${error?.message}");
-}
-},
+  callBack: (ad, error) {
+    if (ad != null) {
+      debugPrint("Inter AD loaded successfully!");
+      debugPrint(ad.adUnitId);
+    } else {
+      debugPrint("Inter Ad failed to load: ${error?.message}");
+    }
+  },
 );
 ```
 > If you want to show an interstitial ad during a navigation flow, simply call this function before navigating and place your navigation logic inside the `callBack`.  
@@ -195,19 +194,19 @@ To display a rewarded ad, use the method below. It provides both a callback for 
 
 ```dart
 PreloadGoogleAds.instance.showRewardedAd(
-callBack: (ad, error) {
-if (ad != null) {
-debugPrint("Ad loaded successfully!");
-} else {
-debugPrint("Ad failed to load: ${error?.message}");
-}
-},
-onReward: (ad, reward) {
-debugPrint("User earned reward: ${reward.amount} ${reward.type}");
-},
+  callBack: (ad, error) {
+    if (ad != null) {
+      debugPrint("Ad loaded successfully!");
+    } else {
+      debugPrint("Ad failed to load: ${error?.message}");
+    }
+  },
+  onReward: (ad, reward) {
+    debugPrint("User earned reward: ${reward.amount} ${reward.type}");
+  },
 );
 ```
-> To show the rewarded ad after a specific number of user clicks, you can set a click counter (e.g., 2). After the user performs the specified number of clicks, the rewarded ad will be displayed. You can manage this using the `callBack`, which will handle both the ad loading and the reward logic once the ad has been shown. The `onReward` callback will be triggered when the user earns their reward after watching the ad.
+> To show the rewarded ad after a specific number of user clicks, you can set a click counter (e.g., 2). The rewarded ad will be displayed after the user clicks the specified number of times. You can manage this using the `callBack`, which will handle both the ad loading and the reward logic once the ad has been shown. The `onReward` callback will be triggered when the user earns their reward after watching the ad.
 
 ### Show Open App Ad
 
