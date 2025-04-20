@@ -1,5 +1,6 @@
+## 0.0.6
 
-
+- Update READ ME Preview issue
 
 ## 0.0.5
 
