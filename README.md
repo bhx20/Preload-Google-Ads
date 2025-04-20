@@ -15,8 +15,12 @@ This package preloads Google Ads in the background during app startup, ensuring 
 
 Below are some previews showing ad preloading in action:
 
-![Demo 1](./1.gif)  
-![Demo 2](./2.gif)
+<div style="display: flex; gap: 12px;">
+  <img src="./1.gif" alt="Demo 1" width="20%" />
+  <img src="./2.gif" alt="Demo 2" width="20%" />
+</div>
+
+
 
 ## Usage
 
