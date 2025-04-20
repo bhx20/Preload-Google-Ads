@@ -5,13 +5,15 @@ void main() {
 
   /// Initialize the PreloadGoogleAds plugin
   PreloadGoogleAds.instance.initialize(
-    adConfig: AdConfigData(
-      nativeADLayout: NativeADLayout(
-        adLayout: AdLayout.nativeLayout,
-        customNativeADStyle: CustomNativeADStyle(),
-        flutterNativeADStyle: FlutterNativeADStyle(),
+    adConfigData: AdConfigData(
+      adIDs: AdIDS(
+        appOpenId: AdTestIds.appOpen,
+        bannerId: AdTestIds.banner,
+        nativeId: AdTestIds.native,
+        interstitialId: AdTestIds.interstitial,
+        rewardedId: AdTestIds.rewarded,
       ),
-    ),
+    )
   );
   runApp(const MyApp());
 }
@@ -163,7 +165,7 @@ class _HomeViewState extends State<HomeView> {
   showOpenAppAd() => PreloadGoogleAds.instance.showOpenApp();
 
   /// Show Interstitial Ad with callback
-  showInterAd() => PreloadGoogleAds.instance.showAdInterstitialAd(
+  showInterAd() => PreloadGoogleAds.instance.showInterstitialAd(
     callBack: (ad, error) {
       if (ad != null) {
         debugPrint("Inter AD loaded successfully!");
@@ -175,7 +177,7 @@ class _HomeViewState extends State<HomeView> {
   );
 
   /// Show Rewarded Ad with callback and reward handler
-  showRewardedAd() => PreloadGoogleAds.instance.showAdRewardedAd(
+  showRewardedAd() => PreloadGoogleAds.instance.showRewardedAd(
     callBack: (ad, error) {
       if (ad != null) {
         debugPrint("Ad loaded successfully!");

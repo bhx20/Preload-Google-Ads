@@ -15,9 +15,8 @@ This package preloads Google Ads in the background during app startup, ensuring 
 
 Below are some previews showing ad preloading in action:
 
-![Demo 1](https://your.domain.com/path/to/demo1.gif)
-![Demo 2](https://your.domain.com/path/to/demo2.gif)
-![Demo 3](https://your.domain.com/path/to/demo3.gif)
+![Demo 1](./1.gif)  
+![Demo 2](./2.gif)
 
 ## Usage
 
@@ -29,14 +28,16 @@ void main() {
 
   /// Initialize the Preload Google Ads
   PreloadGoogleAds.instance.initialize(
-      adConfig: AdConfigData(
+      adConfigData: AdConfigData(
           adIDs: AdIDS(
-    appOpenId: AdTestIds.appOpen,
-    bannerId: AdTestIds.banner,
-    nativeId: AdTestIds.native,
-    interstitialId: AdTestIds.interstitial,
-    rewardedId: AdTestIds.rewarded,
-  )));
+            appOpenId: AdTestIds.appOpen,
+            bannerId: AdTestIds.banner,
+            nativeId: AdTestIds.native,
+            interstitialId: AdTestIds.interstitial,
+            rewardedId: AdTestIds.rewarded,
+          )));
+
+  runApp(const MyApp());
 }
 ```
 > This will load the ads during app initialization and then manage the ad loading process in the background automatically.  
@@ -52,7 +53,7 @@ void main() {
 
   /// Initialize the Preload Google Ads
   PreloadGoogleAds.instance.initialize(
-    adConfig: AdConfigData(
+    adConfigData: AdConfigData(
       adCounter: AdCounter(
         interstitialCounter: 0,
         nativeCounter: 0,
@@ -113,17 +114,29 @@ You can replace the default app navigation in the callback with your custom navi
 
 ```dart
 PreloadGoogleAds.instance.setSplashAdCallback((ad, error) {
-  debugPrint("Ad callback triggered, ${ad?.adUnitId}");
+debugPrint("Ad callback triggered, ${ad?.adUnitId}");
 
-  /// Replace this navigation logic with your desired navigation after splash ad completes
-  Navigator.pushReplacement(
-    context,
-    MaterialPageRoute(builder: (_) => const HomeView()),
-  );
+/// Replace this navigation logic with your desired navigation after splash ad completes
+Navigator.pushReplacement(
+context,
+MaterialPageRoute(builder: (_) => const HomeView()),
+);
 });
 
 ```
+### Show Ads Counter
 
+The **Ads Counter** is a built-in diagnostic tool that helps you monitor the status of different ad formats in real-time. It displays statistics for the following ad types:  
+**Interstitial** | **Rewarded** | **Banner** | **Small Native** | **Medium Native** | **Open App**
+
+For each ad type, the counter displays:  
+**Load status** | **Show status** | **Failed to load status**
+
+You can enable the Ads Counter by calling:
+
+```dart
+PreloadGoogleAds.instance.showAdCounter(showCounter: true);
+```
 
 ### Show Native Ads
 
@@ -156,15 +169,15 @@ PreloadGoogleAds.instance.showBannerAd();
 To show an interstitial ad, use the method below. It handles the loading and provides a callback with success or failure:
 
 ```dart
-PreloadGoogleAds.instance.showAdInterstitialAd(
-  callBack: (ad, error) {
-    if (ad != null) {
-      debugPrint("Inter AD loaded successfully!");
-      debugPrint(ad.adUnitId);
-    } else {
-      debugPrint("Inter Ad failed to load: ${error?.message}");
-    }
-  },
+PreloadGoogleAds.instance.showInterstitialAd(
+callBack: (ad, error) {
+if (ad != null) {
+debugPrint("Inter AD loaded successfully!");
+debugPrint(ad.adUnitId);
+} else {
+debugPrint("Inter Ad failed to load: ${error?.message}");
+}
+},
 );
 ```
 > If you want to show an interstitial ad during a navigation flow, simply call this function before navigating and place your navigation logic inside the `callBack`.  
@@ -176,17 +189,17 @@ PreloadGoogleAds.instance.showAdInterstitialAd(
 To display a rewarded ad, use the method below. It provides both a callback for ad loading and an additional reward callback to handle rewards earned by the user:
 
 ```dart
-PreloadGoogleAds.instance.showAdRewardedAd(
-  callBack: (ad, error) {
-    if (ad != null) {
-      debugPrint("Ad loaded successfully!");
-    } else {
-      debugPrint("Ad failed to load: ${error?.message}");
-    }
-  },
-  onReward: (ad, reward) {
-    debugPrint("User earned reward: ${reward.amount} ${reward.type}");
-  },
+PreloadGoogleAds.instance.showRewardedAd(
+callBack: (ad, error) {
+if (ad != null) {
+debugPrint("Ad loaded successfully!");
+} else {
+debugPrint("Ad failed to load: ${error?.message}");
+}
+},
+onReward: (ad, reward) {
+debugPrint("User earned reward: ${reward.amount} ${reward.type}");
+},
 );
 ```
 > To show the rewarded ad after a specific number of user clicks, you can set a click counter (e.g., 2). After the user performs the specified number of clicks, the rewarded ad will be displayed. You can manage this using the `callBack`, which will handle both the ad loading and the reward logic once the ad has been shown. The `onReward` callback will be triggered when the user earns their reward after watching the ad.
@@ -202,18 +215,18 @@ PreloadGoogleAds.instance.showOpenApp();
 
 ## Support & Contributions
 
-We welcome contributions! Feel free to open issues, submit pull requests, or suggest improvements.  
+We welcome contributions! Feel free to open issues, submit pull requests, or suggest improvements.
 
 If this package helps you, consider starring it on [pub.dev](https://pub.dev/packages/preload_google_ads) to show your support.
 
----
+
 
 ## License
 
 This project is licensed under the Apache License 2.0.  
 See the [LICENSE](https://github.com/bhx20/Preload-Google-Ads/blob/main/LICENSE) file for details.
 
----
+
 
 ## Contact
 
@@ -222,8 +235,3 @@ For support or business inquiries, please reach out at:
 **GitHub**: [https://github.com/bhx20](https://github.com/bhx20/)
 
 <span style="color:#4285F4">|</span> Built with performance and flexibility in mind — preload your ads and boost user experience with minimal effort.
-
-
-
-
-

@@ -14,8 +14,8 @@ class PreloadGoogleAds {
 
   /// Initializes the ad system with optional [adConfig].
   /// Loads and prepares ads if configuration allows.
-  Future<void> initialize({AdConfigData? adConfig}) async {
-    AdManager.instance.initialize(adConfig);
+  Future<void> initialize({AdConfigData? adConfigData}) async {
+    AdManager.instance.initialize(adConfigData);
   }
 
   /// Sets the splash ad callback.
@@ -49,19 +49,19 @@ class PreloadGoogleAds {
 
   /// Displays an interstitial ad.
   /// Returns the [InterstitialAd] or [AdError] through the [callBack].
-  showAdInterstitialAd({
+  showInterstitialAd({
     required Function(InterstitialAd? ad, AdError? error) callBack,
   }) {
-    return _adManager.showAdInterstitialAd(callBack: callBack);
+    return _adManager.showInterstitialAd(callBack: callBack);
   }
 
   /// Displays a rewarded ad.
   /// Returns the [RewardedAd] or [AdError] via [callBack],
   /// and handles the reward logic via [onReward].
-  showAdRewardedAd({
+  showRewardedAd({
     required void Function(RewardedAd? ad, AdError? error) callBack,
     required void Function(AdWithoutView ad, RewardItem reward) onReward,
   }) {
-    return _adManager.showAdRewardedAd(callBack: callBack, onReward: onReward);
+    return _adManager.showRewardedAd(callBack: callBack, onReward: onReward);
   }
 }

@@ -125,7 +125,7 @@ class AdManager {
   }
 
   /// Shows the interstitial ad and invokes the provided callback with the ad or error.
-  showAdInterstitialAd({
+  showInterstitialAd({
     required Function(InterstitialAd? ad, AdError? error) callBack,
   }) {
     return PlugAd.getInstance().showInterAd(
@@ -136,7 +136,7 @@ class AdManager {
   }
 
   /// Shows the rewarded ad and invokes the provided callbacks with the ad, error, and reward information.
-  showAdRewardedAd({
+  showRewardedAd({
     required void Function(RewardedAd? ad, AdError? error) callBack,
     required void Function(AdWithoutView ad, RewardItem reward) onReward,
   }) {
