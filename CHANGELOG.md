@@ -1,3 +1,8 @@
+## 0.0.7
+
+- Update code base and make it stable version
+
+
 ## 0.0.6
 
 - Update READ ME Preview issue

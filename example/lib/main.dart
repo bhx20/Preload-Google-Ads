@@ -13,7 +13,7 @@ void main() {
         interstitialId: AdTestIds.interstitial,
         rewardedId: AdTestIds.rewarded,
       ),
-    )
+    ),
   );
   runApp(const MyApp());
 }
@@ -87,7 +87,7 @@ class _SplashViewState extends State<SplashView> {
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 20),
                   child: Text(
-                    "preload_google_ads: ^0.0.6",
+                    "preload_google_ads: ^0.0.7",
                     style: TextStyle(
                       fontSize: 16,
                       color: Colors.white,
@@ -213,7 +213,7 @@ class _HomeViewState extends State<HomeView> {
           Padding(
             padding: const EdgeInsets.all(15.0),
             child: Text(
-              "preload_google_ads 0.0.6",
+              "preload_google_ads 0.0.7",
               style: TextStyle(fontSize: 14, color: Colors.white),
             ),
           ),
