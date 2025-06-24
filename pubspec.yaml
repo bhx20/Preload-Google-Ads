@@ -21,6 +21,9 @@ flutter:
   plugin:
     implements: preload_google_ads    # declare implements
     platforms:
-      android:                # Declares Android as the only supported platform
+      android:                # Android platform support
         package: com.plug.preload             # Android package name for plugin registration
         pluginClass: PreloadGoogleAdsPlugin   # The class that implements the Android plugin logic
+      ios:                    # iOS platform support
+        package: com.plug.preload             # ios package name for plugin registration
+        pluginClass: PreloadGoogleAdsPlugin   # The class that implements the iOS plugin logic

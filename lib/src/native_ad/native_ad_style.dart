@@ -1,5 +1,6 @@
 import '../../preload_google_ads.dart';
 
+
 class NativeADStyle {
   static final NativeADStyle instance = NativeADStyle._internal();
 

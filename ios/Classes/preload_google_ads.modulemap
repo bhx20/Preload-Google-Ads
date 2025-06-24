@@ -1,0 +1,6 @@
+framework module preload_google_ads {
+  umbrella header "preload_google_ads-umbrella.h"
+
+  export *
+  module * { export * }
+}

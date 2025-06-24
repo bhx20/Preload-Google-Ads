@@ -44,7 +44,7 @@ class AdTestIds {
   /// App Open Ad Unit ID
   static String get appOpen => _getId(
         androidId: 'ca-app-pub-3940256099942544/9257395921',
-        iosId: 'ca-app-pub-3940256099942544/5662855259',
+        iosId: 'ca-app-pub-3940256099942544/5575463023',
       );
 
   /// Helper method to select platform-specific Ad ID
