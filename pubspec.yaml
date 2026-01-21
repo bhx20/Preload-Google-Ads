@@ -1,6 +1,6 @@
 name: preload_google_ads  # The name of your plugin as it'll appear on pub.dev
 description: "Preloading Google Ads in Flutter loads ads in the background for quick display."
-version: 1.0.0  # Semantic versioning — update this with each release
+version: 1.0.1  # Semantic versioning — update this with each release
 homepage: https://github.com/bhx20/Preload-Google-Ads  # Link to your plugin's GitHub repo or docs
 
 environment:
@@ -10,12 +10,12 @@ environment:
 dependencies:
   flutter:
     sdk: flutter              # Core Flutter dependency
-  google_mobile_ads: ^6.0.0   # Google Mobile Ads SDK for Flutter (official package)
+  google_mobile_ads: ^7.0.0   # Google Mobile Ads SDK for Flutter (official package)
 
 dev_dependencies:
   flutter_test:
     sdk: flutter              # Used for writing tests
-  flutter_lints: ^5.0.0       # Enforces recommended linting rules for clean code
+  flutter_lints: ^6.0.0       # Enforces recommended linting rules for clean code
 
 flutter:
   plugin:
