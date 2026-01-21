@@ -47,7 +47,7 @@ AdConfigData preData = AdConfigData(
 
 /// Sets the configuration data for ads, allowing custom values for each ad type.
 /// Uses default values from [preData] if no configuration is provided.
-setConfigData(AdConfigData? adConfig) async {
+Future<AdConfigData> setConfigData(AdConfigData? adConfig) async {
   await setAdStyleData(adConfig?.nativeADLayout?.customNativeADStyle);
   return AdConfigData(
     adIDs: AdIDS(
