@@ -34,9 +34,10 @@ abstract class AdRepo {
 
   /// Displays the splash ad when the app is opened.
   /// A callback function is passed to handle success or failure of loading the ad.
-  showOpenAppOnSplash({
-    required Function({AppOpenAd? ad, AdError? error}) callBack,
+  void showOpenAppOnSplash({
+    required void Function({AppOpenAd? ad, AdError? error}) callBack,
   });
+
 
   /// Loads the interstitial ad.
   void loadInterAd();

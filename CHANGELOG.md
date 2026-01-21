@@ -1,17 +1,9 @@
-## v1.0.2
+## v1.0.3
 
-- Resolved all Dart static analysis warnings reported by `lints_core`.
-- Added explicit return type annotations to all public and internal methods.
-- Updated `async` APIs to return `Future<T>` instead of inferred dynamic types.
+- Updated package version to `v1.0.3`.
+- Fixed minor typos and wording issues across the codebase and documentation.
 - No API changes or breaking behavior.
-- Internal refactoring only; existing integrations continue to work without modification.
-
-## v1.0.1
-
-- Updated Flutter and Dart SDK support to align with the latest stable versions.
-- Updated dependency constraints for improved compatibility and long-term maintenance.
-- No API changes or breaking behavior.
-- Internal adjustments only; existing integrations continue to work without modification.
+- Internal cleanups only; existing integrations continue to work without modification.
 
 ## v1.0.0
 

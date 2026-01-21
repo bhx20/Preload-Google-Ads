@@ -105,27 +105,27 @@ class AdManager {
   /// Below methods are used to show various types of ads
 
   /// Shows a native ad. Optionally specify if it is a small or medium-sized ad.
-  showNativeAd({NativeADType nativeADType = NativeADType.medium}) {
+  Widget showNativeAd({NativeADType nativeADType = NativeADType.medium}) {
     return PlugAd.getInstance().showNative(nativeADType: nativeADType);
   }
 
   /// Shows the open app ad.
-  showOpenApp() {
+  void showOpenApp() {
     return PlugAd.getInstance().showOpenAppAd();
   }
 
   /// Shows the banner ad.
-  showBannerAd() {
+  Widget showBannerAd() {
     return PlugAd.getInstance().showBannerAd();
   }
 
   /// Displays the ad counter (if available).
-  showAdCounter({bool? showCounter}) {
+  Widget showAdCounter({bool? showCounter}) {
     return PlugAd.getInstance().showAdCounter(showCounter ?? true);
   }
 
   /// Shows the interstitial ad and invokes the provided callback with the ad or error.
-  showInterstitialAd({
+  void showInterstitialAd({
     required Function(InterstitialAd? ad, AdError? error) callBack,
   }) {
     return PlugAd.getInstance().showInterAd(
@@ -136,7 +136,7 @@ class AdManager {
   }
 
   /// Shows the rewarded ad and invokes the provided callbacks with the ad, error, and reward information.
-  showRewardedAd({
+  void showRewardedAd({
     required void Function(RewardedAd? ad, AdError? error) callBack,
     required void Function(AdWithoutView ad, RewardItem reward) onReward,
   }) {
