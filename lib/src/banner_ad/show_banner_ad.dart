@@ -1,7 +1,8 @@
-import '../../preload_google_ads.dart';
+import '../ad_internal.dart';
 
 /// A StatefulWidget to display a banner ad.
 class ShowBannerAd extends StatefulWidget {
+  /// Constructor for [ShowBannerAd].
   const ShowBannerAd({super.key});
 
   @override
@@ -19,10 +20,16 @@ class _ShowBannerAdState extends State<ShowBannerAd> {
     /// If banner ads are available and small native ads are not loading,
     /// load a banner ad and remove it from the list of available ads.
     if (LoadBannerAd.instance.bannerAdObject.isNotEmpty &&
-        LoadSmallNative.instance.loading == false) {
+        LoadSmallNative.instance.isLoading == false) {
       banner = LoadBannerAd.instance.bannerAdObject.removeAt(0);
       LoadBannerAd.instance.loadAd();
     }
+  }
+
+  @override
+  void dispose() {
+    banner.dispose();
+    super.dispose();
   }
 
   @override

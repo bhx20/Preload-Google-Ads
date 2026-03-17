@@ -1,4 +1,4 @@
-import '../../preload_google_ads.dart';
+import '../ad_internal.dart';
 
 /// Configuration data for all ad-related settings.
 class AdConfigData {
@@ -99,16 +99,27 @@ class AdFlag {
   });
 }
 
+/// Configuration for the layout of native ads.
 class NativeADLayout {
+  /// The type of layout to use (Flutter or native).
   final AdLayout adLayout;
+
+  /// Custom styling settings for native platform layouts.
   final CustomNativeADStyle? customNativeADStyle;
+
+  /// Styling settings for Flutter-based native ad templates.
   final FlutterNativeADStyle? flutterNativeADStyle;
+
+  /// The decoration of the container surrounding the native ad.
   BoxDecoration decoration;
 
+  /// The padding of the container surrounding the native ad.
   EdgeInsets padding;
 
+  /// The margin of the container surrounding the native ad.
   EdgeInsets margin;
 
+  /// Constructor for [NativeADLayout] with optional styling and layout settings.
   NativeADLayout({
     AdLayout? adLayout,
     this.customNativeADStyle,
@@ -156,8 +167,10 @@ class CustomNativeADStyle {
   /// Optional gradient colors for ad buttons.
   List<Color> buttonGradients;
 
+  /// The constraints for medium-sized native ads.
   BoxConstraints mediumBoxConstrain;
 
+  /// The constraints for small-sized native ads.
   BoxConstraints smallBoxConstrain;
 
   /// Constructor for [CustomNativeADStyle] with default styling values.
@@ -218,10 +231,13 @@ class FlutterNativeADStyle {
   /// Corner radius for call-to-action and icon elements (iOS only).
   ///
   /// Defaults to 5.0, matching `CustomNativeADStyle.buttonRadius`.
+  /// The corner radius for ad elements.
   double? cornerRadius;
 
+  /// The constraints for medium-sized native ads in the Flutter template.
   BoxConstraints mediumBoxConstrain;
 
+  /// The constraints for small-sized native ads in the Flutter template.
   BoxConstraints smallBoxConstrain;
 
   /// Constructor that applies default styling similar to [CustomNativeADStyle].

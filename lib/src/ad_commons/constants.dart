@@ -1,8 +1,15 @@
-import '../../preload_google_ads.dart';
+import '../ad_internal.dart';
 
+/// The channel name for native ad style communication.
 const nativeChannel = 'com.plug.preload/adButtonStyle';
+
+/// The method name for setting ad style data.
 const nativeMethod = 'setAdStyle';
+
+/// The factory ID for medium native ads.
 const factoryIdMediumNative = 'medium_native';
+
+/// The factory ID for small native ads.
 const factoryIdSmallNative = 'small_native';
 
 ///==============================================================================
@@ -49,12 +56,25 @@ class AdTestIds {
 
   /// Helper method to select platform-specific Ad ID
   static String _getId({required String androidId, required String iosId}) {
-    if (Platform.isAndroid) return androidId;
     if (Platform.isIOS) return iosId;
-    throw UnsupportedError('Unsupported platform');
+    return androidId;
   }
 }
 
-enum AdLayout { flutterLayout, nativeLayout }
+/// The type of layout for native ads.
+enum AdLayout {
+  /// Use Flutter-based layout for native ads.
+  flutterLayout,
 
-enum NativeADType { medium, small }
+  /// Use native platform-based layout for native ads.
+  nativeLayout
+}
+
+/// The size/type of native ad.
+enum NativeADType {
+  /// Medium-sized native ad.
+  medium,
+
+  /// Small-sized native ad.
+  small
+}

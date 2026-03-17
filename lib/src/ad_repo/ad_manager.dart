@@ -1,4 +1,4 @@
-import '../../preload_google_ads.dart';
+import '../ad_internal.dart';
 
 /// Singleton class responsible for managing all ad operations.
 class AdManager {
@@ -23,6 +23,9 @@ class AdManager {
   /// Initializes the AdManager with the provided ad configuration.
   /// It also initializes mobile ads and loads the required ads based on the configuration.
   Future<void> initialize(AdConfigData? adConfig) async {
+    // Reset any existing ad state before initializing with new config
+    PlugAd.getInstance().resetAll();
+
     // Set the ad configuration data
     config = await setConfigData(adConfig);
 

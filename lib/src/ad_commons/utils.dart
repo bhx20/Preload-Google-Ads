@@ -1,4 +1,4 @@
-import '../../preload_google_ads.dart';
+import '../ad_internal.dart';
 
 ///==============================================================================
 ///              **  Initial Config Data Function  **
@@ -82,9 +82,9 @@ Future<AdConfigData> setConfigData(AdConfigData? adConfig) async {
       decoration: adConfig?.nativeADLayout?.decoration ??
           preData.nativeADLayout?.decoration,
       margin:
-          adConfig?.nativeADLayout?.padding ?? preData.nativeADLayout?.padding,
-      padding:
           adConfig?.nativeADLayout?.margin ?? preData.nativeADLayout?.margin,
+      padding:
+          adConfig?.nativeADLayout?.padding ?? preData.nativeADLayout?.padding,
       adLayout: adConfig?.nativeADLayout?.adLayout ??
           preData.nativeADLayout?.adLayout,
       customNativeADStyle: adConfig?.nativeADLayout?.customNativeADStyle ??
@@ -138,33 +138,63 @@ class AdStats {
   static AdStats get instance => _instance;
 
   /// Statistics for Interstitial Ads
+  /// Number of interstitial ads loaded.
   final ValueNotifier<int> interLoad = ValueNotifier(0);
+
+  /// Number of interstitial ad impressions.
   final ValueNotifier<int> interImp = ValueNotifier(0);
+
+  /// Number of interstitial ad load failures.
   final ValueNotifier<int> interFailed = ValueNotifier(0);
 
   /// Statistics for Rewarded Ads
+  /// Number of rewarded ads loaded.
   final ValueNotifier<int> rewardedLoad = ValueNotifier(0);
+
+  /// Number of rewarded ad impressions.
   final ValueNotifier<int> rewardedImp = ValueNotifier(0);
+
+  /// Number of rewarded ad load failures.
   final ValueNotifier<int> rewardedFailed = ValueNotifier(0);
 
   /// Statistics for Small Native Ads
+  /// Number of small native ads loaded.
   final ValueNotifier<int> nativeLoadS = ValueNotifier(0);
+
+  /// Number of small native ad impressions.
   final ValueNotifier<int> nativeImpS = ValueNotifier(0);
+
+  /// Number of small native ad load failures.
   final ValueNotifier<int> nativeFailedS = ValueNotifier(0);
 
   /// Statistics for Medium Native Ads
+  /// Number of medium native ads loaded.
   final ValueNotifier<int> nativeLoadM = ValueNotifier(0);
+
+  /// Number of medium native ad impressions.
   final ValueNotifier<int> nativeImpM = ValueNotifier(0);
+
+  /// Number of medium native ad load failures.
   final ValueNotifier<int> nativeFailedM = ValueNotifier(0);
 
   /// Statistics for App Open Ads
+  /// Number of app open ads loaded.
   final ValueNotifier<int> openAppLoad = ValueNotifier(0);
+
+  /// Number of app open ad impressions.
   final ValueNotifier<int> openAppImp = ValueNotifier(0);
+
+  /// Number of app open ad load failures.
   final ValueNotifier<int> openAppFailed = ValueNotifier(0);
 
   /// Statistics for Banner Ads
+  /// Number of banner ads loaded.
   final ValueNotifier<int> bannerLoad = ValueNotifier(0);
+
+  /// Number of banner ad impressions.
   final ValueNotifier<int> bannerImp = ValueNotifier(0);
+
+  /// Number of banner ad load failures.
   final ValueNotifier<int> bannerFailed = ValueNotifier(0);
 }
 

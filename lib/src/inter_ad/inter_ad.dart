@@ -1,30 +1,27 @@
-import '../../preload_google_ads.dart';
+import '../ad_internal.dart';
 
 /// A singleton class to manage interstitial ads.
-class InterAd {
+class InterAd with AdLoaderMixin {
+  /// Singleton instance of [InterAd].
   static final InterAd instance = InterAd._internal();
 
+  /// Factory constructor to provide access to the singleton [InterAd].
   factory InterAd() {
     return instance;
   }
 
+  /// Private constructor for [InterAd] singleton.
   InterAd._internal();
 
   /// The interstitial ad object.
   InterstitialAd? _interstitialAd;
-
-  /// A flag to check if the interstitial ad is loaded.
-  bool _isInterstitialAdLoaded = false;
-
-  /// A counter to track when the ad should be shown based on the limit.
-  var counter = 0;
 
   /// Loads an interstitial ad.
   ///
   /// Attempts to load an interstitial ad and set its immersive mode when it's loaded.
   void load() {
     try {
-      _isInterstitialAdLoaded = false;
+      isAdLoaded = false;
       InterstitialAd.load(
         adUnitId: unitIDInter,
         request: const AdRequest(),
@@ -35,14 +32,14 @@ class InterAd {
             AppLogger.log("inter loaded");
             _interstitialAd = ad;
             _interstitialAd!.setImmersiveMode(true);
-            _isInterstitialAdLoaded = true;
+            isAdLoaded = true;
           },
 
           /// Called if the ad fails to load.
           onAdFailedToLoad: (LoadAdError error) {
             AdStats.instance.interFailed.value++;
             _interstitialAd = null;
-            _isInterstitialAdLoaded = false;
+            handleLoadError("Interstitial", error);
           },
         ),
       );
@@ -61,10 +58,10 @@ class InterAd {
   }) {
     if (shouldShowInterAd) {
       /// Check if the interstitial ad is loaded and if the counter limit has been reached.
-      if (_isInterstitialAdLoaded &&
+      if (isAdLoaded &&
           _interstitialAd != null &&
-          counter >= getInterCounter) {
-        counter = 0;
+          isLimitReached(getInterCounter)) {
+        resetCounter();
 
         _interstitialAd!
           ..fullScreenContentCallback = FullScreenContentCallback(
@@ -92,7 +89,7 @@ class InterAd {
           )
           ..show();
       } else {
-        counter++;
+        incrementCounter();
         callBack();
       }
     } else {

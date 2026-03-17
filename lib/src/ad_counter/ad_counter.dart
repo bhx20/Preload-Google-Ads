@@ -1,9 +1,11 @@
-import '../../preload_google_ads.dart';
+import '../ad_internal.dart';
 
+/// A widget that displays a debug counter of ad loads, impressions, and failures.
 class AdCounterWidget extends StatelessWidget {
+  /// Whether the counter should be currently visible.
   final ValueNotifier<bool> showCounter;
 
-  /// Constructor to receive a ValueNotifier to control whether the counter should be shown
+  /// Constructor to receive a ValueNotifier to control whether the counter should be shown.
   const AdCounterWidget({super.key, required this.showCounter});
 
   /// Define custom colors for different themes (light or dark)

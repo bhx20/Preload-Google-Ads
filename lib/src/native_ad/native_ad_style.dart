@@ -1,31 +1,44 @@
-import '../../preload_google_ads.dart';
+import '../ad_internal.dart';
 
+/// Singleton class responsible for managing the styling of native ads.
 class NativeADStyle {
+  /// Singleton instance of [NativeADStyle].
   static final NativeADStyle instance = NativeADStyle._internal();
 
+  /// Factory constructor to provide access to the singleton [NativeADStyle].
   factory NativeADStyle() {
     return instance;
   }
 
+  /// Private constructor for [NativeADStyle] singleton.
   NativeADStyle._internal();
 
+  /// Returns the factory ID for medium native ads if native layout is enabled.
   String? get mediumNativeFactoryId =>
       !isFlutterLayout ? factoryIdMediumNative : null;
 
+  /// Returns the factory ID for small native ads if native layout is enabled.
   String? get smallNativeFactoryId =>
       !isFlutterLayout ? factoryIdSmallNative : null;
 
+  /// The decoration for the native ad container.
   BoxDecoration decoration =
       config.nativeADLayout?.decoration ?? BoxDecoration();
 
+  /// The padding for the native ad container.
   EdgeInsets padding = config.nativeADLayout?.padding ?? EdgeInsets.all(5);
 
+  /// The margin for the native ad container.
   EdgeInsets margin = config.nativeADLayout?.margin ?? EdgeInsets.all(5);
 
+  /// Custom styling settings for native ads.
   CustomNativeADStyle? customStyle = config.nativeADLayout?.customNativeADStyle;
+
+  /// Flutter-based template styling settings for native ads.
   FlutterNativeADStyle? flutterStyle =
       config.nativeADLayout?.flutterNativeADStyle;
 
+  /// Returns the template style for medium native ads if using Flutter layout.
   NativeTemplateStyle? get nativeMediumTemplateStyle => isFlutterLayout
       ? NativeTemplateStyle(
           templateType: TemplateType.medium,
@@ -38,6 +51,7 @@ class NativeADStyle {
         )
       : null;
 
+  /// Returns the template style for small native ads if using Flutter layout.
   NativeTemplateStyle? get nativeSmallTemplateStyle => isFlutterLayout
       ? NativeTemplateStyle(
           templateType: TemplateType.small,
@@ -50,6 +64,7 @@ class NativeADStyle {
         )
       : null;
 
+  /// Returns constraints for medium native ads based on the layout type.
   BoxConstraints get mediumConstraintsSize => isFlutterLayout
       ? flutterStyle?.mediumBoxConstrain ??
           BoxConstraints(
@@ -66,6 +81,7 @@ class NativeADStyle {
             maxHeight: 265,
           );
 
+  /// Returns constraints for small native ads based on the layout type.
   BoxConstraints get smallConstraintsSize => isFlutterLayout
       ? flutterStyle?.smallBoxConstrain ??
           BoxConstraints(

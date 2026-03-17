@@ -1,5 +1,6 @@
-import '../../preload_google_ads.dart';
+import '../ad_internal.dart';
 
+/// Concrete implementation of [AdRepo] that connects the UI to the underlying ad managers and loaders.
 class AdRepoImpl extends AdRepo {
   /// Loads the App Open ad using the LifeCycleManager
   @override
@@ -89,5 +90,17 @@ class AdRepoImpl extends AdRepo {
       callBack: callBack,
       onReward: onReward,
     );
+  }
+
+  /// Resets all ad state and disposes of loaded ads.
+  @override
+  void resetAll() {
+    LoadMediumNative.instance.reset();
+    LoadSmallNative.instance.reset();
+    LoadBannerAd.instance.reset();
+    InterAd.instance.reset();
+    RewardAd.instance.reset();
+    // App Open ads are usually managed by lifecycle, but we can reset their managers if needed.
+    // Assuming lifecycle managers handle their own state or don't need explicit reset here.
   }
 }

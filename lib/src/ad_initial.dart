@@ -1,4 +1,4 @@
-import '../preload_google_ads.dart';
+import 'ad_internal.dart';
 
 /// Singleton wrapper class to manage ad interactions via [AdManager].
 class PreloadGoogleAds {
@@ -25,8 +25,10 @@ class PreloadGoogleAds {
     _adManager.setSplashAdCallback(callback);
   }
 
-  /// Displays a native ad.
-  /// Pass [isSmall] as true for small ad, false for medium. Defaults to medium.
+  /// Displays a preloaded native ad in the UI.
+  ///
+  /// Specify [nativeADType] as [NativeADType.small] or [NativeADType.medium].
+  /// Returns a [Widget] that contains the ad, or an empty [SizedBox] if no ad is available.
   Widget showNativeAd({NativeADType nativeADType = NativeADType.medium}) {
     return _adManager.showNativeAd(nativeADType: nativeADType);
   }
@@ -56,8 +58,9 @@ class PreloadGoogleAds {
   }
 
   /// Displays a rewarded ad.
-  /// Returns the [RewardedAd] or [AdError] via [callBack],
-  /// and handles the reward logic via [onReward].
+  ///
+  /// Provide a [callBack] to receive the [RewardedAd] or [AdError] when the ad is shown or fails.
+  /// The [onReward] function is called when the user successfully earns the reward.
   void showRewardedAd({
     required void Function(RewardedAd? ad, AdError? error) callBack,
     required void Function(AdWithoutView ad, RewardItem reward) onReward,

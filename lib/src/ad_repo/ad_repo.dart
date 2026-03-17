@@ -1,4 +1,4 @@
-import '../../preload_google_ads.dart';
+import '../ad_internal.dart';
 
 /// Singleton pattern to get the instance of AdRepoImpl
 class PlugAd {
@@ -38,7 +38,6 @@ abstract class AdRepo {
     required void Function({AppOpenAd? ad, AdError? error}) callBack,
   });
 
-
   /// Loads the interstitial ad.
   void loadInterAd();
 
@@ -61,4 +60,7 @@ abstract class AdRepo {
   /// Displays the ad counter.
   /// The [showCounter] boolean determines if the ad counter should be shown.
   Widget showAdCounter(bool showCounter);
+
+  /// Resets all ad state and disposes of loaded ads.
+  void resetAll();
 }

@@ -1,4 +1,4 @@
-import '../../preload_google_ads.dart';
+import '../ad_internal.dart';
 
 /// A class responsible for loading and managing banner ads.
 class LoadBannerAd {
@@ -14,12 +14,13 @@ class LoadBannerAd {
   LoadBannerAd._internal();
 
   /// List that holds loaded banner ads.
+  /// List that holds currently loaded and cached banner ads.
   List<BannerAd> bannerAdObject = [];
 
-  /// Variable to control the reload logic of the ad.
+  /// Variable to control the retry/reload logic of the ad.
   int reloadAd = 1;
 
-  /// Flag to check if the ad is currently loading.
+  /// Flag to check if an ad is currently in the process of loading.
   bool loading = false;
 
   /// Loads a banner ad and handles its loading, errors, and impressions.
@@ -94,5 +95,15 @@ class LoadBannerAd {
         AppLogger.error(error.toString());
       }
     }
+  }
+
+  /// Disposes of all loaded ads and resets the state.
+  void reset() {
+    for (final ad in bannerAdObject) {
+      ad.dispose();
+    }
+    bannerAdObject.clear();
+    loading = false;
+    reloadAd = 1;
   }
 }

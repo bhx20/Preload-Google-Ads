@@ -1,15 +1,16 @@
-import '../../preload_google_ads.dart';
+import '../ad_internal.dart';
 
 /// Utility class that manages loading and showing app open ads.
 class AppOpenAdManager {
+  /// Singleton instance of [AppOpenAdManager].
   static final AppOpenAdManager instance = AppOpenAdManager._internal();
 
-  /// Singleton pattern: ensuring only one instance of AppOpenAdManager exists.
+  /// Factory constructor providing access to the singleton [AppOpenAdManager].
   factory AppOpenAdManager() {
     return instance;
   }
 
-  /// Private constructor to prevent external instantiation.
+  /// Private constructor for [AppOpenAdManager] singleton.
   AppOpenAdManager._internal();
 
   /// Maximum duration allowed between loading and showing the ad.

@@ -1,4 +1,16 @@
-android/src/main/java/com/plug/preload/preload_google_ads/NativeAdFactoryMedium.java
-android/src/main/java/com/plug/preload/preload_google_ads/NativeAdFactorySmall.java
-android/src/main/java/com/plug/preload/preload_google_ads/PreloadGoogleAdsPlugin.java
-example/android/app/src/main/kotlin/com/plug/preload/preload_google_ads_example/MainActivity.kt
+# Exclude large assets not needed for the package
+*.gif
+# Allow PNGs in example/assets for pub.dev screenshots
+!example/assets/*.png
+
+# Exclude build artifacts
+build/
+.dart_tool/
+.idea/
+*.iml
+.metadata
+
+# Exclude platform-specific local files
+android/local.properties
+ios/Flutter/Generated.xcconfig
+ios/Flutter/flutter_export_environment.sh

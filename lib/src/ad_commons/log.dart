@@ -1,4 +1,4 @@
-import '../../preload_google_ads.dart';
+import '../ad_internal.dart';
 
 /// A simple logger utility for debugging purposes.
 /// Logs messages only when the app is running in debug mode.

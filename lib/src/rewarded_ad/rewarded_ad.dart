@@ -1,25 +1,24 @@
-import '../../preload_google_ads.dart';
+import '../ad_internal.dart';
 
 /// A singleton class to manage loading and showing rewarded ads.
-class RewardAd {
+class RewardAd with AdLoaderMixin {
+  /// Singleton instance of [RewardAd].
   static final RewardAd instance = RewardAd._internal();
 
+  /// Factory constructor to provide access to the singleton [RewardAd].
   factory RewardAd() {
     return instance;
   }
 
+  /// Private constructor for [RewardAd] singleton.
   RewardAd._internal();
 
   RewardedAd? _rewardedAd; // Stores the loaded rewarded ad.
-  bool _isRewardedAdLoaded =
-      false; // Flag to track if the rewarded ad is loaded.
-  var counter =
-      0; // Counter to track the number of times the ad has been shown.
 
   /// Loads a rewarded ad with the given unit ID and configuration.
   void load() {
     try {
-      _isRewardedAdLoaded = false;
+      isAdLoaded = false;
       RewardedAd.load(
         adUnitId: unitIDRewarded, // ID for the rewarded ad unit.
         request: const AdRequest(),
@@ -30,14 +29,14 @@ class RewardAd {
             AppLogger.log("Rewarded ad loaded.");
             _rewardedAd = ad;
             _rewardedAd!.setImmersiveMode(true); // Enable immersive mode.
-            _isRewardedAdLoaded = true;
+            isAdLoaded = true;
           },
           // Called if the ad fails to load.
           onAdFailedToLoad: (LoadAdError error) {
             AdStats.instance.rewardedFailed
                 .value++; // Increment ad load failure count.
             _rewardedAd = null;
-            _isRewardedAdLoaded = false;
+            handleLoadError("Rewarded", error);
           },
         ),
       );
@@ -54,10 +53,10 @@ class RewardAd {
     if (shouldShowRewardedAd) {
       // Check if rewarded ad should be shown.
       // Check if the ad is loaded and the counter has reached the limit.
-      if (_isRewardedAdLoaded &&
+      if (isAdLoaded &&
           _rewardedAd != null &&
-          counter >= getRewardedCounter) {
-        counter = 0; // Reset the counter after showing the ad.
+          isLimitReached(getRewardedCounter)) {
+        resetCounter(); // Reset the counter after showing the ad.
 
         _rewardedAd!.fullScreenContentCallback = FullScreenContentCallback(
           // Called when the ad is dismissed.
@@ -88,11 +87,19 @@ class RewardAd {
           },
         );
       } else {
-        counter++; // Increment the counter if ad is not shown yet.
+        incrementCounter(); // Increment the counter if ad is not shown yet.
         callBack(); // Callback if the ad is not shown.
       }
     } else {
       callBack(); // Callback if ads shouldn't be shown.
     }
+  }
+
+  /// Resets the ad state and disposes of loaded ads.
+  @override
+  void reset() {
+    _rewardedAd?.dispose();
+    _rewardedAd = null;
+    isAdLoaded = false;
   }
 }

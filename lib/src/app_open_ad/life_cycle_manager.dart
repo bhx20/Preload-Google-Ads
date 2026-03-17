@@ -1,4 +1,4 @@
-import '../../preload_google_ads.dart';
+import '../ad_internal.dart';
 
 /// Manages the lifecycle of the app's ads, especially the App Open Ads.
 class LifeCycleManager {

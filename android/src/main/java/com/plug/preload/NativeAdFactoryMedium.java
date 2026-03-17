@@ -1,4 +1,4 @@
-package android.src.main.java.com.plug.preload;
+package com.plug.preload;
 
 
 import android.content.Context;

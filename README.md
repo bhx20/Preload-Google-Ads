@@ -22,6 +22,20 @@ Below are some previews showing ad preloading in action:
 </div>
 
 
+## Getting Started
+
+Add this to your `pubspec.yaml` file:
+
+```yaml
+dependencies:
+  preload_google_ads: ^1.0.3
+```
+
+Or run:
+```bash
+flutter pub add preload_google_ads
+```
+
 ## Usage
 
 To get started, initialize the plugin at the top of your `main()` method before running the app:
@@ -90,7 +104,7 @@ void main() {
 
   /// Initialize the Preload Google Ads with custom native ad layout
   PreloadGoogleAds.instance.initialize(
-    adConfig: AdConfigData(
+    adConfigData: AdConfigData(
       nativeADLayout: NativeADLayout(
         padding: EdgeInsets.all(5),
         margin: EdgeInsets.all(5),
@@ -226,7 +240,7 @@ If this package helps you, consider starring it on [pub.dev](https://pub.dev/pac
 
 ## License
 
-This project is licensed under the Apache License 2.0.  
+This project is licensed under the MIT License.  
 See the [LICENSE](https://github.com/bhx20/Preload-Google-Ads/blob/main/LICENSE) file for details.
 
 

@@ -1,4 +1,4 @@
-import '../../preload_google_ads.dart';
+import '../ad_internal.dart';
 
 /// A utility class that manages loading and showing app open ads on splash screens.
 class GoogleAppOpenOnSplash {

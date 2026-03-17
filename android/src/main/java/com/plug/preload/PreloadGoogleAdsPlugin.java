@@ -39,13 +39,13 @@ public class PreloadGoogleAdsPlugin implements FlutterPlugin {
                     GoogleMobileAdsPlugin.registerNativeAdFactory(
                             flutterPluginBinding.getFlutterEngine(),
                             "medium_native",
-                            new android.src.main.java.com.plug.preload.NativeAdFactoryMedium(context, receivedStyleMap)
+                            new NativeAdFactoryMedium(context, receivedStyleMap)
                     );
 
                     GoogleMobileAdsPlugin.registerNativeAdFactory(
                             flutterPluginBinding.getFlutterEngine(),
                             "small_native",
-                            new android.src.main.java.com.plug.preload.NativeAdFactorySmall(context, receivedStyleMap)
+                            new NativeAdFactorySmall(context, receivedStyleMap)
                     );
 
                     result.success(null);
