@@ -45,10 +45,10 @@ abstract class _NativeAdViewState<T extends StatefulWidget> extends State<T> {
   @override
   void initState() {
     super.initState();
-    if (loader.ads.isNotEmpty && !loader.isLoading) {
+    if (loader.ads.isNotEmpty) {
       _ad = loader.ads.removeAt(0);
-      loader.loadAd();
     }
+    loader.loadAd();
   }
 
   @override

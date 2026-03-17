@@ -11,44 +11,38 @@ class ShowBannerAd extends StatefulWidget {
 
 class _ShowBannerAdState extends State<ShowBannerAd> {
   /// The banner ad to be displayed.
-  late BannerAd banner;
+  BannerAd? banner;
 
   @override
   void initState() {
     super.initState();
 
-    /// If banner ads are available and small native ads are not loading,
-    /// load a banner ad and remove it from the list of available ads.
-    if (LoadBannerAd.instance.bannerAdObject.isNotEmpty &&
-        LoadSmallNative.instance.isLoading == false) {
+    /// If banner ads are available, load one. Always call loadAd to ensure 
+    /// that if the initial pre-load failed (e.g. race condition), it tries again.
+    if (LoadBannerAd.instance.bannerAdObject.isNotEmpty) {
       banner = LoadBannerAd.instance.bannerAdObject.removeAt(0);
-      LoadBannerAd.instance.loadAd();
     }
+    LoadBannerAd.instance.loadAd();
   }
 
   @override
   void dispose() {
-    banner.dispose();
+    banner?.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    /// If there are available banner ads, display the ad. Otherwise, return an empty widget.
-    return LoadBannerAd.instance.bannerAdObject.isNotEmpty
-        ? adView()
-        : const SizedBox();
+    /// If there is an initialized banner, display it.
+    return banner != null ? adView() : const SizedBox.shrink();
   }
 
   /// Builds the widget to display the banner ad.
-  ///
-  /// Returns a SizedBox widget containing the AdWidget for displaying the banner ad.
   Widget adView() {
     try {
-      return SizedBox(height: 70, child: AdWidget(ad: banner));
+      return SizedBox(height: 70, child: AdWidget(ad: banner!));
     } catch (e) {
-      // If there is an error displaying the ad, return an empty SizedBox.
-      return const SizedBox();
+      return const SizedBox.shrink();
     }
   }
 }

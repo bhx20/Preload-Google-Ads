@@ -27,73 +27,85 @@ class LoadBannerAd {
   ///
   /// If fewer than 2 banner ads are loaded, it will load additional ads.
   Future<void> loadAd() async {
+    if (loading || bannerAdObject.length > 2) return;
+
     BannerAd? bannerAd;
 
-    if (bannerAdObject.length <= 2) {
-      try {
-        loading = true;
-        // Get the current screen's physical size.
-        final view = PlatformDispatcher.instance.implicitView!;
-        final double logicalScreenWidth =
-            view.physicalSize.width / view.devicePixelRatio;
-
-        // Get the appropriate size for the banner ad based on the screen width.
-        final AnchoredAdaptiveBannerAdSize? size =
-            await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
-          logicalScreenWidth.toInt(),
-        );
-
-        if (size == null) {
-          return;
-        }
-
-        // Create and configure the banner ad.
-        bannerAd = BannerAd(
-          adUnitId: unitIDBanner,
-          size: size,
-          request: const AdRequest(),
-          listener: BannerAdListener(
-            onAdLoaded: (Ad ad) {
-              // Handle successful ad load.
-              AppLogger.log('$ad loaded.');
-              if (bannerAd != null) {
-                bannerAdObject.add(bannerAd);
-              }
-              // Load another ad if there are fewer than 2 loaded ads.
-              if (bannerAdObject.length < 2) {
-                loadAd();
-              }
-              AdStats.instance.bannerLoad.value++;
-              loading = false;
-            },
-            onAdImpression: (ad) {
-              // Track ad impressions.
-              AdStats.instance.bannerImp.value++;
-            },
-            onAdFailedToLoad: (Ad ad, LoadAdError error) {
-              // Handle failed ad load and retry logic.
-              loading = false;
-              AdStats.instance.bannerFailed.value++;
-              ad.dispose();
-              if (reloadAd == 1) {
-                reloadAd--;
-                loadAd();
-                AppLogger.error("Failed Banner AD");
-                AppLogger.error(error.toString());
-              } else {
-                reloadAd = 1;
-              }
-            },
-          ),
-        );
-
-        // Load the banner ad.
-        await bannerAd.load();
-      } catch (error) {
-        // Catch and log any errors that occur during ad loading.
-        AppLogger.error("catch error");
-        AppLogger.error(error.toString());
+    try {
+      loading = true;
+      // Get the current screen's physical size.
+      final view = PlatformDispatcher.instance.implicitView;
+      if (view == null) {
+        loading = false;
+        return;
       }
+
+      final double logicalScreenWidth =
+          view.physicalSize.width / view.devicePixelRatio;
+
+      if (logicalScreenWidth <= 0) {
+        loading = false;
+        return;
+      }
+
+      // Get the appropriate size for the banner ad based on the screen width.
+      final AnchoredAdaptiveBannerAdSize? size =
+          await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
+        logicalScreenWidth.toInt(),
+      );
+
+      if (size == null) {
+        loading = false;
+        return;
+      }
+
+      // Create and configure the banner ad.
+      bannerAd = BannerAd(
+        adUnitId: unitIDBanner,
+        size: size,
+        request: const AdRequest(),
+        listener: BannerAdListener(
+          onAdLoaded: (Ad ad) {
+            // Handle successful ad load.
+            AppLogger.log('$ad loaded.');
+            if (bannerAd != null) {
+              bannerAdObject.add(bannerAd);
+            }
+            // Load another ad if there are fewer than 2 loaded ads.
+            if (bannerAdObject.length < 2) {
+              loadAd();
+            }
+            AdStats.instance.bannerLoad.value++;
+            loading = false;
+          },
+          onAdImpression: (ad) {
+            // Track ad impressions.
+            AdStats.instance.bannerImp.value++;
+          },
+          onAdFailedToLoad: (Ad ad, LoadAdError error) {
+            // Handle failed ad load and retry logic.
+            loading = false;
+            AdStats.instance.bannerFailed.value++;
+            ad.dispose();
+            if (reloadAd == 1) {
+              reloadAd--;
+              loadAd();
+              AppLogger.error("Failed Banner AD");
+              AppLogger.error(error.toString());
+            } else {
+              reloadAd = 1;
+            }
+          },
+        ),
+      );
+
+      // Load the banner ad.
+      await bannerAd.load();
+    } catch (error) {
+      // Catch and log any errors that occur during ad loading.
+      loading = false;
+      AppLogger.error("catch error loading banner");
+      AppLogger.error(error.toString());
     }
   }
 

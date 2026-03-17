@@ -33,7 +33,7 @@ abstract class BaseNativeAdLoader {
 
   /// Loads a native ad.
   Future<void> loadAd() async {
-    if (ads.length > 2) return;
+    if (isLoading || ads.length > 2) return;
 
     try {
       isLoading = true;

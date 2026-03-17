@@ -15,7 +15,7 @@ class PreloadGoogleAds {
   /// Initializes the ad system with optional [adConfig].
   /// Loads and prepares ads if configuration allows.
   Future<void> initialize({AdConfigData? adConfigData}) async {
-    AdManager.instance.initialize(adConfigData);
+    await AdManager.instance.initialize(adConfigData);
   }
 
   /// Sets the splash ad callback.
