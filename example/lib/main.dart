@@ -1,9 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:preload_google_ads/preload_google_ads.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-
-  /// Initialize the PreloadGoogleAds plugin
   PreloadGoogleAds.instance.initialize(
     adConfigData: AdConfigData(
       adIDs: AdIDS(
@@ -18,29 +17,33 @@ void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'Preload Ads Showcase',
       themeMode: ThemeMode.system,
-      theme: ThemeData(brightness: Brightness.light),
-      darkTheme: ThemeData(brightness: Brightness.dark),
+      theme: ThemeData(
+        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFF6366F1),
+          brightness: Brightness.light,
+        ),
+      ),
+      darkTheme: ThemeData(
+        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFF6366F1),
+          brightness: Brightness.dark,
+        ),
+      ),
       debugShowCheckedModeBanner: false,
-      home: SplashView(),
+      home: const SplashView(),
     );
   }
 }
-
-///==============================================================================
-///                            **  Splash View  **
-///==============================================================================
 
 class SplashView extends StatefulWidget {
   const SplashView({super.key});
@@ -52,224 +55,319 @@ class SplashView extends StatefulWidget {
 class _SplashViewState extends State<SplashView> {
   @override
   void initState() {
-    setSplashAdCallBack();
     super.initState();
+    _initAds();
   }
 
-  /// Set a callback for the splash ad finish event
-  setSplashAdCallBack() {
-    PreloadGoogleAds.instance.setSplashAdCallback((ad, error) {
-      debugPrint("Ad callback triggered, ${ad?.adUnitId}");
-
-      /// Navigate to HomeView after splash ad completes
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => const HomeView()),
+  Future<void> _initAds() async {
+    bool navigated = false;
+    void navigate() {
+      if (navigated || !mounted) return;
+      navigated = true;
+      Navigator.of(context).pushReplacement(
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) => const MainDashboard(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) => FadeTransition(opacity: animation, child: child),
+          transitionDuration: const Duration(milliseconds: 800),
+        ),
       );
-    });
+    }
+    PreloadGoogleAds.instance.setSplashAdCallback((ad, error) => navigate());
+    await Future.delayed(const Duration(seconds: 2));
+    if (!navigated) navigate();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blue,
-      body: Column(
-        children: [
-          Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: Image.asset("assets/pub-dev-logo.png", height: 35),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20),
-                  child: Text(
-                    "preload_google_ads: ^1.0.3",
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+      body: Container(
+        width: double.infinity,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Theme.of(context).colorScheme.primary, Theme.of(context).colorScheme.tertiary],
           ),
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: LinearProgressIndicator(color: Colors.blue[300]),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(24),
+              decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+              child: const Icon(Icons.ads_click, size: 60, color: Color(0xFF6366F1)),
             ),
-          ),
-        ],
+            const SizedBox(height: 32),
+            const Text(
+              "Preload Showcase",
+              style: TextStyle(fontSize: 32, fontWeight: FontWeight.w800, color: Colors.white),
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
-///==============================================================================
-///                            **  Home View  **
-///==============================================================================
-
-class AdTypList {
-  final void Function() onPressed;
-  final String title;
-
-  AdTypList({required this.onPressed, required this.title});
-}
-
-class HomeView extends StatefulWidget {
-  const HomeView({super.key});
+class MainDashboard extends StatefulWidget {
+  const MainDashboard({super.key});
 
   @override
-  State<HomeView> createState() => _HomeViewState();
+  State<MainDashboard> createState() => _MainDashboardState();
 }
 
-class _HomeViewState extends State<HomeView> {
-  late Widget ad;
-
-  List<AdTypList> adTypes = [];
-
-  @override
-  void initState() {
-    ad = SizedBox();
-    adTypes = [
-      AdTypList(onPressed: showOpenAppAd, title: "Show Open App AD"),
-      AdTypList(onPressed: showInterAd, title: "Show Interstitial AD"),
-      AdTypList(onPressed: showRewardedAd, title: "Show Rewarded AD"),
-      AdTypList(onPressed: showMediumNativeAd, title: "Show Medium Native AD"),
-      AdTypList(onPressed: showSmallNativeAd, title: "Show Small Native AD"),
-      AdTypList(onPressed: showBannerAd, title: "Show Banner AD"),
-    ];
-    super.initState();
-  }
-
-  /// Show native ad (small or medium based on flag)
-  showNative({NativeADType nativeADType = NativeADType.medium}) {
-    setState(() {
-      ad = PreloadGoogleAds.instance.showNativeAd(nativeADType: nativeADType);
-    });
-  }
-
-  /// Show banner ad
-  showBanner() {
-    setState(() {
-      ad = PreloadGoogleAds.instance.showBannerAd();
-    });
-  }
-
-  /// Show Open App Ad
-  showOpenAppAd() => PreloadGoogleAds.instance.showOpenApp();
-
-  /// Show Interstitial Ad with callback
-  showInterAd() => PreloadGoogleAds.instance.showInterstitialAd(
-    callBack: (ad, error) {
-      if (ad != null) {
-        debugPrint("Inter AD loaded successfully!");
-        debugPrint(ad.adUnitId);
-      } else {
-        debugPrint("Inter Ad failed to load: ${error?.message}");
-      }
-    },
-  );
-
-  /// Show Rewarded Ad with callback and reward handler
-  showRewardedAd() => PreloadGoogleAds.instance.showRewardedAd(
-    callBack: (ad, error) {
-      if (ad != null) {
-        debugPrint("Ad loaded successfully!");
-      } else {
-        debugPrint("Ad failed to load: ${error?.message}");
-      }
-    },
-    onReward: (ad, reward) {
-      debugPrint("User earned reward: ${reward.amount} ${reward.type}");
-    },
-  );
-
-  /// Show Medium Native Ad
-  showMediumNativeAd() => showNative();
-
-  /// Show Small Native Ad
-  showSmallNativeAd() => showNative(nativeADType: NativeADType.small);
-
-  /// Show Banner Ad
-  showBannerAd() => showBanner();
+class _MainDashboardState extends State<MainDashboard> {
+  Widget? currentAd;
+  String currentAdTypeLabel = "No Ad Selected";
+  Color primaryColor = const Color(0xFF6366F1);
+  Color cardBg = Colors.white;
+  double radius = 12;
+  bool isRefreshing = false;
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blue,
-        leading: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: Image.asset("assets/pub-dev-logo.png"),
-        ),
-        leadingWidth: 120,
+        title: const Text('Ad Dashboard'),
         actions: [
-          Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: Text(
-              "preload_google_ads 1.0.3",
-              style: TextStyle(fontSize: 14, color: Colors.white),
-            ),
+          IconButton(
+            icon: const Icon(Icons.palette_rounded),
+            onPressed: _showStyleDialog,
           ),
+          const SizedBox(width: 8),
         ],
       ),
-      body: Column(
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.blue,
-              borderRadius: BorderRadius.vertical(bottom: Radius.circular(20)),
-            ),
-            child: GridView.builder(
-              padding: EdgeInsets.symmetric(
-                horizontal: 10,
-              ).copyWith(bottom: 20, top: 10),
-              itemCount: adTypes.length,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 5,
-                mainAxisSpacing: 5,
-                childAspectRatio: 5,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _buildFormatGrid(theme),
+              const SizedBox(height: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("Live Preview: $currentAdTypeLabel",
+                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                        if (currentAd != null)
+                          IconButton(
+                            icon: const Icon(Icons.close, size: 20),
+                            onPressed: () => setState(() {
+                              currentAd = null;
+                              currentAdTypeLabel = "No Ad Selected";
+                            }),
+                          ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Expanded(
+                      child: Container(
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: theme.colorScheme.surfaceVariant.withOpacity(0.3),
+                          borderRadius: BorderRadius.circular(radius),
+                          border: Border.all(color: theme.dividerColor.withOpacity(0.1)),
+                        ),
+                        child: AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 300),
+                          child: isRefreshing
+                              ? const Center(child: CircularProgressIndicator())
+                              : (currentAd != null
+                              ? ClipRRect(
+                            borderRadius: BorderRadius.circular(radius),
+                            child: Center(child: currentAd),
+                          )
+                              : _buildEmptyPreview(theme)),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemBuilder: (context, index) {
-                return ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                  ),
-                  onPressed: adTypes[index].onPressed,
-                  child: Text(
-                    adTypes[index].title,
-                    style: TextStyle(
-                      color: Colors.blue,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 11,
-                    ),
-                  ),
-                );
+              const SizedBox(height: 16),
+              PreloadGoogleAds.instance.showAdCounter(showCounter: true),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFormatGrid(ThemeData theme) {
+    return GridView.count(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      crossAxisCount: 3,
+      mainAxisSpacing: 8,
+      crossAxisSpacing: 8,
+      childAspectRatio: 1.2,
+      children: [
+        _formatIcon(Icons.fullscreen, "Inter", Colors.blue,
+                () => PreloadGoogleAds.instance.showInterstitialAd(
+              callBack: (ad, error) => _handleAdCallback("Interstitial", ad, error),
+            )),
+        _formatIcon(Icons.stars, "Reward", Colors.orange,
+                () => PreloadGoogleAds.instance.showRewardedAd(
+              callBack: (ad, error) => _handleAdCallback("Rewarded", ad, error),
+              onReward: (a, r) => _showSnackBar("Success! Reward: ${r.amount} ${r.type}"),
+            )),
+        _formatIcon(Icons.launch, "Open", Colors.purple,
+                () => PreloadGoogleAds.instance.showOpenApp()),
+        _formatIcon(Icons.view_stream, "Banner", Colors.green,
+                () => _setAd(PreloadGoogleAds.instance.showBannerAd(), "Banner")),
+        _formatIcon(Icons.ad_units, "Small", Colors.teal,
+                () => _setAd(PreloadGoogleAds.instance.showNativeAd(nativeADType: NativeADType.small,), "Small Native")),
+        _formatIcon(Icons.featured_play_list, "Medium", Colors.indigo,
+                () => _setAd(PreloadGoogleAds.instance.showNativeAd(nativeADType: NativeADType.medium,), "Medium Native")),
+      ],
+    );
+  }
+
+  Widget _formatIcon(IconData icon, String label, Color color, VoidCallback onTap) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        decoration: BoxDecoration(
+          color: color.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: color.withOpacity(0.2)),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, color: color, size: 24),
+            const SizedBox(height: 4),
+            Text(label, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEmptyPreview(ThemeData theme) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(Icons.ads_click, size: 40, color: theme.colorScheme.outline.withOpacity(0.5)),
+        const SizedBox(height: 8),
+        Text("Select Format", style: TextStyle(color: theme.colorScheme.outline)),
+      ],
+    );
+  }
+
+  void _setAd(Widget ad, String label) {
+    setState(() {
+      currentAd = ad;
+      currentAdTypeLabel = label;
+    });
+  }
+
+  void _showStyleDialog() {
+    showDialog(
+      context: context,
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setDialogState) => AlertDialog(
+          title: const Text("Customize Style"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _colorPicker("Button", primaryColor, (c) => setDialogState(() => primaryColor = c)),
+              _colorPicker("Card BG", cardBg, (c) => setDialogState(() => cardBg = c)),
+              const SizedBox(height: 16),
+              const Text("Radius", style: TextStyle(fontWeight: FontWeight.bold)),
+              Slider(
+                value: radius,
+                min: 0,
+                max: 30,
+                onChanged: (v) => setDialogState(() => radius = v),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(onPressed: () => Navigator.pop(ctx), child: const Text("Cancel")),
+            FilledButton(
+              onPressed: () {
+                Navigator.pop(ctx);
+                _applyChanges();
               },
+              child: const Text("Apply"),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _colorPicker(String label, Color color, Function(Color) onSelect) {
+    return ListTile(
+      dense: true,
+      title: Text(label),
+      trailing: Container(
+        width: 32,
+        height: 32,
+        decoration: BoxDecoration(color: color, shape: BoxShape.circle, border: Border.all(color: Colors.grey.withOpacity(0.2))),
+      ),
+      onTap: () {
+        final newColor = color == const Color(0xFF6366F1) ? Colors.pink : (color == Colors.pink ? Colors.teal : const Color(0xFF6366F1));
+        onSelect(newColor);
+      },
+    );
+  }
+
+  Future<void> _applyChanges() async {
+    setState(() => isRefreshing = true);
+
+    await PreloadGoogleAds.instance.initialize(
+      adConfigData: AdConfigData(
+        nativeADLayout: NativeADLayout(
+          customNativeADStyle: CustomNativeADStyle(
+            buttonBackground: primaryColor,
+            buttonRadius: radius.toInt(),
           ),
-          Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                ad,
-                PreloadGoogleAds.instance.showAdCounter(showCounter: true),
-              ],
-            ),
+          decoration: BoxDecoration(
+            color: cardBg,
+            borderRadius: BorderRadius.circular(radius),
+            boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10)],
           ),
-        ],
+        ),
+      ),
+    );
+
+    await Future.delayed(const Duration(milliseconds: 500));
+
+    if (mounted) {
+      setState(() {
+        isRefreshing = false;
+        if (currentAdTypeLabel == "Small Native") {
+          currentAd = PreloadGoogleAds.instance.showNativeAd(nativeADType: NativeADType.small,);
+        } else if (currentAdTypeLabel == "Medium Native") {
+          currentAd = PreloadGoogleAds.instance.showNativeAd(nativeADType: NativeADType.medium,);
+        } else if (currentAdTypeLabel == "Banner") {
+          currentAd = PreloadGoogleAds.instance.showBannerAd();
+        }
+      });
+    }
+  }
+
+  void _handleAdCallback(String type, dynamic ad, AdError? error) {
+    if (error != null) {
+      _showSnackBar(error.message);
+    } else {
+      _showSnackBar("$type Ad opened successfully");
+    }
+  }
+
+  void _showSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        behavior: SnackBarBehavior.floating,
+        duration: const Duration(seconds: 2),
       ),
     );
   }

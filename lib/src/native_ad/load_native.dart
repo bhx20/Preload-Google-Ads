@@ -33,7 +33,7 @@ abstract class BaseNativeAdLoader {
 
   /// Loads a native ad.
   Future<void> loadAd() async {
-    if (isLoading || ads.length > 2) return;
+    if (isLoading || ads.length >= 2) return;
 
     try {
       isLoading = true;
@@ -48,11 +48,11 @@ abstract class BaseNativeAdLoader {
             if (nativeAd != null) {
               ads.add(nativeAd);
             }
+            loadStats.value++;
+            isLoading = false;
             if (ads.length < 2) {
               loadAd();
             }
-            loadStats.value++;
-            isLoading = false;
           },
           onAdImpression: (ad) {
             impStats.value++;
@@ -74,6 +74,7 @@ abstract class BaseNativeAdLoader {
       );
       await nativeAd.load();
     } catch (error) {
+      isLoading = false;
       AppLogger.error("Error in $adTypeLabel ad load catch: $error");
     }
   }

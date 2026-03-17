@@ -27,7 +27,7 @@ class LoadBannerAd {
   ///
   /// If fewer than 2 banner ads are loaded, it will load additional ads.
   Future<void> loadAd() async {
-    if (loading || bannerAdObject.length > 2) return;
+    if (loading || bannerAdObject.length >= 2) return;
 
     BannerAd? bannerAd;
 
@@ -71,12 +71,12 @@ class LoadBannerAd {
             if (bannerAd != null) {
               bannerAdObject.add(bannerAd);
             }
+            AdStats.instance.bannerLoad.value++;
+            loading = false;
             // Load another ad if there are fewer than 2 loaded ads.
             if (bannerAdObject.length < 2) {
               loadAd();
             }
-            AdStats.instance.bannerLoad.value++;
-            loading = false;
           },
           onAdImpression: (ad) {
             // Track ad impressions.

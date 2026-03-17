@@ -22,20 +22,20 @@ class NativeADStyle {
       !isFlutterLayout ? factoryIdSmallNative : null;
 
   /// The decoration for the native ad container.
-  BoxDecoration decoration =
+  BoxDecoration get decoration =>
       config.nativeADLayout?.decoration ?? BoxDecoration();
 
   /// The padding for the native ad container.
-  EdgeInsets padding = config.nativeADLayout?.padding ?? EdgeInsets.all(5);
+  EdgeInsets get padding => config.nativeADLayout?.padding ?? const EdgeInsets.all(5);
 
   /// The margin for the native ad container.
-  EdgeInsets margin = config.nativeADLayout?.margin ?? EdgeInsets.all(5);
+  EdgeInsets get margin => config.nativeADLayout?.margin ?? const EdgeInsets.all(5);
 
   /// Custom styling settings for native ads.
-  CustomNativeADStyle? customStyle = config.nativeADLayout?.customNativeADStyle;
+  CustomNativeADStyle? get customStyle => config.nativeADLayout?.customNativeADStyle;
 
   /// Flutter-based template styling settings for native ads.
-  FlutterNativeADStyle? flutterStyle =
+  FlutterNativeADStyle? get flutterStyle =>
       config.nativeADLayout?.flutterNativeADStyle;
 
   /// Returns the template style for medium native ads if using Flutter layout.
