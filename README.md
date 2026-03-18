@@ -25,10 +25,10 @@ A high-performance Flutter plugin for **background preloading** of Google Mobile
 Below are some previews showing ad preloading in action. Notice the instant display!
 
 <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
-  <img src="https://raw.githubusercontent.com/coddyNet/Preload-Google-Ads/main/docs/assets/1.gif" alt="Demo 1" width="22%" />
-  <img src="https://raw.githubusercontent.com/coddyNet/Preload-Google-Ads/main/docs/assets/2.gif" alt="Demo 2" width="22%" />
-  <img src="https://raw.githubusercontent.com/coddyNet/Preload-Google-Ads/main/docs/assets/3.gif" alt="Demo 3" width="22%" />
-  <img src="https://raw.githubusercontent.com/coddyNet/Preload-Google-Ads/main/docs/assets/4.gif" alt="Demo 4" width="22%" />
+  <img src="https://raw.githubusercontent.com/bhx20/Preload-Google-Ads/main/docs/assets/1.gif" alt="Demo 1" width="22%" />
+  <img src="https://raw.githubusercontent.com/bhx20/Preload-Google-Ads/main/docs/assets/2.gif" alt="Demo 2" width="22%" />
+  <img src="https://raw.githubusercontent.com/bhx20/Preload-Google-Ads/main/docs/assets/3.gif" alt="Demo 3" width="22%" />
+  <img src="https://raw.githubusercontent.com/bhx20/Preload-Google-Ads/main/docs/assets/4.gif" alt="Demo 4" width="22%" />
 </div>
 
 ---
