@@ -29,14 +29,11 @@ android {
     buildTypes {
         release {
             signingConfig = signingConfigs.getByName("debug")
-
-            // ✅ FIX 1: Prevent shrink crash
             isMinifyEnabled = false
             isShrinkResources = false
         }
     }
 
-    // ✅ FIX 2: Disable lint crash
     lint {
         checkReleaseBuilds = false
         abortOnError = false
