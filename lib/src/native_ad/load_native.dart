@@ -51,7 +51,7 @@ abstract class BaseNativeAdLoader {
             loadStats.value++;
             isLoading = false;
             if (ads.length < 2) {
-              loadAd();
+              Future.delayed(const Duration(seconds: 1), () => loadAd());
             }
           },
           onAdImpression: (ad) {

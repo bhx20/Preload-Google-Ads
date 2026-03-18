@@ -36,3 +36,5 @@ flutter:
       android:
         package: com.plug.preload
         pluginClass: PreloadGoogleAdsPlugin
+      ios:
+        pluginClass: PreloadGoogleAdsPlugin

@@ -1,5 +1,6 @@
 name: preload_google_ads_example
 description: "Demonstrates how to use the preload_google_ads plugin."
+version: 1.0.0+1
 
 environment:
   sdk: ^3.7.2

@@ -1,0 +1,54 @@
+PODS:
+  - Flutter (1.0.0)
+  - Google-Mobile-Ads-SDK (12.14.0):
+    - GoogleUserMessagingPlatform (>= 1.1)
+  - google_mobile_ads (7.0.0):
+    - Flutter
+    - Google-Mobile-Ads-SDK (~> 12.14.0)
+    - webview_flutter_wkwebview
+  - GoogleUserMessagingPlatform (3.1.0)
+  - integration_test (0.0.1):
+    - Flutter
+  - preload_google_ads (1.0.3):
+    - Flutter
+    - Google-Mobile-Ads-SDK
+  - webview_flutter_wkwebview (0.0.1):
+    - Flutter
+    - FlutterMacOS
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - google_mobile_ads (from `.symlinks/plugins/google_mobile_ads/ios`)
+  - integration_test (from `.symlinks/plugins/integration_test/ios`)
+  - preload_google_ads (from `.symlinks/plugins/preload_google_ads/ios`)
+  - webview_flutter_wkwebview (from `.symlinks/plugins/webview_flutter_wkwebview/darwin`)
+
+SPEC REPOS:
+  trunk:
+    - Google-Mobile-Ads-SDK
+    - GoogleUserMessagingPlatform
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  google_mobile_ads:
+    :path: ".symlinks/plugins/google_mobile_ads/ios"
+  integration_test:
+    :path: ".symlinks/plugins/integration_test/ios"
+  preload_google_ads:
+    :path: ".symlinks/plugins/preload_google_ads/ios"
+  webview_flutter_wkwebview:
+    :path: ".symlinks/plugins/webview_flutter_wkwebview/darwin"
+
+SPEC CHECKSUMS:
+  Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
+  Google-Mobile-Ads-SDK: 4534fd2dfcd3f705c5485a6633c5188d03d4eed2
+  google_mobile_ads: df3008bafbe1f2ad6862f87334e560d2f047f902
+  GoogleUserMessagingPlatform: befe603da6501006420c206222acd449bba45a9c
+  integration_test: 4a889634ef21a45d28d50d622cf412dc6d9f586e
+  preload_google_ads: 93163cebd893c33909afa8ca7c04799751892354
+  webview_flutter_wkwebview: 8ebf4fded22593026f7dbff1fbff31ea98573c8d
+
+PODFILE CHECKSUM: 1b4e38c5a7977b1d2784dfb12c349b2547df92da
+
+COCOAPODS: 1.16.2

@@ -75,7 +75,7 @@ class LoadBannerAd {
             loading = false;
             // Load another ad if there are fewer than 2 loaded ads.
             if (bannerAdObject.length < 2) {
-              loadAd();
+              Future.delayed(const Duration(seconds: 2), () => loadAd());
             }
           },
           onAdImpression: (ad) {
