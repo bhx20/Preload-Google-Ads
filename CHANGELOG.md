@@ -1,3 +1,11 @@
+## v1.0.4
+
+- Modernized Android build configuration (Java 11, Kotlin 2.1.0, and latest AGP).
+- Redesigned `README.md` for better clarity, aesthetics, and professional presentation.
+- Organized project assets by moving demo GIFs to a dedicated `docs/assets` directory.
+- Added iOS implementation boilerplate and native ad factory foundations.
+- General codebase cleanup and removal of unused constants.
+
 ## v1.0.3
 
 - Updated package version to `v1.0.3`.

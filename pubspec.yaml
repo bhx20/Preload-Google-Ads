@@ -1,6 +1,6 @@
 name: preload_google_ads  # The name of your plugin as it'll appear on pub.dev
 description: "A high-performance Flutter plugin for preloading Google Mobile Ads (AdMob) in the background. Supports immediate display of App Open, Interstitial, Rewarded, Native, and Banner ads."
-version: 1.0.3  # Semantic versioning — update this with each release
+version: 1.0.4  # Semantic versioning — update this with each release
 homepage: https://github.com/bhx20/Preload-Google-Ads
 repository: https://github.com/bhx20/Preload-Google-Ads
 issue_tracker: https://github.com/bhx20/Preload-Google-Ads/issues
