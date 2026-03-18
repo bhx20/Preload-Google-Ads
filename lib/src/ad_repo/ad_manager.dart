@@ -32,14 +32,14 @@ class AdManager {
     // Initialize the Google Mobile Ads SDK
     await MobileAds.instance.initialize();
 
-    // Load and show ads if required
+    // Load and show ads if required with staggered delays to prevent WebView creation issues
     if (shouldShowAd) {
       _loadAndShowSplashAd();
-      _loadNativeAd();
-      _loadBannerAd();
-      _loadOpenAppAd();
-      _loadInterAd();
-      _loadRewardedAd();
+      Future.delayed(const Duration(milliseconds: 200), _loadNativeAd);
+      Future.delayed(const Duration(milliseconds: 400), _loadBannerAd);
+      Future.delayed(const Duration(milliseconds: 600), _loadOpenAppAd);
+      Future.delayed(const Duration(milliseconds: 800), _loadInterAd);
+      Future.delayed(const Duration(milliseconds: 1000), _loadRewardedAd);
     }
   }
 

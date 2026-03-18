@@ -10,10 +10,10 @@ public class PreloadGoogleAdsPlugin: NSObject, FlutterPlugin {
     let instance = PreloadGoogleAdsPlugin()
     
     let mediumFactory = NativeAdFactoryMedium(styleMap: [:])
-    FLTGoogleMobileAdsPlugin.registerNativeAdFactory(registrar, factoryId: "medium_native", nativeAdFactory: mediumFactory)
+    FLTGoogleMobileAdsPlugin.registerNativeAdFactory(UIApplication.shared.delegate as! FlutterPluginRegistry, factoryId: "medium_native", nativeAdFactory: mediumFactory)
     
     let smallFactory = NativeAdFactorySmall(styleMap: [:])
-    FLTGoogleMobileAdsPlugin.registerNativeAdFactory(registrar, factoryId: "small_native", nativeAdFactory: smallFactory)
+    FLTGoogleMobileAdsPlugin.registerNativeAdFactory(UIApplication.shared.delegate as! FlutterPluginRegistry, factoryId: "small_native", nativeAdFactory: smallFactory)
     
     registrar.addMethodCallDelegate(instance, channel: channel!)
   }

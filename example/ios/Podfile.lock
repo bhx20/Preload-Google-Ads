@@ -12,6 +12,7 @@ PODS:
   - preload_google_ads (1.0.3):
     - Flutter
     - Google-Mobile-Ads-SDK
+    - google_mobile_ads
   - webview_flutter_wkwebview (0.0.1):
     - Flutter
     - FlutterMacOS
@@ -46,7 +47,7 @@ SPEC CHECKSUMS:
   google_mobile_ads: df3008bafbe1f2ad6862f87334e560d2f047f902
   GoogleUserMessagingPlatform: befe603da6501006420c206222acd449bba45a9c
   integration_test: 4a889634ef21a45d28d50d622cf412dc6d9f586e
-  preload_google_ads: 93163cebd893c33909afa8ca7c04799751892354
+  preload_google_ads: 2f0713f5bb5b80d1c1fe54c12dad87c75258ea0c
   webview_flutter_wkwebview: 8ebf4fded22593026f7dbff1fbff31ea98573c8d
 
 PODFILE CHECKSUM: 1b4e38c5a7977b1d2784dfb12c349b2547df92da

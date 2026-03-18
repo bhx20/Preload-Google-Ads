@@ -1,8 +1,8 @@
 import 'package:preload_google_ads/preload_google_ads.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  PreloadGoogleAds.instance.initialize(
+  await PreloadGoogleAds.instance.initialize(
     adConfigData: AdConfigData(
       adIDs: AdIDS(
         appOpenId: AdTestIds.appOpen,
