@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:preload_google_ads/preload_google_ads.dart';
 
 void main() {
@@ -168,9 +167,9 @@ class _MainDashboardState extends State<MainDashboard> {
                       child: Container(
                         width: double.infinity,
                         decoration: BoxDecoration(
-                          color: theme.colorScheme.surfaceVariant.withOpacity(0.3),
+                          color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
                           borderRadius: BorderRadius.circular(radius),
-                          border: Border.all(color: theme.dividerColor.withOpacity(0.1)),
+                          border: Border.all(color: theme.dividerColor.withValues(alpha: 0.1)),
                         ),
                         child: AnimatedSwitcher(
                           duration: const Duration(milliseconds: 300),
@@ -233,9 +232,9 @@ class _MainDashboardState extends State<MainDashboard> {
       borderRadius: BorderRadius.circular(12),
       child: Container(
         decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
+          color: color.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: color.withOpacity(0.2)),
+          border: Border.all(color: color.withValues(alpha: 0.2)),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -253,7 +252,7 @@ class _MainDashboardState extends State<MainDashboard> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(Icons.ads_click, size: 40, color: theme.colorScheme.outline.withOpacity(0.5)),
+        Icon(Icons.ads_click, size: 40, color: theme.colorScheme.outline.withValues(alpha: 0.5)),
         const SizedBox(height: 8),
         Text("Select Format", style: TextStyle(color: theme.colorScheme.outline)),
       ],
@@ -310,7 +309,7 @@ class _MainDashboardState extends State<MainDashboard> {
       trailing: Container(
         width: 32,
         height: 32,
-        decoration: BoxDecoration(color: color, shape: BoxShape.circle, border: Border.all(color: Colors.grey.withOpacity(0.2))),
+        decoration: BoxDecoration(color: color, shape: BoxShape.circle, border: Border.all(color: Colors.grey.withValues(alpha: 0.2))),
       ),
       onTap: () {
         final newColor = color == const Color(0xFF6366F1) ? Colors.pink : (color == Colors.pink ? Colors.teal : const Color(0xFF6366F1));
@@ -332,7 +331,7 @@ class _MainDashboardState extends State<MainDashboard> {
           decoration: BoxDecoration(
             color: cardBg,
             borderRadius: BorderRadius.circular(radius),
-            boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10)],
+            boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 10)],
           ),
         ),
       ),

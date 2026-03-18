@@ -2,9 +2,11 @@ import '../ad_internal.dart';
 
 /// Singleton pattern to get the instance of AdRepoImpl
 class PlugAd {
+  static final AdRepoImpl _instance = AdRepoImpl();
+
   /// Returns an instance of AdRepoImpl, the concrete implementation of AdRepo
   static AdRepoImpl getInstance() {
-    return AdRepoImpl();
+    return _instance;
   }
 }
 

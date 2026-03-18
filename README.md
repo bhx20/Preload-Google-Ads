@@ -36,6 +36,32 @@ Or run:
 flutter pub add preload_google_ads
 ```
 
+## Platform Setup
+
+Before initializing the plugin, you must configure your platform-specific files to include your AdMob App ID. Failure to do this will result in a crash on startup.
+
+### Android
+Add your AdMob App ID to your project's `android/app/src/main/AndroidManifest.xml` inside the `<application>` tag:
+
+```xml
+<manifest>
+    <application>
+        <!-- Add this meta-data tag -->
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-xxxxxxxxxxxxxxxx~yyyyyyyyyy"/>
+    </application>
+</manifest>
+```
+
+### iOS
+Add your AdMob App ID to your project's `ios/Runner/Info.plist`:
+
+```xml
+<key>GADApplicationIdentifier</key>
+<string>ca-app-pub-xxxxxxxxxxxxxxxx~yyyyyyyyyy</string>
+```
+
 ## Usage
 
 To get started, initialize the plugin at the top of your `main()` method before running the app:

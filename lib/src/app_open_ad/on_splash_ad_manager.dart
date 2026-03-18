@@ -60,6 +60,7 @@ class GoogleAppOpenOnSplash {
           },
           onAdFailedToLoad: (error) async {
             AdStats.instance.openAppFailed.value++;
+            _timer.cancel(); // Prevent the timer from firing later
             await callBack();
             AppLogger.error('AppOpenAd failed to load: $error');
           },

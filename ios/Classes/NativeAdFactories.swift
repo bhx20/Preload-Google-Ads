@@ -1,12 +1,7 @@
 import Flutter
 import UIKit
 import GoogleMobileAds
-
-// Protocol that matches google_mobile_ads FLTNativeAdFactory
-@objc public protocol FLTNativeAdFactory {
-    @objc func createNativeAd(_ nativeAd: NativeAd,
-                             customOptions: [AnyHashable: Any]?) -> NativeAdView?
-}
+import google_mobile_ads
 
 public class BaseNativeAdFactory: NSObject {
     var styleMap: [String: Any] = [:]

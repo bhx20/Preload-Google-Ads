@@ -1,5 +1,6 @@
 import Flutter
 import UIKit
+import google_mobile_ads
 
 public class PreloadGoogleAdsPlugin: NSObject, FlutterPlugin {
   static var channel: FlutterMethodChannel?
@@ -7,6 +8,13 @@ public class PreloadGoogleAdsPlugin: NSObject, FlutterPlugin {
   public static func register(with registrar: FlutterPluginRegistrar) {
     channel = FlutterMethodChannel(name: "com.plug.preload/adButtonStyle", binaryMessenger: registrar.messenger())
     let instance = PreloadGoogleAdsPlugin()
+    
+    let mediumFactory = NativeAdFactoryMedium(styleMap: [:])
+    FLTGoogleMobileAdsPlugin.registerNativeAdFactory(registrar, factoryId: "medium_native", nativeAdFactory: mediumFactory)
+    
+    let smallFactory = NativeAdFactorySmall(styleMap: [:])
+    FLTGoogleMobileAdsPlugin.registerNativeAdFactory(registrar, factoryId: "small_native", nativeAdFactory: smallFactory)
+    
     registrar.addMethodCallDelegate(instance, channel: channel!)
   }
 

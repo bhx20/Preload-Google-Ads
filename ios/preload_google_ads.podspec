@@ -16,6 +16,7 @@ A high-performance Flutter plugin for preloading Google Mobile Ads (AdMob) in th
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
   s.dependency 'Google-Mobile-Ads-SDK'
+  s.dependency 'google_mobile_ads'
   s.platform = :ios, '12.0'
 
   # Flutter.framework does not contain a i386 slice.
