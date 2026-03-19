@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'preload_google_ads'
-  s.version          = '1.0.3'
+  s.version          = '1.0.6'
   s.summary          = 'A high-performance Flutter plugin for preloading Google Mobile Ads.'
   s.description      = <<-DESC
 A high-performance Flutter plugin for preloading Google Mobile Ads (AdMob) in the background. Supports immediate display of App Open, Interstitial, Rewarded, Native, and Banner ads.

@@ -1,3 +1,8 @@
+## v1.0.6
+
+- Added Swift Package Manager (SPM) support for iOS.
+- Improved package description for better pub.dev compliance and score.
+
 ## v1.0.5
 
 - Added iOS implementation boilerplate and native ad factory foundations.
