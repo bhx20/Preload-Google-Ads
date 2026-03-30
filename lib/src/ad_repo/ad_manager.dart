@@ -30,16 +30,89 @@ class AdManager {
     config = await setConfigData(adConfig);
 
     // Initialize the Google Mobile Ads SDK
-    await MobileAds.instance.initialize();
+    final initStatus = await MobileAds.instance.initialize();
 
-    // Load and show ads if required with staggered delays to prevent WebView creation issues
+    // Log adapter initialization status for diagnostics
+    initStatus.adapterStatuses.forEach((adapter, status) {
+      AppLogger.log(
+        'Adapter: $adapter — ${status.state.name} (${status.description})',
+      );
+    });
+
+    // Register test devices to get test ads on physical devices.
+    // Without this, test ad unit IDs may return "Invalid Request" on real devices.
+    MobileAds.instance.updateRequestConfiguration(
+      RequestConfiguration(
+        testDeviceIds: [
+          // Add test device IDs as needed.
+          // On iOS, check Xcode console for: "<Google> To get test ads on this device, set..."
+        ],
+      ),
+    );
+
+    // Setup MethodChannel for receiving assets from native
+    _setupMethodChannel();
+
+    // Load and show ads if required
     if (shouldShowAd) {
       _loadAndShowSplashAd();
-      Future.delayed(const Duration(milliseconds: 200), _loadNativeAd);
-      Future.delayed(const Duration(milliseconds: 400), _loadBannerAd);
-      Future.delayed(const Duration(milliseconds: 600), _loadOpenAppAd);
-      Future.delayed(const Duration(milliseconds: 800), _loadInterAd);
-      Future.delayed(const Duration(milliseconds: 1000), _loadRewardedAd);
+      _loadBannerAd();
+      _loadOpenAppAd();
+      _loadInterAd();
+      _loadRewardedAd();
+      _loadCustomNativeAds();
+    }
+  }
+
+  /// Sets up the MethodChannel to receive ad assets and other events from native.
+  void _setupMethodChannel() {
+    const channel = MethodChannel(nativeChannel);
+    channel.setMethodCallHandler((call) async {
+      if (call.method == 'onAdAssetsLoaded') {
+        final data = call.arguments as Map<dynamic, dynamic>;
+        final factoryId = data['factoryId'] as String?;
+        if (factoryId != null) {
+          final assets = NativeAdAssets.fromMap(data);
+          
+          final loader = DynamicNativeLoaderManager.instance.getLoader(factoryId);
+
+          if (loader != null) {
+            loader.adAssets.add(assets);
+            if (loader is DynamicBuilderAdLoader) {
+              loader.onAdPreloadSuccess();
+            }
+            AppLogger.log("Assets received for factory: $factoryId");
+          }
+        }
+      }
+    });
+  }
+
+  /// Registers and loads custom native ads if provided in the configuration.
+  void _loadCustomNativeAds() {
+    if (config.adIDs?.customFactories != null) {
+      for (final factory in config.adIDs!.customFactories!) {
+        // All custom native ads (builder-only) now go through
+        // the DynamicNativeLoaderManager for queue management and stats.
+        DynamicNativeLoaderManager.instance.registerFactory(factory);
+      }
+      DynamicNativeLoaderManager.instance.loadAll();
+    }
+  }
+
+  /// Preloads a builder-pattern native ad on the native side.
+  Future<void> preloadBuilderAd({
+    required String adUnitId,
+    required String factoryId,
+  }) async {
+    const channel = MethodChannel(nativeChannel);
+    try {
+      await channel.invokeMethod('preloadBuilderAd', {
+        'adUnitId': adUnitId,
+        'factoryId': factoryId,
+      });
+    } catch (e) {
+      AppLogger.log("Failed to preload builder ad: $e");
     }
   }
 
@@ -64,13 +137,6 @@ class AdManager {
     }
   }
 
-  /// Loads native ads (both small and medium) if enabled in the ad configuration.
-  void _loadNativeAd() {
-    if (shouldShowNativeAd) {
-      PlugAd.getInstance().loadMediumNative();
-      PlugAd.getInstance().loadSmallNative();
-    }
-  }
 
   /// Loads a banner ad if enabled in the ad configuration.
   void _loadBannerAd() {
@@ -107,10 +173,6 @@ class AdManager {
 
   /// Below methods are used to show various types of ads
 
-  /// Shows a native ad. Optionally specify if it is a small or medium-sized ad.
-  Widget showNativeAd({NativeADType nativeADType = NativeADType.medium}) {
-    return PlugAd.getInstance().showNative(nativeADType: nativeADType);
-  }
 
   /// Shows the open app ad.
   void showOpenApp() {

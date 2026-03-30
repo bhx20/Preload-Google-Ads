@@ -14,17 +14,6 @@ class AdRepoImpl extends AdRepo {
     return InterAd.instance.load();
   }
 
-  /// Loads the medium-sized native ad using LoadMediumNative instance
-  @override
-  Future<void> loadMediumNative() {
-    return LoadMediumNative.instance.loadAd();
-  }
-
-  /// Loads the small-sized native ad using LoadSmallNative instance
-  @override
-  Future<void> loadSmallNative() {
-    return LoadSmallNative.instance.loadAd();
-  }
 
   /// Displays the ad counter widget. The [showCounter] value determines if the counter should be shown.
   @override
@@ -46,11 +35,7 @@ class AdRepoImpl extends AdRepo {
     return InterAd.instance.showInter(callBack: callBack);
   }
 
-  /// Displays the native ad, where [isSmall] determines if it is small or large.
-  @override
-  Widget showNative({NativeADType nativeADType = NativeADType.medium}) {
-    return ShowNative(nativeADType: nativeADType);
-  }
+
 
   /// Displays the app open ad on splash screen using GoogleAppOpenOnSplash instance
   @override
@@ -95,11 +80,10 @@ class AdRepoImpl extends AdRepo {
   /// Resets all ad state and disposes of loaded ads.
   @override
   void resetAll() {
-    LoadMediumNative.instance.reset();
-    LoadSmallNative.instance.reset();
     LoadBannerAd.instance.reset();
     InterAd.instance.reset();
     RewardAd.instance.reset();
+    DynamicNativeLoaderManager.instance.resetAll();
     // App Open ads are usually managed by lifecycle, but we can reset their managers if needed.
     // Assuming lifecycle managers handle their own state or don't need explicit reset here.
   }

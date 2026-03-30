@@ -25,12 +25,42 @@ class PreloadGoogleAds {
     _adManager.setSplashAdCallback(callback);
   }
 
-  /// Displays a preloaded native ad in the UI.
+
+  /// Displays a fully customisable native ad using the builder pattern
+  /// with a registered factory ID.
   ///
-  /// Specify [nativeADType] as [NativeADType.small] or [NativeADType.medium].
-  /// Returns a [Widget] that contains the ad, or an empty [SizedBox] if no ad is available.
-  Widget showNativeAd({NativeADType nativeADType = NativeADType.medium}) {
-    return _adManager.showNativeAd(nativeADType: nativeADType);
+  /// This creates a [CustomNativeAdView] that loads ads via native
+  /// PlatformViews while rendering the UI entirely in Flutter.
+  /// Register a factory via [NativeAdFactoryConfig] during initialization,
+  /// then pass that factory's ID here.
+  ///
+  /// See [CustomNativeAdView] for full documentation and examples.
+  Widget showBuilderNativeAd({
+    String? factoryId,
+    String? adUnitId,
+    NativeAdSize size = NativeAdSize.custom,
+    required NativeAdBuilder builder,
+    Widget? fallback,
+    VoidCallback? onAdLoaded,
+    void Function(String code, String message)? onAdFailedToLoad,
+    VoidCallback? onAdClicked,
+    VoidCallback? onAdImpression,
+    VoidCallback? onAdOpened,
+    VoidCallback? onAdClosed,
+  }) {
+    return CustomNativeAdView(
+      factoryId: factoryId,
+      adUnitId: adUnitId,
+      size: size,
+      builder: builder,
+      fallback: fallback,
+      onAdLoaded: onAdLoaded,
+      onAdFailedToLoad: onAdFailedToLoad,
+      onAdClicked: onAdClicked,
+      onAdImpression: onAdImpression,
+      onAdOpened: onAdOpened,
+      onAdClosed: onAdClosed,
+    );
   }
 
   /// Displays the open app ad (not the splash ad).
@@ -66,5 +96,14 @@ class PreloadGoogleAds {
     required void Function(AdWithoutView ad, RewardItem reward) onReward,
   }) {
     return _adManager.showRewardedAd(callBack: callBack, onReward: onReward);
+  }
+
+
+  /// Manually triggers preloading for a builder-pattern native ad on the native side.
+  Future<void> preloadBuilderAd({
+    required String adUnitId,
+    required String factoryId,
+  }) async {
+    return _adManager.preloadBuilderAd(adUnitId: adUnitId, factoryId: factoryId);
   }
 }

@@ -11,7 +11,7 @@ A high-performance Flutter plugin for **background preloading** of Google Mobile
 ## Key Features
 
 - **Zero Latency**: Preload ads during app startup for immediate display.
-- **All Formats Supported**: App Open, Interstitial, Rewarded, Native (Small/Medium), and Banner.
+- **All Formats Supported**: App Open, Interstitial, Rewarded, Native (Custom), and Banner.
 - **Auto-Reloading**: Automatically fetches fresh ads after display or failure.
 - **Click Counter Logic**: Customizable frequency control (e.g., show every 3rd click).
 - **Deep Customization**: Style native ads via Kotlin (Android) or Flutter views.
@@ -111,14 +111,12 @@ PreloadGoogleAds.instance.initialize(
   adConfigData: AdConfigData(
     adCounter: AdCounter(
       interstitialCounter: 2, // Show every 2 clicks
-      nativeCounter: 0,       // Show every time
       rewardedCounter: 1,     // Show every click
     ),
     adFlag: AdFlag(
       showAd: true,
       showBanner: true,
       showInterstitial: true,
-      showNative: true,
       showOpenApp: true,
       showRewarded: true,
       showSplashAd: false,
@@ -152,7 +150,7 @@ NativeADLayout(
 
 | Format | Method |
 | :--- | :--- |
-| **Native** | `PreloadGoogleAds.instance.showNativeAd(nativeADType: NativeADType.medium)` |
+| **Native** | `PreloadGoogleAds.instance.showBuilderNativeAd(...)` |
 | **Banner** | `PreloadGoogleAds.instance.showBannerAd()` |
 | **Interstitial** | `PreloadGoogleAds.instance.showInterstitialAd(callBack: (ad, error) => ...)` |
 | **Rewarded** | `PreloadGoogleAds.instance.showRewardedAd(callBack: (ad, error) => ..., onReward: (ad, item) => ...)` |

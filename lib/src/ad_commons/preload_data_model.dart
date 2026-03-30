@@ -11,11 +11,8 @@ class AdConfigData {
   /// Toggles for showing/hiding different types of ads.
   final AdFlag? adFlag;
 
-  /// Styling preferences for ads.
-  final NativeADLayout? nativeADLayout;
-
   /// Constructor for [AdConfigData].
-  AdConfigData({this.adIDs, this.adCounter, this.adFlag, this.nativeADLayout});
+  AdConfigData({this.adIDs, this.adCounter, this.adFlag});
 }
 
 /// Contains Ad Unit IDs for different ad types.
@@ -26,7 +23,7 @@ class AdIDS {
   /// Banner ad ID.
   final String? bannerId;
 
-  /// Native ad ID.
+  /// Default Native ad ID.
   final String? nativeId;
 
   /// Interstitial ad ID.
@@ -35,6 +32,9 @@ class AdIDS {
   /// Rewarded ad ID.
   final String? rewardedId;
 
+  /// Custom native ad factory configurations.
+  final List<NativeAdFactoryConfig>? customFactories;
+
   /// Constructor for [AdIDS].
   AdIDS({
     this.appOpenId,
@@ -42,8 +42,113 @@ class AdIDS {
     this.nativeId,
     this.interstitialId,
     this.rewardedId,
+    this.customFactories,
   });
 }
+
+/// Configuration for a custom native ad factory.
+class NativeAdFactoryConfig {
+  /// Unique identifier for this factory.
+  final String factoryId;
+
+  /// Optional ad unit ID specifically for this factory.
+  final String? adUnitId;
+
+  /// Whether this custom ad is rendered using the builder pattern (PlatformView).
+  final bool isBuilder;
+
+  /// Constructor for [NativeAdFactoryConfig].
+  NativeAdFactoryConfig({
+    required this.factoryId,
+    this.adUnitId,
+    this.isBuilder = true,
+  });
+
+  /// Converts this configuration to a JSON map.
+  Map<String, dynamic> toJson() => {
+        'factoryId': factoryId,
+        'isBuilder': isBuilder,
+      };
+}
+
+/// Represents the raw assets of a native ad, extracted on the native side.
+class NativeAdAssets {
+  /// Unique identifier for the factory that loaded this ad.
+  final String? factoryId;
+
+  /// The headline of the ad.
+  final String? headline;
+
+  /// The body text of the ad.
+  final String? body;
+
+  /// The text for the call to action button.
+  final String? callToAction;
+
+  /// The name of the advertiser.
+  final String? advertiser;
+
+  /// The store name (e.g., App Store, Play Store).
+  final String? store;
+
+  /// The price of the app or item.
+  final String? price;
+
+  /// The star rating (0 to 5).
+  final double? rating;
+
+  /// The raw bytes of the ad's icon image.
+  final Uint8List? iconBytes;
+
+  /// A list of image URLs from the ad.
+  final List<String> imageUrls;
+
+  /// Whether the ad contains video content.
+  final bool hasVideo;
+
+  /// The duration of the video content in seconds.
+  final double? duration;
+
+  /// The aspect ratio of the media content.
+  final double? aspectRatio;
+
+  /// Constructor for [NativeAdAssets].
+  NativeAdAssets({
+    this.factoryId,
+    this.headline,
+    this.body,
+    this.callToAction,
+    this.advertiser,
+    this.store,
+    this.price,
+    this.rating,
+    this.iconBytes,
+    this.imageUrls = const [],
+    this.hasVideo = false,
+    this.duration,
+    this.aspectRatio,
+  });
+
+  /// Creates a [NativeAdAssets] instance from a platform-provided map.
+  factory NativeAdAssets.fromMap(Map<dynamic, dynamic> map) {
+    return NativeAdAssets(
+      factoryId: map['factoryId'] as String?,
+      headline: map['headline'] as String?,
+      body: map['body'] as String?,
+      callToAction: map['callToAction'] as String?,
+      advertiser: map['advertiser'] as String?,
+      store: map['store'] as String?,
+      price: map['price'] as String?,
+      rating: (map['rating'] as num?)?.toDouble(),
+      iconBytes: map['iconBytes'] as Uint8List?,
+      imageUrls: map['images'] != null ? List<String>.from(map['images']) : const [],
+      hasVideo: map['hasVideo'] as bool? ?? false,
+      duration: (map['duration'] as num?)?.toDouble(),
+      aspectRatio: (map['aspectRatio'] as num?)?.toDouble(),
+    );
+  }
+}
+
 
 /// Controls the display frequency of ads using counters.
 class AdCounter {
@@ -53,14 +158,10 @@ class AdCounter {
   /// Number of times to show rewarded ads.
   final int? rewardedCounter;
 
-  /// Number of times to show native ads.
-  final int? nativeCounter;
-
   /// Constructor for [AdCounter].
   AdCounter({
     this.interstitialCounter,
     this.rewardedCounter,
-    this.nativeCounter,
   });
 }
 
@@ -74,9 +175,6 @@ class AdFlag {
 
   /// Show interstitial ads.
   final bool? showInterstitial;
-
-  /// Show native ads.
-  final bool? showNative;
 
   /// Show splash screen ad.
   final bool? showSplashAd;
@@ -92,201 +190,8 @@ class AdFlag {
     this.showAd,
     this.showBanner,
     this.showInterstitial,
-    this.showNative,
     this.showSplashAd,
     this.showOpenApp,
     this.showRewarded,
   });
-}
-
-/// Configuration for the layout of native ads.
-class NativeADLayout {
-  /// The type of layout to use (Flutter or native).
-  final AdLayout adLayout;
-
-  /// Custom styling settings for native platform layouts.
-  final CustomNativeADStyle? customNativeADStyle;
-
-  /// Styling settings for Flutter-based native ad templates.
-  final FlutterNativeADStyle? flutterNativeADStyle;
-
-  /// The decoration of the container surrounding the native ad.
-  BoxDecoration decoration;
-
-  /// The padding of the container surrounding the native ad.
-  EdgeInsets padding;
-
-  /// The margin of the container surrounding the native ad.
-  EdgeInsets margin;
-
-  /// Constructor for [NativeADLayout] with optional styling and layout settings.
-  NativeADLayout({
-    AdLayout? adLayout,
-    this.customNativeADStyle,
-    this.flutterNativeADStyle,
-    EdgeInsets? padding,
-    EdgeInsets? margin,
-    BoxDecoration? decoration,
-  })  : adLayout = adLayout ?? AdLayout.nativeLayout,
-        decoration = decoration ??
-            BoxDecoration(
-              color: Colors.white,
-              border: Border.all(color: Colors.grey.withValues(alpha: 0.5)),
-              borderRadius: BorderRadius.circular(5),
-            ),
-        padding = padding ?? EdgeInsets.all(5),
-        margin = margin ?? EdgeInsets.all(5);
-}
-
-/// Styling configuration for ad components.
-class CustomNativeADStyle {
-  /// Color of the ad title text.
-  Color titleColor;
-
-  /// Color of the ad body text.
-  Color bodyColor;
-
-  /// Background color of ad tags.
-  Color tagBackground;
-
-  /// Foreground color (text/icon) of ad tags.
-  Color tagForeground;
-
-  /// Background color of ad buttons.
-  Color buttonBackground;
-
-  /// Foreground color (text/icon) of ad buttons.
-  Color buttonForeground;
-
-  /// Border radius for ad buttons.
-  int buttonRadius;
-
-  /// Border radius for ad tags.
-  int tagRadius;
-
-  /// Optional gradient colors for ad buttons.
-  List<Color> buttonGradients;
-
-  /// The constraints for medium-sized native ads.
-  BoxConstraints mediumBoxConstrain;
-
-  /// The constraints for small-sized native ads.
-  BoxConstraints smallBoxConstrain;
-
-  /// Constructor for [CustomNativeADStyle] with default styling values.
-  CustomNativeADStyle({
-    this.titleColor = const Color(0xFF000000),
-    this.bodyColor = const Color(0xFF808080),
-    this.tagBackground = const Color(0xFFF19938),
-    this.tagForeground = const Color(0xFFFFFFFF),
-    this.buttonBackground = const Color(0xFF2196F3),
-    this.buttonForeground = const Color(0xFFFFFFFF),
-    this.buttonRadius = 5,
-    this.tagRadius = 5,
-    List<Color>? buttonGradients,
-    BoxConstraints? mediumBoxConstrain,
-    BoxConstraints? smallBoxConstrain,
-  })  : buttonGradients = buttonGradients ?? [],
-        mediumBoxConstrain = BoxConstraints(
-          minWidth: 320,
-          minHeight: 210,
-          maxWidth: 400,
-          maxHeight: 265,
-        ),
-        smallBoxConstrain = BoxConstraints(
-          minWidth: 320,
-          minHeight: 57,
-          maxWidth: 400,
-          maxHeight: 135,
-        );
-}
-
-/// Styling configuration for Flutter native ad templates.
-class FlutterNativeADStyle {
-  /// Text style for the call-to-action button (e.g., "Install", "Learn More").
-  ///
-  /// Uses white text on a blue background by default, with bold font styling.
-  NativeTemplateTextStyle? callToActionTextStyle;
-
-  /// Text style for the primary title or headline of the ad.
-  ///
-  /// Defaults to black color, normal font, size 16.
-  NativeTemplateTextStyle? primaryTextStyle;
-
-  /// Text style for the secondary text (typically body or rating info).
-  ///
-  /// Defaults to grey color, normal font, size 14.
-  NativeTemplateTextStyle? secondaryTextStyle;
-
-  /// Text style for tertiary text (e.g., store name or additional info).
-  ///
-  /// Defaults to grey color, italic font, size 12.
-  NativeTemplateTextStyle? tertiaryTextStyle;
-
-  /// Background color for the entire ad template.
-  ///
-  /// Defaults to white.
-  Color? mainBackgroundColor;
-
-  /// Corner radius for call-to-action and icon elements (iOS only).
-  ///
-  /// Defaults to 5.0, matching `CustomNativeADStyle.buttonRadius`.
-  /// The corner radius for ad elements.
-  double? cornerRadius;
-
-  /// The constraints for medium-sized native ads in the Flutter template.
-  BoxConstraints mediumBoxConstrain;
-
-  /// The constraints for small-sized native ads in the Flutter template.
-  BoxConstraints smallBoxConstrain;
-
-  /// Constructor that applies default styling similar to [CustomNativeADStyle].
-  FlutterNativeADStyle({
-    NativeTemplateTextStyle? callToActionTextStyle,
-    NativeTemplateTextStyle? primaryTextStyle,
-    NativeTemplateTextStyle? secondaryTextStyle,
-    NativeTemplateTextStyle? tertiaryTextStyle,
-    Color? mainBackgroundColor,
-    double? cornerRadius,
-    BoxConstraints? mediumBoxConstrain,
-    BoxConstraints? smallBoxConstrain,
-  })  : callToActionTextStyle = callToActionTextStyle ??
-            NativeTemplateTextStyle(
-              textColor: Colors.white,
-              backgroundColor: Colors.blue,
-              style: NativeTemplateFontStyle.bold,
-              size: 14.0,
-            ),
-        primaryTextStyle = primaryTextStyle ??
-            NativeTemplateTextStyle(
-              textColor: Colors.black,
-              style: NativeTemplateFontStyle.normal,
-              size: 16.0,
-            ),
-        secondaryTextStyle = secondaryTextStyle ??
-            NativeTemplateTextStyle(
-              textColor: Colors.grey,
-              style: NativeTemplateFontStyle.normal,
-              size: 14.0,
-            ),
-        tertiaryTextStyle = tertiaryTextStyle ??
-            NativeTemplateTextStyle(
-              textColor: Colors.grey,
-              style: NativeTemplateFontStyle.normal,
-              size: 12.0,
-            ),
-        mainBackgroundColor = mainBackgroundColor ?? Colors.white,
-        cornerRadius = cornerRadius ?? 5.0,
-        mediumBoxConstrain = BoxConstraints(
-          minWidth: 320,
-          minHeight: 280,
-          maxWidth: 400,
-          maxHeight: 365,
-        ),
-        smallBoxConstrain = BoxConstraints(
-          minWidth: 320,
-          minHeight: 88,
-          maxWidth: 400,
-          maxHeight: 120,
-        );
 }

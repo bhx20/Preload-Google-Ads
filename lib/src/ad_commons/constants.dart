@@ -6,11 +6,6 @@ const nativeChannel = 'com.plug.preload/adButtonStyle';
 /// The method name for setting ad style data.
 const nativeMethod = 'setAdStyle';
 
-/// The factory ID for medium native ads.
-const factoryIdMediumNative = 'medium_native';
-
-/// The factory ID for small native ads.
-const factoryIdSmallNative = 'small_native';
 
 ///==============================================================================
 ///              **  AD Test ID Class  **
@@ -48,6 +43,12 @@ class AdTestIds {
         iosId: 'ca-app-pub-3940256099942544/3986624511',
       );
 
+  /// Native Video Ad Unit ID
+  static String get nativeVideo => _getId(
+        androidId: 'ca-app-pub-3940256099942544/1044960115',
+        iosId: 'ca-app-pub-3940256099942544/2521693316',
+      );
+
   /// App Open Ad Unit ID
   static String get appOpen => _getId(
         androidId: 'ca-app-pub-3940256099942544/9257395921',
@@ -70,11 +71,3 @@ enum AdLayout {
   nativeLayout
 }
 
-/// The size/type of native ad.
-enum NativeADType {
-  /// Medium-sized native ad.
-  medium,
-
-  /// Small-sized native ad.
-  small
-}

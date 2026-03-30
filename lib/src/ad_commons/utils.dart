@@ -12,32 +12,19 @@ AdConfigData preData = AdConfigData(
     nativeId: AdTestIds.native,
     interstitialId: AdTestIds.interstitial,
     rewardedId: AdTestIds.rewarded,
+    customFactories: [],
   ),
   adCounter: AdCounter(
     interstitialCounter: 0,
-    nativeCounter: 0,
     rewardedCounter: 0,
   ),
   adFlag: AdFlag(
     showAd: true,
     showBanner: true,
     showInterstitial: true,
-    showNative: true,
     showOpenApp: true,
     showRewarded: true,
     showSplashAd: false,
-  ),
-  nativeADLayout: NativeADLayout(
-    padding: EdgeInsets.all(5),
-    margin: EdgeInsets.all(5),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      border: Border.all(color: Colors.grey.withValues(alpha: 0.5)),
-      borderRadius: BorderRadius.circular(5),
-    ),
-    adLayout: AdLayout.nativeLayout,
-    customNativeADStyle: CustomNativeADStyle(),
-    flutterNativeADStyle: FlutterNativeADStyle(),
   ),
 );
 
@@ -48,7 +35,9 @@ AdConfigData preData = AdConfigData(
 /// Sets the configuration data for ads, allowing custom values for each ad type.
 /// Uses default values from [preData] if no configuration is provided.
 Future<AdConfigData> setConfigData(AdConfigData? adConfig) async {
-  await setAdStyleData(adConfig?.nativeADLayout?.customNativeADStyle);
+  if (adConfig?.adIDs?.customFactories != null) {
+    await setCustomFactoryLayouts(adConfig!.adIDs!.customFactories!);
+  }
   return AdConfigData(
     adIDs: AdIDS(
       appOpenId: adConfig?.adIDs?.appOpenId ?? preData.adIDs?.appOpenId,
@@ -57,12 +46,12 @@ Future<AdConfigData> setConfigData(AdConfigData? adConfig) async {
       interstitialId:
           adConfig?.adIDs?.interstitialId ?? preData.adIDs?.interstitialId,
       rewardedId: adConfig?.adIDs?.rewardedId ?? preData.adIDs?.rewardedId,
+      customFactories:
+          adConfig?.adIDs?.customFactories ?? preData.adIDs?.customFactories,
     ),
     adCounter: AdCounter(
       interstitialCounter: adConfig?.adCounter?.interstitialCounter ??
           preData.adCounter?.interstitialCounter,
-      nativeCounter: adConfig?.adCounter?.nativeCounter ??
-          preData.adCounter?.nativeCounter,
       rewardedCounter: adConfig?.adCounter?.rewardedCounter ??
           preData.adCounter?.rewardedCounter,
     ),
@@ -71,55 +60,21 @@ Future<AdConfigData> setConfigData(AdConfigData? adConfig) async {
       showBanner: adConfig?.adFlag?.showBanner ?? preData.adFlag?.showBanner,
       showInterstitial: adConfig?.adFlag?.showInterstitial ??
           preData.adFlag?.showInterstitial,
-      showNative: adConfig?.adFlag?.showNative ?? preData.adFlag?.showNative,
       showOpenApp: adConfig?.adFlag?.showOpenApp ?? preData.adFlag?.showOpenApp,
       showRewarded:
           adConfig?.adFlag?.showRewarded ?? preData.adFlag?.showRewarded,
       showSplashAd:
           adConfig?.adFlag?.showSplashAd ?? preData.adFlag?.showSplashAd,
     ),
-    nativeADLayout: NativeADLayout(
-      decoration: adConfig?.nativeADLayout?.decoration ??
-          preData.nativeADLayout?.decoration,
-      margin:
-          adConfig?.nativeADLayout?.margin ?? preData.nativeADLayout?.margin,
-      padding:
-          adConfig?.nativeADLayout?.padding ?? preData.nativeADLayout?.padding,
-      adLayout: adConfig?.nativeADLayout?.adLayout ??
-          preData.nativeADLayout?.adLayout,
-      customNativeADStyle: adConfig?.nativeADLayout?.customNativeADStyle ??
-          preData.nativeADLayout?.customNativeADStyle,
-      flutterNativeADStyle: adConfig?.nativeADLayout?.flutterNativeADStyle ??
-          preData.nativeADLayout?.flutterNativeADStyle,
-    ),
   );
 }
 
-///==============================================================================
-///              **  Set Ad Style Data Function  **
-///==============================================================================
-
-/// Sets the ad style data by invoking a method on the native platform.
-/// This method adjusts the appearance of various ad components like buttons and text.
-Future<void> setAdStyleData(CustomNativeADStyle? adStyle) async {
+/// Sends custom native ad factory layouts to the native platform.
+Future<void> setCustomFactoryLayouts(
+    List<NativeAdFactoryConfig> factories) async {
   final channel = MethodChannel(nativeChannel);
-
-  /// Fallback to default ad style if none is provided
-  adStyle ??= CustomNativeADStyle();
-
-  /// Passes ad style data to the native platform.
-  await channel.invokeMethod(nativeMethod, {
-    "title": colorToHex(adStyle.titleColor),
-    "description": colorToHex(adStyle.bodyColor),
-    "tag_background": colorToHex(adStyle.tagBackground),
-    "tag_foreground": colorToHex(adStyle.tagForeground),
-    "button_background": colorToHex(adStyle.buttonBackground),
-    "button_foreground": colorToHex(adStyle.buttonForeground),
-    "button_radius": adStyle.buttonRadius,
-    "tag_radius": adStyle.tagRadius,
-    "button_gradients":
-        adStyle.buttonGradients.map((color) => colorToHex(color)).toList(),
-  });
+  final layouts = factories.map((f) => f.toJson()).toList();
+  await channel.invokeMethod('setCustomFactoryLayouts', {'factories': layouts});
 }
 
 ///==============================================================================
@@ -156,26 +111,6 @@ class AdStats {
 
   /// Number of rewarded ad load failures.
   final ValueNotifier<int> rewardedFailed = ValueNotifier(0);
-
-  /// Statistics for Small Native Ads
-  /// Number of small native ads loaded.
-  final ValueNotifier<int> nativeLoadS = ValueNotifier(0);
-
-  /// Number of small native ad impressions.
-  final ValueNotifier<int> nativeImpS = ValueNotifier(0);
-
-  /// Number of small native ad load failures.
-  final ValueNotifier<int> nativeFailedS = ValueNotifier(0);
-
-  /// Statistics for Medium Native Ads
-  /// Number of medium native ads loaded.
-  final ValueNotifier<int> nativeLoadM = ValueNotifier(0);
-
-  /// Number of medium native ad impressions.
-  final ValueNotifier<int> nativeImpM = ValueNotifier(0);
-
-  /// Number of medium native ad load failures.
-  final ValueNotifier<int> nativeFailedM = ValueNotifier(0);
 
   /// Statistics for App Open Ads
   /// Number of app open ads loaded.
@@ -251,8 +186,7 @@ bool get shouldShowSplashAd =>
     config.adFlag?.showSplashAd == true && config.adFlag?.showAd == true;
 
 /// Determines if native ads should be shown.
-bool get shouldShowNativeAd =>
-    config.adFlag?.showNative == true && config.adFlag?.showAd == true;
+bool get shouldShowNativeAd => config.adFlag?.showAd == true;
 
 /// Determines if banner ads should be shown.
 bool get shouldShowBannerAd =>
@@ -274,11 +208,7 @@ bool get shouldShowOpenAppAd =>
 int get getInterCounter => config.adCounter?.interstitialCounter ?? 0;
 
 /// Gets the native ad counter.
-int get getNativeCounter => config.adCounter?.nativeCounter ?? 0;
+int get getNativeCounter => 0; // Default to 0 (always show) for custom native ads
 
 /// Gets the rewarded ad counter.
 int get getRewardedCounter => config.adCounter?.rewardedCounter ?? 0;
-
-/// Gets the Layout Type
-bool get isFlutterLayout =>
-    config.nativeADLayout?.adLayout == AdLayout.flutterLayout;

@@ -89,20 +89,18 @@ class AdCounterWidget extends StatelessWidget {
     ValueNotifier<int> imp,
     ValueNotifier<int> fail,
   ) {
-    return Expanded(
-      child: Column(
-        children: [
-          /// Title cell with the given title (like "Inter")
-          _buildTitleCell(context, title),
+    return Column(
+      children: [
+        /// Title cell with the given title (like "Inter")
+        _buildTitleCell(context, title),
 
-          /// Stat values for Load, Imp, and Failed
-          _buildStatValue(context, load),
-          const Divider(height: 1),
-          _buildStatValue(context, imp),
-          const Divider(height: 1),
-          _buildStatValue(context, fail),
-        ],
-      ),
+        /// Stat values for Load, Imp, and Failed
+        _buildStatValue(context, load),
+        const Divider(height: 1),
+        _buildStatValue(context, imp),
+        const Divider(height: 1),
+        _buildStatValue(context, fail),
+      ],
     );
   }
 
@@ -113,35 +111,33 @@ class AdCounterWidget extends StatelessWidget {
     /// Get the text color based on the current theme
     final textColor = _getTextColor(context);
 
-    return Expanded(
-      child: Column(
-        children: [
-          /// Title cell for the 'STATES' label
-          _buildTitleCell(context, 'STATES'),
+    return Column(
+      children: [
+        /// Title cell for the 'STATES' label
+        _buildTitleCell(context, 'STATES'),
 
-          /// Loop through the labels and build corresponding text with dividers
-          ...List.generate(labels.length, (index) {
-            return Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5),
-                  child: Text(
-                    labels[index],
-                    style: TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold,
-                      color: textColor,
-                    ),
+        /// Loop through the labels and build corresponding text with dividers
+        ...List.generate(labels.length, (index) {
+          return Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 5),
+                child: Text(
+                  labels[index],
+                  style: TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
+                    color: textColor,
                   ),
                 ),
+              ),
 
-                /// Add divider between each label except the last one
-                if (index < labels.length - 1) const Divider(height: 1),
-              ],
-            );
-          }),
-        ],
-      ),
+              /// Add divider between each label except the last one
+              if (index < labels.length - 1) const Divider(height: 1),
+            ],
+          );
+        }),
+      ],
     );
   }
 
@@ -171,55 +167,72 @@ class AdCounterWidget extends StatelessWidget {
 
             final stats = AdStats.instance;
 
-            return Row(
-              children: [
-                /// Build the label column (e.g., LOAD, SHOW, FAILED)
-                _buildLabelColumn(context),
+            return SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  /// Build the label column (e.g., LOAD, SHOW, FAILED)
+                  SizedBox(width: 60, child: _buildLabelColumn(context)),
 
-                /// Build stat columns for various ad types (Inter, Reward, etc.)
-                _buildStatColumn(
-                  context,
-                  "Inter",
-                  stats.interLoad,
-                  stats.interImp,
-                  stats.interFailed,
-                ),
-                _buildStatColumn(
-                  context,
-                  "Reward",
-                  stats.rewardedLoad,
-                  stats.rewardedImp,
-                  stats.rewardedFailed,
-                ),
-                _buildStatColumn(
-                  context,
-                  "Banner",
-                  stats.bannerLoad,
-                  stats.bannerImp,
-                  stats.bannerFailed,
-                ),
-                _buildStatColumn(
-                  context,
-                  "SNative",
-                  stats.nativeLoadS,
-                  stats.nativeImpS,
-                  stats.nativeFailedS,
-                ),
-                _buildStatColumn(
-                  context,
-                  "MNative",
-                  stats.nativeLoadM,
-                  stats.nativeImpM,
-                  stats.nativeFailedM,
-                ),
-                _buildStatColumn(
-                  context,
-                  "OpenApp",
-                  stats.openAppLoad,
-                  stats.openAppImp,
-                  stats.openAppFailed,
-                ),
-              ],
+                  /// Build stat columns for various ad types (Inter, Reward, etc.)
+                  SizedBox(
+                    width: 50,
+                    child: _buildStatColumn(
+                      context,
+                      "Inter",
+                      stats.interLoad,
+                      stats.interImp,
+                      stats.interFailed,
+                    ),
+                  ),
+                  SizedBox(
+                    width: 50,
+                    child: _buildStatColumn(
+                      context,
+                      "Reward",
+                      stats.rewardedLoad,
+                      stats.rewardedImp,
+                      stats.rewardedFailed,
+                    ),
+                  ),
+                  SizedBox(
+                    width: 50,
+                    child: _buildStatColumn(
+                      context,
+                      "Banner",
+                      stats.bannerLoad,
+                      stats.bannerImp,
+                      stats.bannerFailed,
+                    ),
+                  ),
+                  SizedBox(
+                    width: 50,
+                    child: _buildStatColumn(
+                      context,
+                      "OpenApp",
+                      stats.openAppLoad,
+                      stats.openAppImp,
+                      stats.openAppFailed,
+                    ),
+                  ),
+
+                  /// Build dynamic stat columns for all custom/builder factories
+                  ...DynamicNativeLoaderManager.instance.loaders.values
+                      .map((loader) {
+                    return SizedBox(
+                      width: 80,
+                      child: _buildStatColumn(
+                        context,
+                        loader.adTypeLabel.replaceAll("Dynamic ", ""),
+                        // Shorten label
+                        loader.loadStats,
+                        loader.impStats,
+                        loader.failedStats,
+                      ),
+                    );
+                  }),
+                ],
+              ),
             );
           },
         ),
