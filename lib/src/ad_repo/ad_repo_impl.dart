@@ -24,7 +24,8 @@ class AdRepoImpl extends AdRepo {
   /// Displays the banner ad using ShowBannerAd instance
   @override
   Widget showBannerAd() {
-    return ShowBannerAd();
+    if (!shouldShowBannerAd) return const SizedBox.shrink();
+    return const ShowBannerAd();
   }
 
   /// Displays the Interstitial ad by calling the showInter method of InterAd
@@ -56,6 +57,7 @@ class AdRepoImpl extends AdRepo {
   /// Loads the banner ad using LoadBannerAd instance
   @override
   Future<void> loadBannerAd() {
+    if (!shouldShowBannerAd) return Future.value();
     return LoadBannerAd.instance.loadAd();
   }
 

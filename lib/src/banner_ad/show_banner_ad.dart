@@ -17,11 +17,10 @@ class _ShowBannerAdState extends State<ShowBannerAd> {
   void initState() {
     super.initState();
 
-    /// If banner ads are available, load one. Always call loadAd to ensure 
-    /// that if the initial pre-load failed (e.g. race condition), it tries again.
-    if (LoadBannerAd.instance.bannerAdObject.isNotEmpty) {
-      banner = LoadBannerAd.instance.bannerAdObject.removeAt(0);
-    }
+    /// If banner ads are available, take one.
+    banner = LoadBannerAd.instance.takeAd();
+    
+    /// Trigger loadAd to ensure cache is replenished.
     LoadBannerAd.instance.loadAd();
   }
 
@@ -34,14 +33,45 @@ class _ShowBannerAdState extends State<ShowBannerAd> {
   @override
   Widget build(BuildContext context) {
     /// If there is an initialized banner, display it.
-    return banner != null ? adView() : const SizedBox.shrink();
+    if (banner != null) {
+      return adView();
+    }
+
+    /// If no ad is ready, listen for the next available one.
+    return ValueListenableBuilder<List<BannerAd>>(
+      valueListenable: LoadBannerAd.instance.bannerAds,
+      builder: (context, ads, _) {
+        if (banner == null && ads.isNotEmpty) {
+          // An ad is now available, grab it!
+          // We use microtask to avoid calling setState during build.
+          Future.microtask(() {
+            if (mounted && banner == null) {
+              setState(() {
+                banner = LoadBannerAd.instance.takeAd();
+              });
+            }
+          });
+        }
+
+        return banner != null ? adView() : const SizedBox.shrink();
+      },
+    );
   }
 
   /// Builds the widget to display the banner ad.
   Widget adView() {
+    final ad = banner;
+    if (ad == null) return const SizedBox.shrink();
+    
     try {
-      return SizedBox(height: 70, child: AdWidget(ad: banner!));
+      return Container(
+        alignment: Alignment.center,
+        width: ad.size.width.toDouble(),
+        height: ad.size.height.toDouble(),
+        child: AdWidget(ad: ad),
+      );
     } catch (e) {
+      AppLogger.error("Exception in ShowBannerAd.adView: $e");
       return const SizedBox.shrink();
     }
   }

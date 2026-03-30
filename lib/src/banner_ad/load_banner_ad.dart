@@ -13,12 +13,17 @@ class LoadBannerAd {
   /// Private constructor to prevent external instantiation.
   LoadBannerAd._internal();
 
-  /// List that holds loaded banner ads.
-  /// List that holds currently loaded and cached banner ads.
-  List<BannerAd> bannerAdObject = [];
+  /// ValueNotifier that holds currently loaded and cached banner ads.
+  final ValueNotifier<List<BannerAd>> bannerAds = ValueNotifier([]);
+
+  /// Helper to get the list of ads directly.
+  List<BannerAd> get _activeAds => bannerAds.value;
 
   /// Variable to control the retry/reload logic of the ad.
   int reloadAd = 1;
+
+  /// The ad currently in the process of loading.
+  BannerAd? _loadingAd;
 
   /// Flag to check if an ad is currently in the process of loading.
   bool loading = false;
@@ -27,9 +32,7 @@ class LoadBannerAd {
   ///
   /// If fewer than 2 banner ads are loaded, it will load additional ads.
   Future<void> loadAd() async {
-    if (loading || bannerAdObject.length >= 2) return;
-
-    BannerAd? bannerAd;
+    if (loading || _activeAds.length >= 2 || !shouldShowBannerAd) return;
 
     try {
       loading = true;
@@ -60,38 +63,62 @@ class LoadBannerAd {
       }
 
       // Create and configure the banner ad.
-      bannerAd = BannerAd(
+      late final BannerAd currentAd;
+      currentAd = BannerAd(
         adUnitId: unitIDBanner,
         size: size,
         request: const AdRequest(),
         listener: BannerAdListener(
           onAdLoaded: (Ad ad) {
-            // Handle successful ad load.
-            AppLogger.log('$ad loaded.');
-            if (bannerAd != null) {
-              bannerAdObject.add(bannerAd);
+            // Verify if this ad is still the one we were waiting for.
+            // If _loadingAd is null or different, it means reset() was called
+            // or another load was started, so we should dispose this ad.
+            if (_loadingAd != currentAd) {
+              AppLogger.warn("Ad loaded but was already replaced/reset. Disposing.");
+              ad.dispose();
+              return;
             }
+
+            // Handle successful ad load.
+            AppLogger.log('Banner Ad loaded: $ad');
+            
+            // Atomically update the list to trigger listeners.
+            bannerAds.value = [..._activeAds, ad as BannerAd];
+            
+            _loadingAd = null;
             AdStats.instance.bannerLoad.value++;
             loading = false;
             // Load another ad if there are fewer than 2 loaded ads.
-            if (bannerAdObject.length < 2) {
+            if (_activeAds.length < 2) {
               Future.delayed(const Duration(seconds: 2), () => loadAd());
             }
           },
           onAdImpression: (ad) {
-            // Track ad impressions.
-            AdStats.instance.bannerImp.value++;
+            // We now increment in takeAd() for more immediate feedback, 
+            // but we can log the official SDK impression here.
+            AppLogger.log("Banner Ad SDK Impression recorded.");
+          },
+          onAdOpened: (ad) {
+            AppLogger.log("Banner Ad Opened.");
+          },
+          onAdClicked: (ad) {
+            AppLogger.log("Banner Ad Clicked.");
           },
           onAdFailedToLoad: (Ad ad, LoadAdError error) {
             // Handle failed ad load and retry logic.
-            loading = false;
+            if (_loadingAd == currentAd) {
+              _loadingAd = null;
+              loading = false;
+            }
+            
             AdStats.instance.bannerFailed.value++;
             ad.dispose();
+            
+            // Only retry if we are still in a valid loading state.
             if (reloadAd == 1) {
               reloadAd--;
               loadAd();
-              AppLogger.error("Failed Banner AD");
-              AppLogger.error(error.toString());
+              AppLogger.error("Failed Banner AD: ${error.message}");
             } else {
               reloadAd = 1;
             }
@@ -99,22 +126,45 @@ class LoadBannerAd {
         ),
       );
 
+      _loadingAd = currentAd;
+
       // Load the banner ad.
-      await bannerAd.load();
+      await currentAd.load();
     } catch (error) {
       // Catch and log any errors that occur during ad loading.
+      _loadingAd?.dispose();
+      _loadingAd = null;
       loading = false;
-      AppLogger.error("catch error loading banner");
-      AppLogger.error(error.toString());
+      AppLogger.error("catch error loading banner: $error");
     }
+  }
+
+  /// Takes the first available ad from the cache and notifies listeners.
+  BannerAd? takeAd() {
+    if (_activeAds.isEmpty) return null;
+    final ads = List<BannerAd>.from(_activeAds);
+    final ad = ads.removeAt(0);
+
+    // Increment impression count and update the list.
+    // Wrap in microtask to avoid "setState() or markNeedsBuild() called during build"
+    // which happens when updating notifiers during the widget build phase (e.g. initState).
+    Future.microtask(() {
+      bannerAds.value = ads;
+      AdStats.instance.bannerImp.value++;
+      AppLogger.log("Banner Ad consumed from cache. Show count incremented.");
+    });
+    
+    return ad;
   }
 
   /// Disposes of all loaded ads and resets the state.
   void reset() {
-    for (final ad in bannerAdObject) {
+    _loadingAd?.dispose();
+    _loadingAd = null;
+    for (final ad in _activeAds) {
       ad.dispose();
     }
-    bannerAdObject.clear();
+    bannerAds.value = [];
     loading = false;
     reloadAd = 1;
   }
