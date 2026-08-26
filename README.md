@@ -47,35 +47,12 @@ Add this to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  preload_google_ads: ^1.0.3
+  preload_google_ads: ^1.0.7
 ```
 
 Or run:
 ```bash
 flutter pub add preload_google_ads
-```
-
-### 2. Platform Setup
-
-**Important**: Configure your AdMob App ID in both Android and iOS projects to avoid crashes.
-
-#### Android
-Update `android/app/src/main/AndroidManifest.xml`:
-```xml
-<manifest>
-    <application>
-        <meta-data
-            android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-xxxxxxxxxxxxxxxx~yyyyyyyyyy"/>
-    </application>
-</manifest>
-```
-
-#### iOS
-Update `ios/Runner/Info.plist`:
-```xml
-<key>GADApplicationIdentifier</key>
-<string>ca-app-pub-xxxxxxxxxxxxxxxx~yyyyyyyyyy</string>
 ```
 
 ---
@@ -97,6 +74,7 @@ void main() async {
         nativeId: AdTestIds.native,
         interstitialId: AdTestIds.interstitial,
         rewardedId: AdTestIds.rewarded,
+        rewardedInterstitialId: AdTestIds.rewardedInterstitial,
       ),
     ),
   );
@@ -116,9 +94,10 @@ Control specifically which ads to show and how frequently they appear.
 PreloadGoogleAds.instance.initialize(
   adConfigData: AdConfigData(
     adCounter: AdCounter(
-      interstitialCounter: 2, // Show every 2 clicks
-      nativeCounter: 0,       // Show every time
-      rewardedCounter: 1,     // Show every click
+      interstitialCounter: 2,        // Show every 2 clicks
+      nativeCounter: 0,              // Show every time
+      rewardedCounter: 1,            // Show every click
+      rewardedInterCounter: 1,       // Show every click
     ),
     adFlag: AdFlag(
       showAd: true,
@@ -127,27 +106,44 @@ PreloadGoogleAds.instance.initialize(
       showNative: true,
       showOpenApp: true,
       showRewarded: true,
+      showRewardedInter: true,
       showSplashAd: false,
     ),
   ),
 );
 ```
 
-### Native Ad Styling
-Customize the appearance of native ads to match your branding perfectly.
+### Native Ad Custom Styling
+Customize the appearance of native ads with light and dark mode tokens.
 
 ```dart
 NativeADLayout(
-  padding: EdgeInsets.all(8),
-  decoration: BoxDecoration(
+  padding: const EdgeInsets.all(8),
+  lightDecoration: BoxDecoration(
     color: Colors.white,
-    border: Border.all(color: Colors.grey.withOpacity(0.5)),
+    border: Border.all(color: Colors.grey.shade300),
     borderRadius: BorderRadius.circular(12),
   ),
-  adLayout: AdLayout.nativeLayout, // Uses Kotlin layout on Android
+  darkDecoration: BoxDecoration(
+    color: const Color(0xFF1E293B),
+    border: Border.all(color: const Color(0xFF334155)),
+    borderRadius: BorderRadius.circular(12),
+  ),
   customNativeADStyle: CustomNativeADStyle(
-    buttonBackground: Colors.blueAccent,
     titleColor: Colors.black,
+    bodyColor: Colors.grey.shade700,
+    buttonBackground: Colors.blueAccent,
+    buttonForeground: Colors.white,
+    buttonRadius: 10,
+    tagBackground: Colors.amber,
+    tagForeground: Colors.black,
+  ),
+  darkCustomNativeADStyle: CustomNativeADStyle.dark(
+    titleColor: Colors.white,
+    bodyColor: Colors.grey.shade300,
+    buttonBackground: Colors.indigoAccent,
+    buttonForeground: Colors.white,
+    buttonRadius: 10,
   ),
 )
 ```
@@ -156,13 +152,15 @@ NativeADLayout(
 
 ## Showing Ads
 
-| Format | Method |
-| :--- | :--- |
-| **Native** | `PreloadGoogleAds.instance.showNativeAd(nativeADType: NativeADType.medium)` |
-| **Banner** | `PreloadGoogleAds.instance.showBannerAd()` |
-| **Interstitial** | `PreloadGoogleAds.instance.showInterstitialAd(callBack: (ad, error) => ...)` |
-| **Rewarded** | `PreloadGoogleAds.instance.showRewardedAd(callBack: (ad, error) => ..., onReward: (ad, item) => ...)` |
-| **App Open** | `PreloadGoogleAds.instance.showOpenApp()` |
+| Format | Method | Description |
+| :--- | :--- | :--- |
+| **Native** | `PreloadGoogleAds.instance.showNativeAd(key: ..., nativeADType: NativeADType.medium)` | Displays native ad with key identity & medium/small layout |
+| **Standard Banner** | `PreloadGoogleAds.instance.showBannerAd()` | Displays standard 320x50 adaptive banner scaled with `FittedBox` |
+| **Collapsible Banner** | `PreloadGoogleAds.instance.showCollapsibleBannerAd(collapsiblePosition: CollapsibleBannerPosition.bottom)` | Displays dynamic collapsible banner anchored to `bottom` or `top` |
+| **Interstitial** | `PreloadGoogleAds.instance.showInterstitialAd(callBack: (ad, error) => ...)` | Shows full-screen interstitial ad |
+| **Rewarded** | `PreloadGoogleAds.instance.showRewardedAd(callBack: ..., onReward: (ad, reward) => ...)` | Shows rewarded ad and grants reward item |
+| **Rewarded Interstitial** | `PreloadGoogleAds.instance.showRewardedInterstitialAd(callBack: ..., onReward: (ad, reward) => ...)` | Shows rewarded interstitial ad and grants reward item |
+| **App Open** | `PreloadGoogleAds.instance.showOpenApp()` | Shows app open ad |
 
 > [!TIP]
 > **Pro Tip**: To show an ad during navigation, place your navigation logic inside the `callBack`. This ensures the transition happens exactly when the ad is closed or fails to load.
