@@ -57,7 +57,7 @@ class LoadBannerAd extends BaseAdLoader {
 
       // Get the appropriate size for the banner ad based on the screen width.
       final AnchoredAdaptiveBannerAdSize? size =
-          await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
+          await AdSize.getLargeAnchoredAdaptiveBannerAdSize(
         logicalScreenWidth.toInt(),
       );
 
