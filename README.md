@@ -1,8 +1,14 @@
-# Preload Google Ads
+<p align="center">
+  <img src="https://raw.githubusercontent.com/bhx20/Preload-Google-Ads/main/docs/assets/logo.svg" alt="Preload Google Ads Logo" width="300" />
+</p>
 
-[![pub package](https://img.shields.io/pub/v/preload_google_ads.svg?color=blue)](https://pub.dev/packages/preload_google_ads)
-[![Publisher](https://img.shields.io/pub/publisher/preload_google_ads.svg?color=blue)](https://pub.dev/packages/preload_google_ads)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+<p align="center">
+  <a href="https://pub.dev/packages/preload_google_ads"><img src="https://img.shields.io/pub/v/preload_google_ads.svg?color=blue" alt="pub package"></a>
+  <a href="https://pub.dev/packages/preload_google_ads"><img src="https://img.shields.io/pub/publisher/preload_google_ads.svg?color=blue" alt="Publisher"></a>
+  <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
+</p>
+
+---
 
 A high-performance Flutter plugin for **background preloading** of Google Mobile Ads (AdMob). Deliver a seamless, zero-latency experience by fetching ads before your users even need them.
 

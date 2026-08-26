@@ -99,7 +99,8 @@ class GoogleAppOpenOnSplash {
       AppLogger.warn('Tried to show ad while already showing an ad.');
       return;
     }
-    if (DateTime.now().subtract(maxCacheDuration).isAfter(_appOpenLoadTime!)) {
+    if (_appOpenLoadTime != null &&
+        DateTime.now().subtract(maxCacheDuration).isAfter(_appOpenLoadTime!)) {
       AppLogger.error('Maximum cache duration exceeded. Loading another ad.');
       _appOpenAd!.dispose();
       _appOpenAd = null;

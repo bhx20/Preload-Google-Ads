@@ -21,9 +21,16 @@ class NativeADStyle {
   String? get smallNativeFactoryId =>
       !isFlutterLayout ? factoryIdSmallNative : null;
 
-  /// The decoration for the native ad container.
-  BoxDecoration get decoration =>
-      config.nativeADLayout?.decoration ?? BoxDecoration();
+  /// The decoration for the native ad container in Light Mode.
+  BoxDecoration get lightDecoration =>
+      config.nativeADLayout?.lightDecoration ?? BoxDecoration();
+
+  /// Legacy alias getter for [lightDecoration] for backward compatibility.
+  BoxDecoration get decoration => lightDecoration;
+
+  /// The decoration for the native ad container in Dark Mode.
+  BoxDecoration? get darkDecoration =>
+      config.nativeADLayout?.darkDecoration;
 
   /// The padding for the native ad container.
   EdgeInsets get padding => config.nativeADLayout?.padding ?? const EdgeInsets.all(5);
@@ -31,38 +38,77 @@ class NativeADStyle {
   /// The margin for the native ad container.
   EdgeInsets get margin => config.nativeADLayout?.margin ?? const EdgeInsets.all(5);
 
-  /// Custom styling settings for native ads.
-  CustomNativeADStyle? get customStyle => config.nativeADLayout?.customNativeADStyle;
+  /// Dynamically resolves whether Dark Mode is currently active based on AdThemeMode and BuildContext.
+  bool isDarkMode({BuildContext? context}) {
+    final mode = config.themeMode;
+    if (mode == AdThemeMode.dark) return true;
+    if (mode == AdThemeMode.light) return false;
+    if (context != null) {
+      return MediaQuery.platformBrightnessOf(context) == Brightness.dark ||
+          Theme.of(context).brightness == Brightness.dark;
+    }
+    return false;
+  }
+
+  /// Dynamically resolves the active CustomNativeADStyle based on theme mode.
+  CustomNativeADStyle getCustomStyle({BuildContext? context}) {
+    final isDark = isDarkMode(context: context);
+    if (isDark && config.nativeADLayout?.darkCustomNativeADStyle != null) {
+      return config.nativeADLayout!.darkCustomNativeADStyle!;
+    }
+    return config.nativeADLayout?.customNativeADStyle ?? CustomNativeADStyle();
+  }
+
+  /// Dynamically resolves the active FlutterNativeADStyle based on theme mode.
+  FlutterNativeADStyle getFlutterStyle({BuildContext? context}) {
+    final isDark = isDarkMode(context: context);
+    if (isDark && config.nativeADLayout?.darkFlutterNativeADStyle != null) {
+      return config.nativeADLayout!.darkFlutterNativeADStyle!;
+    }
+    return config.nativeADLayout?.flutterNativeADStyle ?? FlutterNativeADStyle();
+  }
+
+  /// Custom styling settings for native ads (defaults to current active style).
+  CustomNativeADStyle get customStyle => getCustomStyle();
 
   /// Flutter-based template styling settings for native ads.
-  FlutterNativeADStyle? get flutterStyle =>
-      config.nativeADLayout?.flutterNativeADStyle;
+  FlutterNativeADStyle get flutterStyle => getFlutterStyle();
 
   /// Returns the template style for medium native ads if using Flutter layout.
-  NativeTemplateStyle? get nativeMediumTemplateStyle => isFlutterLayout
-      ? NativeTemplateStyle(
-          templateType: TemplateType.medium,
-          mainBackgroundColor: flutterStyle?.mainBackgroundColor,
-          cornerRadius: flutterStyle?.cornerRadius,
-          callToActionTextStyle: flutterStyle?.callToActionTextStyle,
-          primaryTextStyle: flutterStyle?.primaryTextStyle,
-          secondaryTextStyle: flutterStyle?.secondaryTextStyle,
-          tertiaryTextStyle: flutterStyle?.tertiaryTextStyle,
-        )
-      : null;
+  NativeTemplateStyle? getNativeMediumTemplateStyle({BuildContext? context}) {
+    if (!isFlutterLayout) return null;
+    final fStyle = getFlutterStyle(context: context);
+    return NativeTemplateStyle(
+      templateType: TemplateType.medium,
+      mainBackgroundColor: fStyle.mainBackgroundColor,
+      cornerRadius: fStyle.cornerRadius,
+      callToActionTextStyle: fStyle.callToActionTextStyle,
+      primaryTextStyle: fStyle.primaryTextStyle,
+      secondaryTextStyle: fStyle.secondaryTextStyle,
+      tertiaryTextStyle: fStyle.tertiaryTextStyle,
+    );
+  }
 
   /// Returns the template style for small native ads if using Flutter layout.
-  NativeTemplateStyle? get nativeSmallTemplateStyle => isFlutterLayout
-      ? NativeTemplateStyle(
-          templateType: TemplateType.small,
-          mainBackgroundColor: flutterStyle?.mainBackgroundColor,
-          cornerRadius: flutterStyle?.cornerRadius,
-          callToActionTextStyle: flutterStyle?.callToActionTextStyle,
-          primaryTextStyle: flutterStyle?.primaryTextStyle,
-          secondaryTextStyle: flutterStyle?.secondaryTextStyle,
-          tertiaryTextStyle: flutterStyle?.tertiaryTextStyle,
-        )
-      : null;
+  NativeTemplateStyle? getNativeSmallTemplateStyle({BuildContext? context}) {
+    if (!isFlutterLayout) return null;
+    final fStyle = getFlutterStyle(context: context);
+    return NativeTemplateStyle(
+      templateType: TemplateType.small,
+      mainBackgroundColor: fStyle.mainBackgroundColor,
+      cornerRadius: fStyle.cornerRadius,
+      callToActionTextStyle: fStyle.callToActionTextStyle,
+      primaryTextStyle: fStyle.primaryTextStyle,
+      secondaryTextStyle: fStyle.secondaryTextStyle,
+      tertiaryTextStyle: fStyle.tertiaryTextStyle,
+    );
+  }
+
+  /// Legacy getter for medium template style.
+  NativeTemplateStyle? get nativeMediumTemplateStyle => getNativeMediumTemplateStyle();
+
+  /// Legacy getter for small template style.
+  NativeTemplateStyle? get nativeSmallTemplateStyle => getNativeSmallTemplateStyle();
 
   /// Returns constraints for medium native ads based on the layout type.
   BoxConstraints get mediumConstraintsSize => isFlutterLayout

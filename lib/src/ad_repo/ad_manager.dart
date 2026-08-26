@@ -15,7 +15,7 @@ class AdManager {
   static AdManager get instance => _instance;
 
   /// The current ad configuration
-  late AdConfigData config;
+  AdConfigData config = preData;
 
   /// Callback for splash ad
   Function(AppOpenAd? ad, AdError? error)? _splashAdCallback;
@@ -29,6 +29,9 @@ class AdManager {
     // Set the ad configuration data
     config = await setConfigData(adConfig);
 
+    // Sync initial native channel ad style based on configured mode
+    await _syncNativeAdStyle();
+
     // Initialize the Google Mobile Ads SDK
     await MobileAds.instance.initialize();
 
@@ -40,6 +43,67 @@ class AdManager {
       Future.delayed(const Duration(milliseconds: 600), _loadOpenAppAd);
       Future.delayed(const Duration(milliseconds: 800), _loadInterAd);
       Future.delayed(const Duration(milliseconds: 1000), _loadRewardedAd);
+      Future.delayed(const Duration(milliseconds: 1200), _loadRewardedInterAd);
+    }
+  }
+
+  /// Sets the ad theme mode dynamically at runtime and updates native styles.
+  Future<void> setThemeMode(AdThemeMode mode, {BuildContext? context}) async {
+    config = AdConfigData(
+      adIDs: config.adIDs,
+      adCounter: config.adCounter,
+      adFlag: config.adFlag,
+      nativeADLayout: config.nativeADLayout,
+      bannerADLayout: config.bannerADLayout,
+      themeMode: mode,
+    );
+    await _syncNativeAdStyle(context: context);
+  }
+
+  /// Syncs native Kotlin/Swift ad styling via MethodChannel.
+  Future<void> _syncNativeAdStyle({BuildContext? context}) async {
+    final style = NativeADStyle.instance.getCustomStyle(context: context);
+    await setAdStyleData(style);
+  }
+
+  /// Force reloads native ads (Small or Medium).
+  void reloadNativeAd({NativeADType? nativeADType}) {
+    if (nativeADType == NativeADType.small) {
+      LoadSmallNative.instance.loadAd();
+    } else if (nativeADType == NativeADType.medium) {
+      LoadMediumNative.instance.loadAd();
+    } else {
+      LoadMediumNative.instance.loadAd();
+      LoadSmallNative.instance.loadAd();
+    }
+  }
+
+  /// Triggers background reloading of any ad format that failed or was lost due to network issues.
+  void reloadUnloadedAds() {
+    if (!shouldShowAd) return;
+
+    if (shouldShowRewardedAd && !RewardAd.instance.isAdLoaded) {
+      RewardAd.instance.load();
+    }
+    if (shouldShowRewardedInterAd && !RewardInterAd.instance.isAdLoaded) {
+      RewardInterAd.instance.load();
+    }
+    if (shouldShowInterAd && !InterAd.instance.isAdLoaded) {
+      InterAd.instance.load();
+    }
+    if (shouldShowBannerAd && LoadBannerAd.instance.bannerAdObject.isEmpty) {
+      LoadBannerAd.instance.loadAd();
+    }
+    if (shouldShowNativeAd) {
+      if (LoadMediumNative.instance.ads.isEmpty) {
+        LoadMediumNative.instance.loadAd();
+      }
+      if (LoadSmallNative.instance.ads.isEmpty) {
+        LoadSmallNative.instance.loadAd();
+      }
+    }
+    if (shouldShowOpenAppAd && !AppOpenAdManager.instance.isAdAvailable) {
+      AppOpenAdManager.instance.loadAd();
     }
   }
 
@@ -100,6 +164,13 @@ class AdManager {
     }
   }
 
+  /// Loads the rewarded interstitial ad if enabled in the ad configuration.
+  void _loadRewardedInterAd() {
+    if (shouldShowRewardedInterAd) {
+      PlugAd.getInstance().loadRewardedInterAd();
+    }
+  }
+
   /// Sets the callback function to be invoked when the splash ad is ready or fails.
   void setSplashAdCallback(Function(AppOpenAd? ad, AdError? error) callback) {
     _splashAdCallback = callback;
@@ -117,9 +188,9 @@ class AdManager {
     return PlugAd.getInstance().showOpenAppAd();
   }
 
-  /// Shows the banner ad.
-  Widget showBannerAd() {
-    return PlugAd.getInstance().showBannerAd();
+  /// Shows the banner ad (standard or collapsible).
+  Widget showBannerAd({String? isCollapsible}) {
+    return PlugAd.getInstance().showBannerAd(isCollapsible: isCollapsible);
   }
 
   /// Displays the ad counter (if available).
@@ -145,6 +216,19 @@ class AdManager {
   }) {
     return PlugAd.getInstance().showRewardedAd(
       callBack: ({RewardedAd? ad, AdError? error}) {
+        callBack(ad, error);
+      },
+      onReward: onReward,
+    );
+  }
+
+  /// Shows the rewarded interstitial ad and invokes the provided callbacks with the ad, error, and reward information.
+  void showRewardedInterstitialAd({
+    required void Function(RewardedInterstitialAd? ad, AdError? error) callBack,
+    required void Function(AdWithoutView ad, RewardItem reward) onReward,
+  }) {
+    return PlugAd.getInstance().showRewardedInterAd(
+      callBack: ({RewardedInterstitialAd? ad, AdError? error}) {
         callBack(ad, error);
       },
       onReward: onReward,

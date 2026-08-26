@@ -34,8 +34,8 @@ class AdRepoImpl extends AdRepo {
 
   /// Displays the banner ad using ShowBannerAd instance
   @override
-  Widget showBannerAd() {
-    return ShowBannerAd();
+  Widget showBannerAd({String? isCollapsible}) {
+    return ShowBannerAd(isCollapsible: isCollapsible);
   }
 
   /// Displays the Interstitial ad by calling the showInter method of InterAd
@@ -92,6 +92,24 @@ class AdRepoImpl extends AdRepo {
     );
   }
 
+  /// Loads the rewarded interstitial ad using RewardInterAd instance
+  @override
+  void loadRewardedInterAd() {
+    RewardInterAd.instance.load();
+  }
+
+  /// Displays the rewarded interstitial ad using RewardInterAd instance
+  @override
+  void showRewardedInterAd({
+    required Function({RewardedInterstitialAd? ad, AdError? error}) callBack,
+    required Function(AdWithoutView ad, RewardItem reward) onReward,
+  }) {
+    return RewardInterAd.instance.showRewardedInter(
+      callBack: callBack,
+      onReward: onReward,
+    );
+  }
+
   /// Resets all ad state and disposes of loaded ads.
   @override
   void resetAll() {
@@ -100,7 +118,6 @@ class AdRepoImpl extends AdRepo {
     LoadBannerAd.instance.reset();
     InterAd.instance.reset();
     RewardAd.instance.reset();
-    // App Open ads are usually managed by lifecycle, but we can reset their managers if needed.
-    // Assuming lifecycle managers handle their own state or don't need explicit reset here.
+    RewardInterAd.instance.reset();
   }
 }

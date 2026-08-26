@@ -12,10 +12,35 @@ class PreloadGoogleAds {
   /// Reference to the internal AdManager instance
   final AdManager _adManager = AdManager.instance;
 
-  /// Initializes the ad system with optional [adConfig].
+  /// Initializes the ad system with optional [adConfigData].
   /// Loads and prepares ads if configuration allows.
   Future<void> initialize({AdConfigData? adConfigData}) async {
     await AdManager.instance.initialize(adConfigData);
+  }
+
+  /// Sets the ad theme mode dynamically (system, light, dark).
+  Future<void> setThemeMode(AdThemeMode mode, {BuildContext? context}) async {
+    await _adManager.setThemeMode(mode, context: context);
+  }
+
+  /// Static shortcut to initialize the ad system with optional [adConfigData].
+  static Future<void> init({AdConfigData? adConfigData}) async {
+    await instance.initialize(adConfigData: adConfigData);
+  }
+
+  /// Reloads native ads (Medium and Small).
+  void reloadNativeAd({NativeADType? nativeADType}) {
+    _adManager.reloadNativeAd(nativeADType: nativeADType);
+  }
+
+  /// Triggers background reloading of any ad format that was lost or failed to load (e.g. after network returns).
+  void reloadUnloadedAds() {
+    _adManager.reloadUnloadedAds();
+  }
+
+  /// Static shortcut to trigger background reloading of all missing/unloaded ads.
+  static void reloadAllUnloadedAds() {
+    instance.reloadUnloadedAds();
   }
 
   /// Sets the splash ad callback.
@@ -38,9 +63,9 @@ class PreloadGoogleAds {
     return _adManager.showOpenApp();
   }
 
-  /// Displays a banner ad if available.
-  Widget showBannerAd() {
-    return _adManager.showBannerAd();
+  /// Displays a banner ad if available. Pass [isCollapsible] ('bottom' or 'top') for collapsible banner ads.
+  Widget showBannerAd({String? isCollapsible}) {
+    return _adManager.showBannerAd(isCollapsible: isCollapsible);
   }
 
   /// Shows the ad counter, typically for debugging or development.
@@ -66,5 +91,19 @@ class PreloadGoogleAds {
     required void Function(AdWithoutView ad, RewardItem reward) onReward,
   }) {
     return _adManager.showRewardedAd(callBack: callBack, onReward: onReward);
+  }
+
+  /// Displays a rewarded interstitial ad.
+  ///
+  /// Provide a [callBack] to receive the [RewardedInterstitialAd] or [AdError] when the ad is shown or fails.
+  /// The [onReward] function is called when the user successfully earns the reward.
+  void showRewardedInterstitialAd({
+    required void Function(RewardedInterstitialAd? ad, AdError? error) callBack,
+    required void Function(AdWithoutView ad, RewardItem reward) onReward,
+  }) {
+    return _adManager.showRewardedInterstitialAd(
+      callBack: callBack,
+      onReward: onReward,
+    );
   }
 }

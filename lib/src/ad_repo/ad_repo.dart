@@ -25,8 +25,8 @@ abstract class AdRepo {
   /// Loads the banner ad.
   Future<void> loadBannerAd();
 
-  /// Displays the banner ad.
-  Widget showBannerAd();
+  /// Displays the banner ad. Optionally pass [isCollapsible] ('bottom' or 'top').
+  Widget showBannerAd({String? isCollapsible});
 
   /// Loads the app open ad.
   Future<void> loadAppOpenAd();
@@ -56,6 +56,16 @@ abstract class AdRepo {
   /// Callback functions are passed to handle the ad state (success or failure) and reward information.
   void showRewardedAd({
     required Function({RewardedAd? ad, AdError? error}) callBack,
+    required Function(AdWithoutView ad, RewardItem reward) onReward,
+  });
+
+  /// Loads the rewarded interstitial ad.
+  void loadRewardedInterAd();
+
+  /// Displays the rewarded interstitial ad.
+  /// Callback functions are passed to handle the ad state (success or failure) and reward information.
+  void showRewardedInterAd({
+    required Function({RewardedInterstitialAd? ad, AdError? error}) callBack,
     required Function(AdWithoutView ad, RewardItem reward) onReward,
   });
 
