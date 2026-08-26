@@ -1,3 +1,19 @@
+## v1.0.7
+
+- **Collapsible Banner Modularization**:
+  - Introduced `ShowCollapsibleBannerAd` for dedicated, dynamic collapsible banner ad display.
+  - Added strongly-typed `CollapsibleBannerPosition` enum (`bottom` and `top`) replacing string literals.
+  - Added `FittedBox(fit: BoxFit.contain)` responsive layout container to scale standard and collapsible banners seamlessly inside parent constraints.
+- **Native Customizer Live Updates**:
+  - Fixed native ad disappearance on dynamic color selections by updating MethodChannel state without clearing active loaded ad instances.
+  - Expanded `CustomNativeADStyle` to support title, body, button, tag foreground/background colors, radius sliders, and button gradient tokens.
+  - Added optional `Key? key` parameter to `showNativeAd(...)` and `showCollapsibleBannerAd(...)` for instant subtree key identity updates.
+- **Comprehensive Unit Testing Suite**:
+  - Modularized unit tests into dedicated files under `test/`: `ad_commons_test.dart`, `banner_ad_test.dart`, `native_ad_test.dart`, `inter_ad_test.dart`, `rewarded_ad_test.dart`, `app_open_ad_test.dart`, and `preload_google_ads_test.dart`.
+- **Showcase Example App Redesign**:
+  - Streamlined navigation into clean top-level tabs: **Dashboard**, **Customizer**, **Native Feed**, **Banner Ads**, and **Ad Lab**.
+  - Updated branding logo and app icons across Android and iOS assets.
+
 ## v1.0.6
 
 - Added Swift Package Manager (SPM) support for iOS.
