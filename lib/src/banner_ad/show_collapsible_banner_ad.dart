@@ -1,42 +1,58 @@
 import '../ad_internal.dart';
 
-/// A StatefulWidget specifically for displaying standard anchored banner ads.
-class ShowBannerAd extends StatefulWidget {
-  /// Constructor for [ShowBannerAd].
-  const ShowBannerAd({super.key});
+/// A StatefulWidget specifically for displaying collapsible banner ads (top or bottom).
+class ShowCollapsibleBannerAd extends StatefulWidget {
+  /// Collapsible position: [CollapsibleBannerPosition.bottom] or [CollapsibleBannerPosition.top]. Defaults to [CollapsibleBannerPosition.bottom].
+  final CollapsibleBannerPosition collapsiblePosition;
+
+  /// Optional key override.
+  final Key? key;
+
+  const ShowCollapsibleBannerAd({
+    this.key,
+    this.collapsiblePosition = CollapsibleBannerPosition.bottom,
+  }) : super(key: key);
 
   @override
-  State<ShowBannerAd> createState() => _ShowBannerAdState();
+  State<ShowCollapsibleBannerAd> createState() => _ShowCollapsibleBannerAdState();
 }
 
-class _ShowBannerAdState extends State<ShowBannerAd> {
-  /// The banner ad to be displayed.
+class _ShowCollapsibleBannerAdState extends State<ShowCollapsibleBannerAd> {
   BannerAd? banner;
 
   @override
   void initState() {
     super.initState();
-    if (LoadBannerAd.instance.bannerAdObject.isNotEmpty) {
-      banner = LoadBannerAd.instance.bannerAdObject.removeAt(0);
-    } else {
-      _loadStandardBanner();
-    }
+    _loadCollapsibleBanner();
   }
 
-  Future<void> _loadStandardBanner() async {
+  Future<void> _loadCollapsibleBanner() async {
     try {
       final view = PlatformDispatcher.instance.implicitView;
       if (view == null) return;
       final double logicalScreenWidth = view.physicalSize.width / view.devicePixelRatio;
       if (logicalScreenWidth <= 0) return;
 
-      final size = await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(logicalScreenWidth.toInt());
+      final AnchoredAdaptiveBannerAdSize? size =
+          await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
+        logicalScreenWidth.toInt(),
+      );
+
       if (size == null) return;
 
-      final stdBanner = BannerAd(
+      final positionString = widget.collapsiblePosition.name;
+
+      final AdRequest request = AdRequest(
+        extras: <String, String>{
+          'collapsible': positionString,
+          'collapsible_request_id': DateTime.now().millisecondsSinceEpoch.toString(),
+        },
+      );
+
+      final colBanner = BannerAd(
         adUnitId: unitIDBanner,
         size: size,
-        request: const AdRequest(),
+        request: request,
         listener: BannerAdListener(
           onAdLoaded: (Ad ad) {
             if (mounted) {
@@ -46,16 +62,18 @@ class _ShowBannerAdState extends State<ShowBannerAd> {
             }
             AdStats.instance.bannerLoad.value++;
           },
-          onAdImpression: (ad) => AdStats.instance.bannerImp.value++,
+          onAdImpression: (ad) {
+            AdStats.instance.bannerImp.value++;
+          },
           onAdFailedToLoad: (Ad ad, LoadAdError error) {
             AdStats.instance.bannerFailed.value++;
             ad.dispose();
           },
         ),
       );
-      await stdBanner.load();
+      await colBanner.load();
     } catch (e) {
-      AppLogger.error("Failed to load standard banner: $e");
+      AppLogger.error("Failed to load collapsible banner: $e");
     }
   }
 
@@ -67,11 +85,8 @@ class _ShowBannerAdState extends State<ShowBannerAd> {
 
   @override
   Widget build(BuildContext context) {
-    return banner != null ? adView() : const SizedBox.shrink();
-  }
+    if (banner == null) return const SizedBox.shrink();
 
-  /// Builds the widget to display the banner ad.
-  Widget adView() {
     try {
       final double nativeHeight = banner!.size.height.toDouble();
       final double targetHeight = nativeHeight > 0 ? nativeHeight : 50.0;
@@ -87,7 +102,9 @@ class _ShowBannerAdState extends State<ShowBannerAd> {
         decoration: decoration,
         margin: bannerLayout?.margin,
         padding: bannerLayout?.padding,
-        alignment: Alignment.center,
+        alignment: widget.collapsiblePosition == CollapsibleBannerPosition.top
+            ? Alignment.topCenter
+            : Alignment.bottomCenter,
         child: FittedBox(
           fit: BoxFit.contain,
           child: SizedBox(

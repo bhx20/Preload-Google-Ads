@@ -21,6 +21,7 @@ export 'app_open_ad/life_cycle_manager.dart';
 export 'app_open_ad/on_splash_ad_manager.dart';
 export 'banner_ad/load_banner_ad.dart';
 export 'banner_ad/show_banner_ad.dart';
+export 'banner_ad/show_collapsible_banner_ad.dart';
 export 'inter_ad/inter_ad.dart';
 export 'native_ad/load_native.dart';
 export 'native_ad/native_ad_style.dart';

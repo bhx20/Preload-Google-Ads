@@ -25,8 +25,13 @@ abstract class AdRepo {
   /// Loads the banner ad.
   Future<void> loadBannerAd();
 
-  /// Displays the banner ad. Optionally pass [isCollapsible] ('bottom' or 'top').
-  Widget showBannerAd({String? isCollapsible});
+  /// Displays a standard anchored banner ad.
+  Widget showBannerAd();
+
+  /// Displays a collapsible banner ad ([CollapsibleBannerPosition.bottom] or [CollapsibleBannerPosition.top]).
+  Widget showCollapsibleBannerAd({
+    CollapsibleBannerPosition collapsiblePosition = CollapsibleBannerPosition.bottom,
+  });
 
   /// Loads the app open ad.
   Future<void> loadAppOpenAd();

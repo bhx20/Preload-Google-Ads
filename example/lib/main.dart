@@ -6,6 +6,7 @@ import 'widgets/app_drawer.dart';
 import 'screens/home_dashboard_screen.dart';
 import 'screens/native_list_screen.dart';
 import 'screens/custom_style_screen.dart';
+import 'screens/banner_ad_screen.dart';
 import 'screens/format_lab_screen.dart';
 
 void main() async {
@@ -110,8 +111,9 @@ class _MainNavigationContainerState extends State<MainNavigationContainer> {
         onNavigate: _selectScreen,
         themeProvider: widget.themeProvider,
       ),
-      const NativeListScreen(),
       CustomStyleScreen(themeProvider: widget.themeProvider),
+      const NativeListScreen(),
+      BannerAdScreen(themeProvider: widget.themeProvider),
       const FormatLabScreen(),
     ];
 
@@ -137,14 +139,19 @@ class _MainNavigationContainerState extends State<MainNavigationContainer> {
                 label: 'Dashboard',
               ),
               NavigationDestination(
-                icon: Icon(Icons.view_list_outlined),
-                selectedIcon: Icon(Icons.view_list_rounded),
-                label: 'ListView',
-              ),
-              NavigationDestination(
                 icon: Icon(Icons.tune_outlined),
                 selectedIcon: Icon(Icons.tune_rounded),
                 label: 'Customizer',
+              ),
+              NavigationDestination(
+                icon: Icon(Icons.view_list_outlined),
+                selectedIcon: Icon(Icons.view_list_rounded),
+                label: 'Native Feed',
+              ),
+              NavigationDestination(
+                icon: Icon(Icons.view_stream_outlined),
+                selectedIcon: Icon(Icons.view_stream_rounded),
+                label: 'Banner Ads',
               ),
               NavigationDestination(
                 icon: Icon(Icons.science_outlined),

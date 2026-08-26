@@ -192,9 +192,14 @@ class AdManager {
     return PlugAd.getInstance().showOpenAppAd();
   }
 
-  /// Shows the banner ad (standard or collapsible).
-  Widget showBannerAd({String? isCollapsible}) {
-    return PlugAd.getInstance().showBannerAd(isCollapsible: isCollapsible);
+  /// Shows a standard anchored banner ad.
+  Widget showBannerAd() {
+    return PlugAd.getInstance().showBannerAd();
+  }
+
+  /// Shows a collapsible banner ad ([CollapsibleBannerPosition.bottom] or [CollapsibleBannerPosition.top]).
+  Widget showCollapsibleBannerAd({CollapsibleBannerPosition collapsiblePosition = CollapsibleBannerPosition.bottom}) {
+    return PlugAd.getInstance().showCollapsibleBannerAd(collapsiblePosition: collapsiblePosition);
   }
 
   /// Displays the ad counter (if available).

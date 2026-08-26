@@ -218,15 +218,15 @@ void main() {
       expect(timerFired, isFalse);
     });
 
-    test('ShowBannerAd widget supports collapsible banner parameter', () {
+    test('ShowBannerAd and ShowCollapsibleBannerAd widget constructors', () {
       const widgetStandard = ShowBannerAd();
-      expect(widgetStandard.isCollapsible, isNull);
+      expect(widgetStandard, isA<Widget>());
 
-      const widgetCollapsibleBottom = ShowBannerAd(isCollapsible: 'bottom');
-      expect(widgetCollapsibleBottom.isCollapsible, 'bottom');
+      const widgetCollapsibleBottom = ShowCollapsibleBannerAd(collapsiblePosition: CollapsibleBannerPosition.bottom);
+      expect(widgetCollapsibleBottom.collapsiblePosition, CollapsibleBannerPosition.bottom);
 
-      const widgetCollapsibleTop = ShowBannerAd(isCollapsible: 'top');
-      expect(widgetCollapsibleTop.isCollapsible, 'top');
+      const widgetCollapsibleTop = ShowCollapsibleBannerAd(collapsiblePosition: CollapsibleBannerPosition.top);
+      expect(widgetCollapsibleTop.collapsiblePosition, CollapsibleBannerPosition.top);
     });
   });
 

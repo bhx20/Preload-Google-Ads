@@ -32,10 +32,18 @@ class AdRepoImpl extends AdRepo {
     return AdCounterWidget(showCounter: ValueNotifier(showCounter));
   }
 
-  /// Displays the banner ad using ShowBannerAd instance
+  /// Displays a standard anchored banner ad.
   @override
-  Widget showBannerAd({String? isCollapsible}) {
-    return ShowBannerAd(isCollapsible: isCollapsible);
+  Widget showBannerAd() {
+    return const ShowBannerAd();
+  }
+
+  /// Displays a collapsible banner ad ([CollapsibleBannerPosition.bottom] or [CollapsibleBannerPosition.top]).
+  @override
+  Widget showCollapsibleBannerAd({
+    CollapsibleBannerPosition collapsiblePosition = CollapsibleBannerPosition.bottom,
+  }) {
+    return ShowCollapsibleBannerAd(collapsiblePosition: collapsiblePosition);
   }
 
   /// Displays the Interstitial ad by calling the showInter method of InterAd

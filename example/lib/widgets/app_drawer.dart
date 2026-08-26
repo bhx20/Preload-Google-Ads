@@ -82,9 +82,8 @@ class AppDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: const Icon(Icons.view_list_rounded),
-            title: const Text("Native Ads in ListView"),
-            subtitle: const Text("Pagination & Inline Ads"),
+            leading: const Icon(Icons.tune_rounded),
+            title: const Text("Native Style Customizer"),
             selected: currentIndex == 1,
             onTap: () {
               Navigator.pop(context);
@@ -92,8 +91,8 @@ class AppDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: const Icon(Icons.tune_rounded),
-            title: const Text("Native Style Customizer"),
+            leading: const Icon(Icons.view_list_rounded),
+            title: const Text("Native Ads in ListView"),
             selected: currentIndex == 2,
             onTap: () {
               Navigator.pop(context);
@@ -101,12 +100,21 @@ class AppDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: const Icon(Icons.science_rounded),
-            title: const Text("Ad Format Test Lab"),
+            leading: const Icon(Icons.view_stream_rounded),
+            title: const Text("Banner Ads Hub"),
             selected: currentIndex == 3,
             onTap: () {
               Navigator.pop(context);
               onSelectScreen(3);
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.science_rounded),
+            title: const Text("Ad Format Test Lab"),
+            selected: currentIndex == 4,
+            onTap: () {
+              Navigator.pop(context);
+              onSelectScreen(4);
             },
           ),
           const Divider(),

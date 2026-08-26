@@ -69,9 +69,20 @@ class PreloadGoogleAds {
     return _adManager.showOpenApp();
   }
 
-  /// Displays a banner ad if available. Pass [isCollapsible] ('bottom' or 'top') for collapsible banner ads.
-  Widget showBannerAd({String? isCollapsible}) {
-    return _adManager.showBannerAd(isCollapsible: isCollapsible);
+  /// Displays a standard anchored banner ad if available.
+  Widget showBannerAd() {
+    return _adManager.showBannerAd();
+  }
+
+  /// Displays a collapsible banner ad ([CollapsibleBannerPosition.bottom] or [CollapsibleBannerPosition.top]).
+  Widget showCollapsibleBannerAd({
+    Key? key,
+    CollapsibleBannerPosition collapsiblePosition = CollapsibleBannerPosition.bottom,
+  }) {
+    return ShowCollapsibleBannerAd(
+      key: key,
+      collapsiblePosition: collapsiblePosition,
+    );
   }
 
   /// Shows the ad counter, typically for debugging or development.

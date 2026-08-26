@@ -94,9 +94,9 @@ class HomeDashboardScreen extends StatelessWidget {
 
             _useCaseCard(
               context,
-              "ListView Feed & Pagination",
-              "Inline Small Native Ads automatically inserted into an infinite scroll feed.",
-              Icons.view_list_rounded,
+              "Native Ads Hub",
+              "Live Style Customizer & Native ListView feed pagination.",
+              Icons.view_compact_rounded,
               Colors.indigo,
               () => onNavigate(1),
             ),
@@ -104,10 +104,10 @@ class HomeDashboardScreen extends StatelessWidget {
 
             _useCaseCard(
               context,
-              "Native Ad Style Customizer",
-              "Tweak primary colors, border radiuses, and backgrounds dynamically.",
-              Icons.tune_rounded,
-              Colors.amber[800]!,
+              "Banner Ads Hub",
+              "Standard 320x50 and dynamic Collapsible Top/Bottom Banners.",
+              Icons.view_stream_rounded,
+              Colors.teal,
               () => onNavigate(2),
             ),
             const SizedBox(height: 12),
@@ -115,7 +115,7 @@ class HomeDashboardScreen extends StatelessWidget {
             _useCaseCard(
               context,
               "Ad Format Test Lab",
-              "Trigger Interstitial, Rewarded, Collapsible Banner, and App Open ads.",
+              "Trigger Interstitial, Rewarded, and App Open ads.",
               Icons.science_rounded,
               Colors.purple,
               () => onNavigate(3),
