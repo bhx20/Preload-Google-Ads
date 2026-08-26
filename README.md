@@ -55,6 +55,29 @@ Or run:
 flutter pub add preload_google_ads
 ```
 
+### 2. Platform Setup
+
+**Important**: Configure your AdMob App ID in both Android and iOS projects to avoid crashes.
+
+#### Android
+Update `android/app/src/main/AndroidManifest.xml`:
+```xml
+<manifest>
+    <application>
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-xxxxxxxxxxxxxxxx~yyyyyyyyyy"/>
+    </application>
+</manifest>
+```
+
+#### iOS
+Update `ios/Runner/Info.plist`:
+```xml
+<key>GADApplicationIdentifier</key>
+<string>ca-app-pub-xxxxxxxxxxxxxxxx~yyyyyyyyyy</string>
+```
+
 ---
 
 ## Basic Usage
