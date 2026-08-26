@@ -174,6 +174,9 @@ class NativeADLayout {
   /// Custom styling settings for native platform layouts in Light Mode.
   final CustomNativeADStyle? customNativeADStyle;
 
+  /// Alias for [customNativeADStyle].
+  CustomNativeADStyle? get lightCustomNativeADStyle => customNativeADStyle;
+
   /// Custom styling settings for native platform layouts in Dark Mode.
   final CustomNativeADStyle? darkCustomNativeADStyle;
 
@@ -204,7 +207,8 @@ class NativeADLayout {
   /// Constructor for [NativeADLayout] with Light Mode and Dark Mode decoration options.
   NativeADLayout({
     AdLayout? adLayout,
-    this.customNativeADStyle,
+    CustomNativeADStyle? customNativeADStyle,
+    CustomNativeADStyle? lightCustomNativeADStyle,
     this.darkCustomNativeADStyle,
     this.flutterNativeADStyle,
     this.darkFlutterNativeADStyle,
@@ -213,7 +217,8 @@ class NativeADLayout {
     BoxDecoration? lightDecoration,
     BoxDecoration? decoration,
     this.darkDecoration,
-  })  : adLayout = adLayout ?? AdLayout.nativeLayout,
+  })  : customNativeADStyle = customNativeADStyle ?? lightCustomNativeADStyle,
+        adLayout = adLayout ?? AdLayout.nativeLayout,
         lightDecoration = lightDecoration ??
             decoration ??
             BoxDecoration(

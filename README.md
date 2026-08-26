@@ -152,7 +152,7 @@ NativeADLayout(
     border: Border.all(color: const Color(0xFF334155)),
     borderRadius: BorderRadius.circular(12),
   ),
-  customNativeADStyle: CustomNativeADStyle(
+  lightCustomNativeADStyle: CustomNativeADStyle(
     titleColor: Colors.black,
     bodyColor: Colors.grey.shade700,
     buttonBackground: Colors.blueAccent,
