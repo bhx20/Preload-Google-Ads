@@ -30,7 +30,7 @@ class _ShowBannerAdState extends State<ShowBannerAd> {
       final double logicalScreenWidth = view.physicalSize.width / view.devicePixelRatio;
       if (logicalScreenWidth <= 0) return;
 
-      final size = await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(logicalScreenWidth.toInt());
+      final size = await AdSize.getLargeAnchoredAdaptiveBannerAdSize(logicalScreenWidth.toInt());
       if (size == null) return;
 
       final stdBanner = BannerAd(

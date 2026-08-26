@@ -6,8 +6,10 @@ class ShowCollapsibleBannerAd extends StatefulWidget {
   final CollapsibleBannerPosition collapsiblePosition;
 
   /// Optional key override.
+  @override
   final Key? key;
 
+  /// Creates a [ShowCollapsibleBannerAd] widget.
   const ShowCollapsibleBannerAd({
     this.key,
     this.collapsiblePosition = CollapsibleBannerPosition.bottom,
@@ -34,7 +36,7 @@ class _ShowCollapsibleBannerAdState extends State<ShowCollapsibleBannerAd> {
       if (logicalScreenWidth <= 0) return;
 
       final AnchoredAdaptiveBannerAdSize? size =
-          await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
+          await AdSize.getLargeAnchoredAdaptiveBannerAdSize(
         logicalScreenWidth.toInt(),
       );
 

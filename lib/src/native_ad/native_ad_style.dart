@@ -112,14 +112,14 @@ class NativeADStyle {
 
   /// Returns constraints for medium native ads based on the layout type.
   BoxConstraints get mediumConstraintsSize => isFlutterLayout
-      ? flutterStyle?.mediumBoxConstrain ??
+      ? flutterStyle.mediumBoxConstrain ??
           BoxConstraints(
             minWidth: 320,
             minHeight: 280,
             maxWidth: 400,
             maxHeight: 365,
           )
-      : customStyle?.mediumBoxConstrain ??
+      : customStyle.mediumBoxConstrain ??
           BoxConstraints(
             minWidth: 320,
             minHeight: 210,
@@ -129,14 +129,14 @@ class NativeADStyle {
 
   /// Returns constraints for small native ads based on the layout type.
   BoxConstraints get smallConstraintsSize => isFlutterLayout
-      ? flutterStyle?.smallBoxConstrain ??
+      ? flutterStyle.smallBoxConstrain ??
           BoxConstraints(
             minWidth: 320,
             minHeight: 88,
             maxWidth: 400,
             maxHeight: 120,
           )
-      : customStyle?.smallBoxConstrain ??
+      : customStyle.smallBoxConstrain ??
           BoxConstraints(
             minWidth: 320,
             minHeight: 57,
