@@ -1,6 +1,8 @@
 ## v1.0.7
 
-- **Collapsible Banner Modularization**:
+- **Rewarded Interstitial Format Integration**:
+  - Added full preloading and management support for **Rewarded Interstitial Ads** via `RewardInterAd` and `showRewardedInterstitialAd(...)`.
+- **Collapsible & Standard Banner Modularization**:
   - Introduced `ShowCollapsibleBannerAd` for dedicated, dynamic collapsible banner ad display.
   - Added strongly-typed `CollapsibleBannerPosition` enum (`bottom` and `top`) replacing string literals.
   - Added `FittedBox(fit: BoxFit.contain)` responsive layout container to scale standard and collapsible banners seamlessly inside parent constraints.
@@ -12,7 +14,7 @@
   - Modularized unit tests into dedicated files under `test/`: `ad_commons_test.dart`, `banner_ad_test.dart`, `native_ad_test.dart`, `inter_ad_test.dart`, `rewarded_ad_test.dart`, `app_open_ad_test.dart`, and `preload_google_ads_test.dart`.
 - **Showcase Example App Redesign**:
   - Streamlined navigation into clean top-level tabs: **Dashboard**, **Customizer**, **Native Feed**, **Banner Ads**, and **Ad Lab**.
-  - Updated branding logo and app icons across Android and iOS assets.
+  - Updated branding logo and app launcher icons across Android and iOS assets.
 
 ## v1.0.6
 
