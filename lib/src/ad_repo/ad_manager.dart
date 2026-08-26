@@ -23,8 +23,7 @@ class AdManager {
   /// Initializes the AdManager with the provided ad configuration.
   /// It also initializes mobile ads and loads the required ads based on the configuration.
   Future<void> initialize(AdConfigData? adConfig) async {
-    // Reset any existing ad state before initializing with new config
-    PlugAd.getInstance().resetAll();
+    final isFirstInit = config == preData;
 
     // Set the ad configuration data
     config = await setConfigData(adConfig);
@@ -35,8 +34,8 @@ class AdManager {
     // Initialize the Google Mobile Ads SDK
     await MobileAds.instance.initialize();
 
-    // Load and show ads if required with staggered delays to prevent WebView creation issues
-    if (shouldShowAd) {
+    // Load initial ads only on first initialization
+    if (isFirstInit && shouldShowAd) {
       _loadAndShowSplashAd();
       Future.delayed(const Duration(milliseconds: 200), _loadNativeAd);
       Future.delayed(const Duration(milliseconds: 400), _loadBannerAd);
@@ -67,12 +66,17 @@ class AdManager {
   }
 
   /// Force reloads native ads (Small or Medium).
-  void reloadNativeAd({NativeADType? nativeADType}) {
+  Future<void> reloadNativeAd({NativeADType? nativeADType, BuildContext? context}) async {
+    await _syncNativeAdStyle(context: context);
     if (nativeADType == NativeADType.small) {
+      LoadSmallNative.instance.reset();
       LoadSmallNative.instance.loadAd();
     } else if (nativeADType == NativeADType.medium) {
+      LoadMediumNative.instance.reset();
       LoadMediumNative.instance.loadAd();
     } else {
+      LoadMediumNative.instance.reset();
+      LoadSmallNative.instance.reset();
       LoadMediumNative.instance.loadAd();
       LoadSmallNative.instance.loadAd();
     }

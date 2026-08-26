@@ -287,4 +287,39 @@ void main() {
       expect(loader.canShowAd(2), isTrue);
     });
   });
+
+  group('Custom Style Sync & reloadNativeAd Tests', () {
+    test('showNativeAd accepts Key parameter without errors', () {
+      final widget = PreloadGoogleAds.instance.showNativeAd(
+        key: const ValueKey("test_preview_key"),
+        nativeADType: NativeADType.medium,
+      );
+      expect(widget, isA<Widget>());
+      expect((widget as KeyedSubtree).key, equals(const ValueKey("test_preview_key")));
+    });
+
+    test('CustomNativeADStyle properties initialize properly with custom parameters', () {
+      final style = CustomNativeADStyle(
+        titleColor: const Color(0xFFFF0000),
+        bodyColor: const Color(0xFF00FF00),
+        buttonBackground: const Color(0xFF0000FF),
+        buttonForeground: const Color(0xFFFFFFFF),
+        tagBackground: const Color(0xFFFFFF00),
+        tagForeground: const Color(0xFF000000),
+        buttonRadius: 12,
+        tagRadius: 8,
+        buttonGradients: const [Color(0xFF0000FF), Color(0xFFFF0000)],
+      );
+
+      expect(style.titleColor, equals(const Color(0xFFFF0000)));
+      expect(style.bodyColor, equals(const Color(0xFF00FF00)));
+      expect(style.buttonBackground, equals(const Color(0xFF0000FF)));
+      expect(style.buttonForeground, equals(const Color(0xFFFFFFFF)));
+      expect(style.tagBackground, equals(const Color(0xFFFFFF00)));
+      expect(style.tagForeground, equals(const Color(0xFF000000)));
+      expect(style.buttonRadius, equals(12));
+      expect(style.tagRadius, equals(8));
+      expect(style.buttonGradients.length, equals(2));
+    });
+  });
 }

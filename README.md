@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/bhx20/Preload-Google-Ads/main/docs/assets/logo.svg" alt="Preload Google Ads Logo" width="300" />
+  <img src="https://raw.githubusercontent.com/bhx20/Preload-Google-Ads/main/docs/assets/Preload%20Google%20Ad%20Logo.png" alt="Preload Google Ads Logo" width="300" />
 </p>
 
 <p align="center">

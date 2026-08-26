@@ -104,21 +104,11 @@ class HomeDashboardScreen extends StatelessWidget {
 
             _useCaseCard(
               context,
-              "GridView & Card Feed",
-              "Full-width Medium Native Ads integrated into product feeds.",
-              Icons.grid_view_rounded,
-              Colors.teal,
-              () => onNavigate(2),
-            ),
-            const SizedBox(height: 12),
-
-            _useCaseCard(
-              context,
               "Native Ad Style Customizer",
               "Tweak primary colors, border radiuses, and backgrounds dynamically.",
               Icons.tune_rounded,
               Colors.amber[800]!,
-              () => onNavigate(3),
+              () => onNavigate(2),
             ),
             const SizedBox(height: 12),
 
@@ -128,7 +118,7 @@ class HomeDashboardScreen extends StatelessWidget {
               "Trigger Interstitial, Rewarded, Collapsible Banner, and App Open ads.",
               Icons.science_rounded,
               Colors.purple,
-              () => onNavigate(4),
+              () => onNavigate(3),
             ),
             const SizedBox(height: 24),
 

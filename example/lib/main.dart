@@ -5,7 +5,6 @@ import 'theme/theme_provider.dart';
 import 'widgets/app_drawer.dart';
 import 'screens/home_dashboard_screen.dart';
 import 'screens/native_list_screen.dart';
-import 'screens/native_grid_screen.dart';
 import 'screens/custom_style_screen.dart';
 import 'screens/format_lab_screen.dart';
 
@@ -112,7 +111,6 @@ class _MainNavigationContainerState extends State<MainNavigationContainer> {
         themeProvider: widget.themeProvider,
       ),
       const NativeListScreen(),
-      const NativeGridScreen(),
       CustomStyleScreen(themeProvider: widget.themeProvider),
       const FormatLabScreen(),
     ];
@@ -142,11 +140,6 @@ class _MainNavigationContainerState extends State<MainNavigationContainer> {
                 icon: Icon(Icons.view_list_outlined),
                 selectedIcon: Icon(Icons.view_list_rounded),
                 label: 'ListView',
-              ),
-              NavigationDestination(
-                icon: Icon(Icons.grid_view_outlined),
-                selectedIcon: Icon(Icons.grid_view_rounded),
-                label: 'GridView',
               ),
               NavigationDestination(
                 icon: Icon(Icons.tune_outlined),

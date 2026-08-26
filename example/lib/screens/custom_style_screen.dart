@@ -18,17 +18,26 @@ class _CustomStyleScreenState extends State<CustomStyleScreen> with SingleTicker
   Color lightTitleColor = const Color(0xFF0F172A);
   Color lightBodyColor = const Color(0xFF64748B);
   Color lightButtonBg = const Color(0xFF6366F1);
+  Color lightButtonFg = const Color(0xFFFFFFFF);
   Color lightTagBg = const Color(0xFFF19938);
+  Color lightTagFg = const Color(0xFFFFFFFF);
   double lightButtonRadius = 10.0;
+  double lightTagRadius = 6.0;
+  bool lightUseGradient = false;
 
   // Dark Mode Tokens
   Color darkTitleColor = const Color(0xFFF8FAFC);
   Color darkBodyColor = const Color(0xFF94A3B8);
   Color darkButtonBg = const Color(0xFF818CF8);
+  Color darkButtonFg = const Color(0xFFFFFFFF);
   Color darkTagBg = const Color(0xFFF59E0B);
+  Color darkTagFg = const Color(0xFFFFFFFF);
   double darkButtonRadius = 10.0;
+  double darkTagRadius = 6.0;
+  bool darkUseGradient = false;
 
   NativeADType selectedType = NativeADType.medium;
+  int previewKey = 0;
 
   @override
   void initState() {
@@ -83,8 +92,12 @@ class _CustomStyleScreenState extends State<CustomStyleScreen> with SingleTicker
     final titleColor = isDarkModeView ? darkTitleColor : lightTitleColor;
     final bodyColor = isDarkModeView ? darkBodyColor : lightBodyColor;
     final buttonBg = isDarkModeView ? darkButtonBg : lightButtonBg;
+    final buttonFg = isDarkModeView ? darkButtonFg : lightButtonFg;
     final tagBg = isDarkModeView ? darkTagBg : lightTagBg;
-    final radiusVal = isDarkModeView ? darkButtonRadius : lightButtonRadius;
+    final tagFg = isDarkModeView ? darkTagFg : lightTagFg;
+    final btnRadiusVal = isDarkModeView ? darkButtonRadius : lightButtonRadius;
+    final tagRadiusVal = isDarkModeView ? darkTagRadius : lightTagRadius;
+    final useGradient = isDarkModeView ? darkUseGradient : lightUseGradient;
 
     return Theme(
       data: isDarkModeView ? ThemeData.dark() : ThemeData.light(),
@@ -129,7 +142,7 @@ class _CustomStyleScreenState extends State<CustomStyleScreen> with SingleTicker
                   Container(
                     decoration: BoxDecoration(
                       color: isDarkModeView ? const Color(0xFF1E293B) : Colors.white,
-                      borderRadius: BorderRadius.circular(radiusVal),
+                      borderRadius: BorderRadius.circular(btnRadiusVal),
                       border: Border.all(
                         color: isDarkModeView ? const Color(0xFF334155) : const Color(0xFFE2E8F0),
                       ),
@@ -142,6 +155,7 @@ class _CustomStyleScreenState extends State<CustomStyleScreen> with SingleTicker
                     ),
                     padding: const EdgeInsets.all(12),
                     child: PreloadGoogleAds.instance.showNativeAd(
+                      key: ValueKey("preview_$previewKey"),
                       nativeADType: selectedType,
                     ),
                   ),
@@ -184,14 +198,28 @@ class _CustomStyleScreenState extends State<CustomStyleScreen> with SingleTicker
                           ),
                           const SizedBox(height: 14),
 
-                          // Button Primary Color
+                          // Button Background Color
                           _buildColorSelectorRow(
-                            label: "Button Primary",
+                            label: "Button Background",
                             currentColor: buttonBg,
                             presets: isDarkModeView
                                 ? const [Color(0xFF818CF8), Color(0xFF6366F1), Colors.pinkAccent, Colors.greenAccent]
                                 : const [Color(0xFF6366F1), Colors.blue, Colors.deepOrange, Colors.green],
-                            onColorSelected: (c) => _updateColor(isDarkModeForm: isDarkModeView, field: 'button', color: c),
+                            onColorSelected: (c) => _updateColor(isDarkModeForm: isDarkModeView, field: 'buttonBg', color: c),
+                          ),
+                          const SizedBox(height: 14),
+
+                          // Button Text/Foreground Color
+                          _buildColorSelectorRow(
+                            label: "Button Text (Foreground)",
+                            currentColor: buttonFg,
+                            presets: const [
+                              Colors.white,
+                              Colors.black,
+                              Colors.yellowAccent,
+                              Colors.cyanAccent,
+                            ],
+                            onColorSelected: (c) => _updateColor(isDarkModeForm: isDarkModeView, field: 'buttonFg', color: c),
                           ),
                           const SizedBox(height: 14),
 
@@ -205,29 +233,87 @@ class _CustomStyleScreenState extends State<CustomStyleScreen> with SingleTicker
                               Colors.deepOrange,
                               Colors.purple,
                             ],
-                            onColorSelected: (c) => _updateColor(isDarkModeForm: isDarkModeView, field: 'tag', color: c),
+                            onColorSelected: (c) => _updateColor(isDarkModeForm: isDarkModeView, field: 'tagBg', color: c),
                           ),
                           const SizedBox(height: 14),
 
-                          // Border Radius Slider
+                          // Tag Text/Foreground Color
+                          _buildColorSelectorRow(
+                            label: "Ad Tag Text (Foreground)",
+                            currentColor: tagFg,
+                            presets: const [
+                              Colors.white,
+                              Colors.black,
+                              Colors.amberAccent,
+                              Colors.lightGreenAccent,
+                            ],
+                            onColorSelected: (c) => _updateColor(isDarkModeForm: isDarkModeView, field: 'tagFg', color: c),
+                          ),
+                          const SizedBox(height: 14),
+
+                          // Button Radius Slider
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const Text("Button / Container Radius", style: TextStyle(fontSize: 13)),
-                              Text("${radiusVal.toInt()} px", style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.grey)),
+                              const Text("Button Radius", style: TextStyle(fontSize: 13)),
+                              Text("${btnRadiusVal.toInt()} px", style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.grey)),
                             ],
                           ),
                           Slider(
-                            value: radiusVal,
+                            value: btnRadiusVal,
                             min: 0,
-                            max: 24,
-                            divisions: 12,
+                            max: 30,
+                            divisions: 15,
                             onChanged: (val) {
                               setState(() {
                                 if (isDarkModeView) {
                                   darkButtonRadius = val;
                                 } else {
                                   lightButtonRadius = val;
+                                }
+                              });
+                              _syncConfigLive();
+                            },
+                          ),
+                          const SizedBox(height: 10),
+
+                          // Tag Radius Slider
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text("Tag Radius", style: TextStyle(fontSize: 13)),
+                              Text("${tagRadiusVal.toInt()} px", style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.grey)),
+                            ],
+                          ),
+                          Slider(
+                            value: tagRadiusVal,
+                            min: 0,
+                            max: 20,
+                            divisions: 10,
+                            onChanged: (val) {
+                              setState(() {
+                                if (isDarkModeView) {
+                                  darkTagRadius = val;
+                                } else {
+                                  lightTagRadius = val;
+                                }
+                              });
+                              _syncConfigLive();
+                            },
+                          ),
+                          const SizedBox(height: 10),
+
+                          // Button Gradient Toggle Switch
+                          SwitchListTile(
+                            contentPadding: EdgeInsets.zero,
+                            title: const Text("Use Button Gradient", style: TextStyle(fontSize: 13)),
+                            value: useGradient,
+                            onChanged: (val) {
+                              setState(() {
+                                if (isDarkModeView) {
+                                  darkUseGradient = val;
+                                } else {
+                                  lightUseGradient = val;
                                 }
                               });
                               _syncConfigLive();
@@ -360,13 +446,17 @@ class _CustomStyleScreenState extends State<CustomStyleScreen> with SingleTicker
       if (isDarkModeForm) {
         if (field == 'title') darkTitleColor = color;
         if (field == 'body') darkBodyColor = color;
-        if (field == 'button') darkButtonBg = color;
-        if (field == 'tag') darkTagBg = color;
+        if (field == 'buttonBg') darkButtonBg = color;
+        if (field == 'buttonFg') darkButtonFg = color;
+        if (field == 'tagBg') darkTagBg = color;
+        if (field == 'tagFg') darkTagFg = color;
       } else {
         if (field == 'title') lightTitleColor = color;
         if (field == 'body') lightBodyColor = color;
-        if (field == 'button') lightButtonBg = color;
-        if (field == 'tag') lightTagBg = color;
+        if (field == 'buttonBg') lightButtonBg = color;
+        if (field == 'buttonFg') lightButtonFg = color;
+        if (field == 'tagBg') lightTagBg = color;
+        if (field == 'tagFg') lightTagFg = color;
       }
     });
     _syncConfigLive();
@@ -391,7 +481,7 @@ class _CustomStyleScreenState extends State<CustomStyleScreen> with SingleTicker
     );
   }
 
-  Future<void> _syncConfigLive() async {
+  Future<void> _syncConfigLive({bool reloadAd = false}) async {
     final adMode = _tabController.index == 1 ? AdThemeMode.dark : AdThemeMode.light;
 
     await PreloadGoogleAds.instance.initialize(
@@ -402,15 +492,27 @@ class _CustomStyleScreenState extends State<CustomStyleScreen> with SingleTicker
             titleColor: lightTitleColor,
             bodyColor: lightBodyColor,
             buttonBackground: lightButtonBg,
+            buttonForeground: lightButtonFg,
             tagBackground: lightTagBg,
+            tagForeground: lightTagFg,
             buttonRadius: lightButtonRadius.toInt(),
+            tagRadius: lightTagRadius.toInt(),
+            buttonGradients: lightUseGradient ? [lightButtonBg, lightTagBg] : [],
+            smallBoxConstrain: const BoxConstraints(minWidth: 280, minHeight: 90, maxWidth: 400, maxHeight: 150),
+            mediumBoxConstrain: const BoxConstraints(minWidth: 280, minHeight: 250, maxWidth: 400, maxHeight: 380),
           ),
           darkCustomNativeADStyle: CustomNativeADStyle.dark(
             titleColor: darkTitleColor,
             bodyColor: darkBodyColor,
             buttonBackground: darkButtonBg,
+            buttonForeground: darkButtonFg,
             tagBackground: darkTagBg,
+            tagForeground: darkTagFg,
             buttonRadius: darkButtonRadius.toInt(),
+            tagRadius: darkTagRadius.toInt(),
+            buttonGradients: darkUseGradient ? [darkButtonBg, darkTagBg] : [],
+            smallBoxConstrain: const BoxConstraints(minWidth: 280, minHeight: 90, maxWidth: 400, maxHeight: 150),
+            mediumBoxConstrain: const BoxConstraints(minWidth: 280, minHeight: 250, maxWidth: 400, maxHeight: 380),
           ),
         ),
       ),
@@ -420,6 +522,17 @@ class _CustomStyleScreenState extends State<CustomStyleScreen> with SingleTicker
       widget.themeProvider!.setThemeMode(_tabController.index == 1 ? ThemeMode.dark : ThemeMode.light);
     } else {
       await PreloadGoogleAds.instance.setThemeMode(adMode);
+    }
+
+    // Synchronize native channel style and reload active native ad format
+    await PreloadGoogleAds.instance.reloadNativeAd(
+      nativeADType: selectedType,
+      context: context,
+    );
+    if (mounted) {
+      setState(() {
+        previewKey++;
+      });
     }
   }
 }

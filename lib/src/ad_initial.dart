@@ -29,8 +29,8 @@ class PreloadGoogleAds {
   }
 
   /// Reloads native ads (Medium and Small).
-  void reloadNativeAd({NativeADType? nativeADType}) {
-    _adManager.reloadNativeAd(nativeADType: nativeADType);
+  Future<void> reloadNativeAd({NativeADType? nativeADType, BuildContext? context}) async {
+    await _adManager.reloadNativeAd(nativeADType: nativeADType, context: context);
   }
 
   /// Triggers background reloading of any ad format that was lost or failed to load (e.g. after network returns).
@@ -54,8 +54,14 @@ class PreloadGoogleAds {
   ///
   /// Specify [nativeADType] as [NativeADType.small] or [NativeADType.medium].
   /// Returns a [Widget] that contains the ad, or an empty [SizedBox] if no ad is available.
-  Widget showNativeAd({NativeADType nativeADType = NativeADType.medium}) {
-    return _adManager.showNativeAd(nativeADType: nativeADType);
+  Widget showNativeAd({
+    Key? key,
+    NativeADType nativeADType = NativeADType.medium,
+  }) {
+    return KeyedSubtree(
+      key: key,
+      child: _adManager.showNativeAd(nativeADType: nativeADType),
+    );
   }
 
   /// Displays the open app ad (not the splash ad).
