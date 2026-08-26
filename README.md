@@ -175,6 +175,90 @@ NativeADLayout(
 
 ## Showing Ads
 
+### Code Examples for All Ad Formats
+
+#### 1. Native Ad (Medium / Small)
+```dart
+// Native Medium Ad
+PreloadGoogleAds.instance.showNativeAd(
+  key: const ValueKey('home_native_ad'),
+  nativeADType: NativeADType.medium,
+);
+
+// Native Small Ad
+PreloadGoogleAds.instance.showNativeAd(
+  key: const ValueKey('feed_native_ad'),
+  nativeADType: NativeADType.small,
+);
+```
+
+#### 2. Standard Anchored Banner Ad
+```dart
+PreloadGoogleAds.instance.showBannerAd();
+```
+
+#### 3. Collapsible Banner Ad (Bottom / Top)
+```dart
+// Bottom Collapsible Banner
+PreloadGoogleAds.instance.showCollapsibleBannerAd(
+  collapsiblePosition: CollapsibleBannerPosition.bottom,
+);
+
+// Top Collapsible Banner
+PreloadGoogleAds.instance.showCollapsibleBannerAd(
+  collapsiblePosition: CollapsibleBannerPosition.top,
+);
+```
+
+#### 4. Interstitial Ad
+```dart
+PreloadGoogleAds.instance.showInterstitialAd(
+  callBack: (ad, error) {
+    if (error != null) {
+      print("Interstitial failed to show: ${error.message}");
+    }
+    // Perform navigation or action after ad is closed
+  },
+);
+```
+
+#### 5. Rewarded Ad
+```dart
+PreloadGoogleAds.instance.showRewardedAd(
+  callBack: (ad, error) {
+    if (error != null) {
+      print("Rewarded ad failed to show: ${error.message}");
+    }
+  },
+  onReward: (ad, rewardItem) {
+    print("User earned reward: ${rewardItem.amount} ${rewardItem.type}");
+  },
+);
+```
+
+#### 6. Rewarded Interstitial Ad
+```dart
+PreloadGoogleAds.instance.showRewardedInterstitialAd(
+  callBack: (ad, error) {
+    if (error != null) {
+      print("Rewarded Interstitial failed to show: ${error.message}");
+    }
+  },
+  onReward: (ad, rewardItem) {
+    print("User earned rewarded interstitial reward!");
+  },
+);
+```
+
+#### 7. App Open Ad
+```dart
+PreloadGoogleAds.instance.showOpenApp();
+```
+
+---
+
+### Quick Reference Table
+
 | Format | Method | Description |
 | :--- | :--- | :--- |
 | **Native** | `PreloadGoogleAds.instance.showNativeAd(key: ..., nativeADType: NativeADType.medium)` | Displays native ad with key identity & medium/small layout |
