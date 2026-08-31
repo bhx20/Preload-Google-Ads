@@ -12,7 +12,7 @@ import android.widget.TextView
 import androidx.annotation.LayoutRes
 import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.gms.ads.nativead.NativeAdView
-import io.flutter.plugins.googlemobileads.GoogleMobileAdsPlugin.NativeAdFactory
+import io.flutter.plugins.googlemobileads.NativeAdFactory
 
 abstract class BaseNativeAdFactory(
     protected val context: Context,
