@@ -49,6 +49,7 @@ class RewardAd extends BaseAdLoader {
     } catch (error) {
       state = AdLoadState.failed;
       _rewardedAd?.dispose(); // Dispose ad if there's an error.
+      handleFailureAndRetry(error);
     }
   }
 

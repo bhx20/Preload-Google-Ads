@@ -53,6 +53,7 @@ class InterAd extends BaseAdLoader {
       state = AdLoadState.failed;
       /// Disposes the ad if any error occurs.
       _interstitialAd?.dispose();
+      handleFailureAndRetry(error);
     }
   }
 

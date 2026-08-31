@@ -46,6 +46,7 @@ class RewardInterAd extends BaseAdLoader {
     } catch (error) {
       state = AdLoadState.failed;
       _rewardedInterstitialAd?.dispose();
+      handleFailureAndRetry(error);
     }
   }
 

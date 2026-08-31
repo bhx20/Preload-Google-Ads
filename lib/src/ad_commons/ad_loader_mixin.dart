@@ -100,6 +100,16 @@ abstract class BaseAdLoader with AdLoaderMixin {
       });
     } else {
       retryAttempts = maxRetries;
+      AppLogger.log(
+        "Max initial retries for $adLabel reached. Scheduling periodic recovery retry in 15 seconds.",
+      );
+      scheduleReload(const Duration(seconds: 15), () {
+        if (onRetry != null) {
+          onRetry();
+        } else {
+          load();
+        }
+      });
     }
   }
 

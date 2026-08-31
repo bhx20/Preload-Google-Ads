@@ -109,6 +109,7 @@ class LoadBannerAd extends BaseAdLoader {
       // Catch and log any errors that occur during ad loading.
       state = AdLoadState.failed;
       AppLogger.error("catch error loading banner: $error");
+      handleFailureAndRetry(error, onRetry: () => loadAd(isCollapsible: isCollapsible));
     }
   }
 

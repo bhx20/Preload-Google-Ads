@@ -68,6 +68,7 @@ abstract class BaseNativeAdLoader extends BaseAdLoader {
     } catch (error) {
       state = AdLoadState.failed;
       AppLogger.error("Error in $adTypeLabel ad load catch: $error");
+      handleFailureAndRetry(error, onRetry: () => loadAd());
     }
   }
 

@@ -56,6 +56,7 @@ class AppOpenAdManager extends BaseAdLoader {
     } catch (error) {
       state = AdLoadState.failed;
       AppLogger.error('Exception during AppOpenAd load: $error');
+      handleFailureAndRetry(error, onRetry: () => loadAd());
     }
   }
 
