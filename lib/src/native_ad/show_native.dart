@@ -1,8 +1,5 @@
 import '../ad_internal.dart';
 
-/// A counter to track the number of native ads shown.
-var nativeCounter = 0;
-
 /// A widget that determines which type of native ad (small or medium) to show
 /// based on the `nativeADType` and the counter logic.
 class ShowNative extends StatelessWidget {
@@ -14,11 +11,11 @@ class ShowNative extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    /// If the counter exceeds the native ad display limit, reset it and show the ad if allowed.
+    final isSmall = nativeADType == NativeADType.small;
+    final loader = isSmall ? LoadSmallNative.instance : LoadMediumNative.instance;
 
-    bool isSmall = nativeADType == NativeADType.small;
-    if (nativeCounter >= getNativeCounter) {
-      nativeCounter = 0;
+    if (loader.counter >= getNativeCounter) {
+      loader.resetCounter();
       if (shouldShowNativeAd) {
         // Show either small or medium native ad based on the `isSmall` flag.
         return isSmall ? const NativeSmall() : const MediumNative();
@@ -27,7 +24,7 @@ class ShowNative extends StatelessWidget {
         return const SizedBox.shrink();
       }
     } else {
-      nativeCounter++;
+      loader.incrementCounter();
       // If the counter limit is not reached, return an empty space.
       return const SizedBox.shrink();
     }
@@ -61,9 +58,14 @@ abstract class _NativeAdViewState<T extends StatefulWidget> extends State<T> {
   Widget build(BuildContext context) {
     if (_ad == null) return const SizedBox.shrink();
 
+    final isDark = NativeADStyle.instance.isDarkMode(context: context);
+    final decoration = (isDark && NativeADStyle.instance.darkDecoration != null)
+        ? NativeADStyle.instance.darkDecoration
+        : NativeADStyle.instance.lightDecoration;
+
     try {
       return Container(
-        decoration: NativeADStyle.instance.decoration,
+        decoration: decoration,
         constraints: constraints,
         margin: NativeADStyle.instance.margin,
         padding: NativeADStyle.instance.padding,
