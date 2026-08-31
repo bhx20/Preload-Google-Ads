@@ -1,16 +1,20 @@
 import '../ad_internal.dart';
 
 /// Base class for loading native ads to reduce code duplication.
-abstract class BaseNativeAdLoader {
+abstract class BaseNativeAdLoader extends BaseAdLoader {
   /// List to store the loaded native ads.
   List<NativeAd> ads = [];
 
-  /// Reload control for native ads.
-  int reloadAdCount = 1;
+  @override
+  bool get isEnabled => shouldShowNativeAd;
 
-  /// A flag to track if an ad is currently loading.
-  /// Whether an ad is currently being loaded.
-  bool isLoading = false;
+  @override
+  String get adLabel => adTypeLabel;
+
+  @override
+  void load() {
+    loadAd();
+  }
 
   /// Abstract getters for ad-specific configuration.
   /// The factory ID to use for this ad loader.
@@ -33,10 +37,9 @@ abstract class BaseNativeAdLoader {
 
   /// Loads a native ad.
   Future<void> loadAd() async {
-    if (isLoading || ads.length >= 2) return;
+    if (ads.isNotEmpty || !prepareLoad()) return;
 
     try {
-      isLoading = true;
       NativeAd? nativeAd;
       nativeAd = NativeAd(
         factoryId: factoryId,
@@ -44,49 +47,39 @@ abstract class BaseNativeAdLoader {
         nativeTemplateStyle: templateStyle,
         listener: NativeAdListener(
           onAdLoaded: (ad) async {
-            AppLogger.log('$adTypeLabel ad loaded.');
             if (nativeAd != null) {
               ads.add(nativeAd);
             }
             loadStats.value++;
-            isLoading = false;
-            if (ads.length < 2) {
-              Future.delayed(const Duration(seconds: 1), () => loadAd());
-            }
+            handleLoadSuccess();
           },
           onAdImpression: (ad) {
             impStats.value++;
           },
           onAdFailedToLoad: (ad, error) {
-            isLoading = false;
             failedStats.value++;
             ad.dispose();
-            if (reloadAdCount == 1) {
-              reloadAdCount--;
-              loadAd();
-              AppLogger.error("Failed to load $adTypeLabel ad: $error");
-            } else {
-              reloadAdCount = 1;
-            }
+            handleFailureAndRetry(error, onRetry: () => loadAd());
           },
         ),
         request: const AdRequest(),
       );
       await nativeAd.load();
     } catch (error) {
-      isLoading = false;
+      state = AdLoadState.failed;
       AppLogger.error("Error in $adTypeLabel ad load catch: $error");
+      handleFailureAndRetry(error, onRetry: () => loadAd());
     }
   }
 
   /// Disposes of all loaded ads and resets the state.
+  @override
   void reset() {
     for (final ad in ads) {
       ad.dispose();
     }
     ads.clear();
-    isLoading = false;
-    reloadAdCount = 1;
+    super.reset();
   }
 }
 

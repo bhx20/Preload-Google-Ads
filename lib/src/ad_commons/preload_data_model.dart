@@ -1,5 +1,17 @@
 import '../ad_internal.dart';
 
+/// Enum representing the ad theme mode.
+enum AdThemeMode {
+  /// Automatically matches system / Flutter ThemeData brightness.
+  system,
+
+  /// Forces Light Mode ad styles.
+  light,
+
+  /// Forces Dark Mode ad styles.
+  dark,
+}
+
 /// Configuration data for all ad-related settings.
 class AdConfigData {
   /// IDs for various ad formats.
@@ -11,11 +23,54 @@ class AdConfigData {
   /// Toggles for showing/hiding different types of ads.
   final AdFlag? adFlag;
 
-  /// Styling preferences for ads.
+  /// Styling preferences for native ads (Light and Dark mode support).
   final NativeADLayout? nativeADLayout;
 
+  /// Styling preferences for banner ads (Light and Dark mode support).
+  final BannerADLayout? bannerADLayout;
+
+  /// Theme mode for ad styling (system, light, or dark).
+  final AdThemeMode themeMode;
+
   /// Constructor for [AdConfigData].
-  AdConfigData({this.adIDs, this.adCounter, this.adFlag, this.nativeADLayout});
+  AdConfigData({
+    this.adIDs,
+    this.adCounter,
+    this.adFlag,
+    this.nativeADLayout,
+    this.bannerADLayout,
+    this.themeMode = AdThemeMode.system,
+  });
+}
+
+/// Configuration for the layout of banner ads.
+class BannerADLayout {
+  /// The decoration of the container surrounding the banner ad in Light Mode.
+  BoxDecoration? lightDecoration;
+
+  /// Legacy alias getter for [lightDecoration] for backward compatibility.
+  BoxDecoration? get decoration => lightDecoration;
+
+  /// Legacy alias setter for [lightDecoration] for backward compatibility.
+  set decoration(BoxDecoration? value) => lightDecoration = value;
+
+  /// The decoration of the container surrounding the banner ad in Dark Mode.
+  BoxDecoration? darkDecoration;
+
+  /// The padding of the container surrounding the banner ad.
+  EdgeInsets? padding;
+
+  /// The margin of the container surrounding the banner ad.
+  EdgeInsets? margin;
+
+  /// Constructor for [BannerADLayout] with Light Mode and Dark Mode decoration options.
+  BannerADLayout({
+    BoxDecoration? lightDecoration,
+    BoxDecoration? decoration,
+    this.darkDecoration,
+    this.padding,
+    this.margin,
+  }) : lightDecoration = lightDecoration ?? decoration;
 }
 
 /// Contains Ad Unit IDs for different ad types.
@@ -35,6 +90,9 @@ class AdIDS {
   /// Rewarded ad ID.
   final String? rewardedId;
 
+  /// Rewarded Interstitial ad ID.
+  final String? rewardedInterstitialId;
+
   /// Constructor for [AdIDS].
   AdIDS({
     this.appOpenId,
@@ -42,6 +100,7 @@ class AdIDS {
     this.nativeId,
     this.interstitialId,
     this.rewardedId,
+    this.rewardedInterstitialId,
   });
 }
 
@@ -53,6 +112,9 @@ class AdCounter {
   /// Number of times to show rewarded ads.
   final int? rewardedCounter;
 
+  /// Number of times to show rewarded interstitial ads.
+  final int? rewardedInterstitialCounter;
+
   /// Number of times to show native ads.
   final int? nativeCounter;
 
@@ -60,6 +122,7 @@ class AdCounter {
   AdCounter({
     this.interstitialCounter,
     this.rewardedCounter,
+    this.rewardedInterstitialCounter,
     this.nativeCounter,
   });
 }
@@ -78,14 +141,14 @@ class AdFlag {
   /// Show native ads.
   final bool? showNative;
 
-  /// Show splash screen ad.
-  final bool? showSplashAd;
-
   /// Show open app ad.
   final bool? showOpenApp;
 
   /// Show rewarded ad.
   final bool? showRewarded;
+
+  /// Show rewarded interstitial ad.
+  final bool? showRewardedInterstitial;
 
   /// Constructor for [AdFlag].
   AdFlag({
@@ -93,9 +156,9 @@ class AdFlag {
     this.showBanner,
     this.showInterstitial,
     this.showNative,
-    this.showSplashAd,
     this.showOpenApp,
     this.showRewarded,
+    this.showRewardedInterstitial,
   });
 }
 
@@ -104,14 +167,32 @@ class NativeADLayout {
   /// The type of layout to use (Flutter or native).
   final AdLayout adLayout;
 
-  /// Custom styling settings for native platform layouts.
+  /// Custom styling settings for native platform layouts in Light Mode.
   final CustomNativeADStyle? customNativeADStyle;
 
-  /// Styling settings for Flutter-based native ad templates.
+  /// Alias for [customNativeADStyle].
+  CustomNativeADStyle? get lightCustomNativeADStyle => customNativeADStyle;
+
+  /// Custom styling settings for native platform layouts in Dark Mode.
+  final CustomNativeADStyle? darkCustomNativeADStyle;
+
+  /// Styling settings for Flutter-based native ad templates in Light Mode.
   final FlutterNativeADStyle? flutterNativeADStyle;
 
-  /// The decoration of the container surrounding the native ad.
-  BoxDecoration decoration;
+  /// Styling settings for Flutter-based native ad templates in Dark Mode.
+  final FlutterNativeADStyle? darkFlutterNativeADStyle;
+
+  /// The decoration of the container surrounding the native ad in Light Mode.
+  BoxDecoration lightDecoration;
+
+  /// Legacy alias getter for [lightDecoration] for backward compatibility.
+  BoxDecoration get decoration => lightDecoration;
+
+  /// Legacy alias setter for [lightDecoration] for backward compatibility.
+  set decoration(BoxDecoration value) => lightDecoration = value;
+
+  /// The decoration of the container surrounding the native ad in Dark Mode.
+  BoxDecoration? darkDecoration;
 
   /// The padding of the container surrounding the native ad.
   EdgeInsets padding;
@@ -119,23 +200,30 @@ class NativeADLayout {
   /// The margin of the container surrounding the native ad.
   EdgeInsets margin;
 
-  /// Constructor for [NativeADLayout] with optional styling and layout settings.
+  /// Constructor for [NativeADLayout] with Light Mode and Dark Mode decoration options.
   NativeADLayout({
     AdLayout? adLayout,
-    this.customNativeADStyle,
+    CustomNativeADStyle? customNativeADStyle,
+    CustomNativeADStyle? lightCustomNativeADStyle,
+    this.darkCustomNativeADStyle,
     this.flutterNativeADStyle,
+    this.darkFlutterNativeADStyle,
     EdgeInsets? padding,
     EdgeInsets? margin,
+    BoxDecoration? lightDecoration,
     BoxDecoration? decoration,
-  })  : adLayout = adLayout ?? AdLayout.nativeLayout,
-        decoration = decoration ??
+    this.darkDecoration,
+  })  : customNativeADStyle = customNativeADStyle ?? lightCustomNativeADStyle,
+        adLayout = adLayout ?? AdLayout.nativeLayout,
+        lightDecoration = lightDecoration ??
+            decoration ??
             BoxDecoration(
               color: Colors.white,
               border: Border.all(color: Colors.grey.withValues(alpha: 0.5)),
               borderRadius: BorderRadius.circular(5),
             ),
-        padding = padding ?? EdgeInsets.all(5),
-        margin = margin ?? EdgeInsets.all(5);
+        padding = padding ?? const EdgeInsets.all(5),
+        margin = margin ?? const EdgeInsets.all(5);
 }
 
 /// Styling configuration for ad components.
@@ -173,7 +261,7 @@ class CustomNativeADStyle {
   /// The constraints for small-sized native ads.
   BoxConstraints smallBoxConstrain;
 
-  /// Constructor for [CustomNativeADStyle] with default styling values.
+  /// Default Light Mode Constructor.
   CustomNativeADStyle({
     this.titleColor = const Color(0xFF000000),
     this.bodyColor = const Color(0xFF808080),
@@ -199,39 +287,55 @@ class CustomNativeADStyle {
           maxWidth: 400,
           maxHeight: 135,
         );
+
+  /// Factory constructor for Dark Mode presets.
+  factory CustomNativeADStyle.dark({
+    Color titleColor = const Color(0xFFF8FAFC),
+    Color bodyColor = const Color(0xFF94A3B8),
+    Color tagBackground = const Color(0xFFF19938),
+    Color tagForeground = const Color(0xFFFFFFFF),
+    Color buttonBackground = const Color(0xFF6366F1),
+    Color buttonForeground = const Color(0xFFFFFFFF),
+    int buttonRadius = 5,
+    int tagRadius = 5,
+    List<Color>? buttonGradients,
+    BoxConstraints? mediumBoxConstrain,
+    BoxConstraints? smallBoxConstrain,
+  }) {
+    return CustomNativeADStyle(
+      titleColor: titleColor,
+      bodyColor: bodyColor,
+      tagBackground: tagBackground,
+      tagForeground: tagForeground,
+      buttonBackground: buttonBackground,
+      buttonForeground: buttonForeground,
+      buttonRadius: buttonRadius,
+      tagRadius: tagRadius,
+      buttonGradients: buttonGradients,
+      mediumBoxConstrain: mediumBoxConstrain,
+      smallBoxConstrain: smallBoxConstrain,
+    );
+  }
 }
 
 /// Styling configuration for Flutter native ad templates.
 class FlutterNativeADStyle {
   /// Text style for the call-to-action button (e.g., "Install", "Learn More").
-  ///
-  /// Uses white text on a blue background by default, with bold font styling.
   NativeTemplateTextStyle? callToActionTextStyle;
 
   /// Text style for the primary title or headline of the ad.
-  ///
-  /// Defaults to black color, normal font, size 16.
   NativeTemplateTextStyle? primaryTextStyle;
 
   /// Text style for the secondary text (typically body or rating info).
-  ///
-  /// Defaults to grey color, normal font, size 14.
   NativeTemplateTextStyle? secondaryTextStyle;
 
   /// Text style for tertiary text (e.g., store name or additional info).
-  ///
-  /// Defaults to grey color, italic font, size 12.
   NativeTemplateTextStyle? tertiaryTextStyle;
 
   /// Background color for the entire ad template.
-  ///
-  /// Defaults to white.
   Color? mainBackgroundColor;
 
   /// Corner radius for call-to-action and icon elements (iOS only).
-  ///
-  /// Defaults to 5.0, matching `CustomNativeADStyle.buttonRadius`.
-  /// The corner radius for ad elements.
   double? cornerRadius;
 
   /// The constraints for medium-sized native ads in the Flutter template.
@@ -240,7 +344,7 @@ class FlutterNativeADStyle {
   /// The constraints for small-sized native ads in the Flutter template.
   BoxConstraints smallBoxConstrain;
 
-  /// Constructor that applies default styling similar to [CustomNativeADStyle].
+  /// Default Light Mode Constructor.
   FlutterNativeADStyle({
     NativeTemplateTextStyle? callToActionTextStyle,
     NativeTemplateTextStyle? primaryTextStyle,
@@ -289,4 +393,48 @@ class FlutterNativeADStyle {
           maxWidth: 400,
           maxHeight: 120,
         );
+
+  /// Factory constructor for Dark Mode presets.
+  factory FlutterNativeADStyle.dark({
+    NativeTemplateTextStyle? callToActionTextStyle,
+    NativeTemplateTextStyle? primaryTextStyle,
+    NativeTemplateTextStyle? secondaryTextStyle,
+    NativeTemplateTextStyle? tertiaryTextStyle,
+    Color mainBackgroundColor = const Color(0xFF1E293B),
+    double cornerRadius = 5.0,
+    BoxConstraints? mediumBoxConstrain,
+    BoxConstraints? smallBoxConstrain,
+  }) {
+    return FlutterNativeADStyle(
+      callToActionTextStyle: callToActionTextStyle ??
+          NativeTemplateTextStyle(
+            textColor: Colors.white,
+            backgroundColor: const Color(0xFF6366F1),
+            style: NativeTemplateFontStyle.bold,
+            size: 14.0,
+          ),
+      primaryTextStyle: primaryTextStyle ??
+          NativeTemplateTextStyle(
+            textColor: const Color(0xFFF8FAFC),
+            style: NativeTemplateFontStyle.normal,
+            size: 16.0,
+          ),
+      secondaryTextStyle: secondaryTextStyle ??
+          NativeTemplateTextStyle(
+            textColor: const Color(0xFF94A3B8),
+            style: NativeTemplateFontStyle.normal,
+            size: 14.0,
+          ),
+      tertiaryTextStyle: tertiaryTextStyle ??
+          NativeTemplateTextStyle(
+            textColor: const Color(0xFF64748B),
+            style: NativeTemplateFontStyle.normal,
+            size: 12.0,
+          ),
+      mainBackgroundColor: mainBackgroundColor,
+      cornerRadius: cornerRadius,
+      mediumBoxConstrain: mediumBoxConstrain,
+      smallBoxConstrain: smallBoxConstrain,
+    );
+  }
 }
