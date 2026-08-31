@@ -12,11 +12,13 @@ AdConfigData preData = AdConfigData(
     nativeId: AdTestIds.native,
     interstitialId: AdTestIds.interstitial,
     rewardedId: AdTestIds.rewarded,
+    rewardedInterstitialId: AdTestIds.rewardedInterstitial,
   ),
   adCounter: AdCounter(
     interstitialCounter: 0,
     nativeCounter: 0,
     rewardedCounter: 0,
+    rewardedInterstitialCounter: 0,
   ),
   adFlag: AdFlag(
     showAd: true,
@@ -25,7 +27,7 @@ AdConfigData preData = AdConfigData(
     showNative: true,
     showOpenApp: true,
     showRewarded: true,
-    showSplashAd: false,
+    showRewardedInterstitial: true,
   ),
   nativeADLayout: NativeADLayout(
     padding: EdgeInsets.all(5),
@@ -57,6 +59,8 @@ Future<AdConfigData> setConfigData(AdConfigData? adConfig) async {
       interstitialId:
           adConfig?.adIDs?.interstitialId ?? preData.adIDs?.interstitialId,
       rewardedId: adConfig?.adIDs?.rewardedId ?? preData.adIDs?.rewardedId,
+      rewardedInterstitialId: adConfig?.adIDs?.rewardedInterstitialId ??
+          preData.adIDs?.rewardedInterstitialId,
     ),
     adCounter: AdCounter(
       interstitialCounter: adConfig?.adCounter?.interstitialCounter ??
@@ -65,6 +69,9 @@ Future<AdConfigData> setConfigData(AdConfigData? adConfig) async {
           preData.adCounter?.nativeCounter,
       rewardedCounter: adConfig?.adCounter?.rewardedCounter ??
           preData.adCounter?.rewardedCounter,
+      rewardedInterstitialCounter:
+          adConfig?.adCounter?.rewardedInterstitialCounter ??
+              preData.adCounter?.rewardedInterstitialCounter,
     ),
     adFlag: AdFlag(
       showAd: adConfig?.adFlag?.showAd ?? preData.adFlag?.showAd,
@@ -75,12 +82,15 @@ Future<AdConfigData> setConfigData(AdConfigData? adConfig) async {
       showOpenApp: adConfig?.adFlag?.showOpenApp ?? preData.adFlag?.showOpenApp,
       showRewarded:
           adConfig?.adFlag?.showRewarded ?? preData.adFlag?.showRewarded,
-      showSplashAd:
-          adConfig?.adFlag?.showSplashAd ?? preData.adFlag?.showSplashAd,
+      showRewardedInterstitial: adConfig?.adFlag?.showRewardedInterstitial ??
+          preData.adFlag?.showRewardedInterstitial,
     ),
+    themeMode: adConfig?.themeMode ?? preData.themeMode,
     nativeADLayout: NativeADLayout(
-      decoration: adConfig?.nativeADLayout?.decoration ??
-          preData.nativeADLayout?.decoration,
+      lightDecoration: adConfig?.nativeADLayout?.lightDecoration ??
+          preData.nativeADLayout?.lightDecoration,
+      darkDecoration: adConfig?.nativeADLayout?.darkDecoration ??
+          preData.nativeADLayout?.darkDecoration,
       margin:
           adConfig?.nativeADLayout?.margin ?? preData.nativeADLayout?.margin,
       padding:
@@ -89,8 +99,20 @@ Future<AdConfigData> setConfigData(AdConfigData? adConfig) async {
           preData.nativeADLayout?.adLayout,
       customNativeADStyle: adConfig?.nativeADLayout?.customNativeADStyle ??
           preData.nativeADLayout?.customNativeADStyle,
+      darkCustomNativeADStyle: adConfig?.nativeADLayout?.darkCustomNativeADStyle ??
+          preData.nativeADLayout?.darkCustomNativeADStyle,
       flutterNativeADStyle: adConfig?.nativeADLayout?.flutterNativeADStyle ??
           preData.nativeADLayout?.flutterNativeADStyle,
+      darkFlutterNativeADStyle: adConfig?.nativeADLayout?.darkFlutterNativeADStyle ??
+          preData.nativeADLayout?.darkFlutterNativeADStyle,
+    ),
+    bannerADLayout: BannerADLayout(
+      lightDecoration: adConfig?.bannerADLayout?.lightDecoration ??
+          preData.bannerADLayout?.lightDecoration,
+      darkDecoration: adConfig?.bannerADLayout?.darkDecoration ??
+          preData.bannerADLayout?.darkDecoration,
+      margin: adConfig?.bannerADLayout?.margin ?? preData.bannerADLayout?.margin,
+      padding: adConfig?.bannerADLayout?.padding ?? preData.bannerADLayout?.padding,
     ),
   );
 }
@@ -156,6 +178,16 @@ class AdStats {
 
   /// Number of rewarded ad load failures.
   final ValueNotifier<int> rewardedFailed = ValueNotifier(0);
+
+  /// Statistics for Rewarded Interstitial Ads
+  /// Number of rewarded interstitial ads loaded.
+  final ValueNotifier<int> rewardedInterLoad = ValueNotifier(0);
+
+  /// Number of rewarded interstitial ad impressions.
+  final ValueNotifier<int> rewardedInterImp = ValueNotifier(0);
+
+  /// Number of rewarded interstitial ad load failures.
+  final ValueNotifier<int> rewardedInterFailed = ValueNotifier(0);
 
   /// Statistics for Small Native Ads
   /// Number of small native ads loaded.
@@ -243,12 +275,12 @@ String get unitIDNative => config.adIDs?.nativeId ?? AdTestIds.native;
 /// Retrieves the Rewarded Ad Unit ID.
 String get unitIDRewarded => config.adIDs?.rewardedId ?? AdTestIds.rewarded;
 
+/// Retrieves the Rewarded Interstitial Ad Unit ID.
+String get unitIDRewardedInter =>
+    config.adIDs?.rewardedInterstitialId ?? AdTestIds.rewardedInterstitial;
+
 /// Determines if any ads should be shown based on flags.
 bool get shouldShowAd => config.adFlag?.showAd == true;
-
-/// Determines if the splash ad should be shown.
-bool get shouldShowSplashAd =>
-    config.adFlag?.showSplashAd == true && config.adFlag?.showAd == true;
 
 /// Determines if native ads should be shown.
 bool get shouldShowNativeAd =>
@@ -266,6 +298,11 @@ bool get shouldShowInterAd =>
 bool get shouldShowRewardedAd =>
     config.adFlag?.showRewarded == true && config.adFlag?.showAd == true;
 
+/// Determines if rewarded interstitial ads should be shown.
+bool get shouldShowRewardedInterAd =>
+    config.adFlag?.showRewardedInterstitial == true &&
+    config.adFlag?.showAd == true;
+
 /// Determines if the Open App ad should be shown.
 bool get shouldShowOpenAppAd =>
     config.adFlag?.showOpenApp == true && config.adFlag?.showAd == true;
@@ -278,6 +315,10 @@ int get getNativeCounter => config.adCounter?.nativeCounter ?? 0;
 
 /// Gets the rewarded ad counter.
 int get getRewardedCounter => config.adCounter?.rewardedCounter ?? 0;
+
+/// Gets the rewarded interstitial ad counter.
+int get getRewardedInterCounter =>
+    config.adCounter?.rewardedInterstitialCounter ?? 0;
 
 /// Gets the Layout Type
 bool get isFlutterLayout =>
