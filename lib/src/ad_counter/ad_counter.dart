@@ -1,227 +1,272 @@
 import '../ad_internal.dart';
 
-/// A widget that displays a debug counter of ad loads, impressions, and failures.
-class AdCounterWidget extends StatelessWidget {
-  /// Whether the counter should be currently visible.
+/// A widget that displays a draggable floating action button.
+/// Tapping the button opens a clean popup overlay displaying ad metrics vertically.
+class AdCounterWidget extends StatefulWidget {
+  /// Whether the counter widget should be currently visible.
   final ValueNotifier<bool> showCounter;
 
   /// Constructor to receive a ValueNotifier to control whether the counter should be shown.
   const AdCounterWidget({super.key, required this.showCounter});
 
-  /// Define custom colors for different themes (light or dark)
-  Color _getTitleColor(BuildContext context) {
-    /// Return title color depending on the current theme (light or dark)
-    return Theme.of(context).brightness == Brightness.dark
-        ? Colors.white70
-        : Colors.white;
-  }
+  @override
+  State<AdCounterWidget> createState() => _AdCounterWidgetState();
+}
 
-  Color _getBackgroundColor(BuildContext context) {
-    /// Return background color depending on the current theme (light or dark)
-    return Theme.of(context).brightness == Brightness.dark
-        ? Colors.grey[850]!
-        : Colors.white;
-  }
-
-  Color _getBorderColor(BuildContext context) {
-    /// Return border color depending on the current theme (light or dark)
-    return Theme.of(context).brightness == Brightness.dark
-        ? Colors.blueGrey
-        : Colors.blue;
-  }
-
-  Color _getTextColor(BuildContext context) {
-    /// Return text color depending on the current theme (light or dark)
-    return Theme.of(context).brightness == Brightness.dark
-        ? Colors.white60
-        : Colors.black87;
-  }
-
-  /// Custom widget to build title with a specific color for each theme
-  Widget _buildTitleCell(BuildContext context, String title) {
-    /// Get the title color and background color based on the current theme
-    final titleColor = _getTitleColor(context);
-    final backgroundColor = Theme.of(context).brightness == Brightness.dark
-        ? Colors.blueGrey
-        : Colors.blue;
-
-    /// Return a container with title text and background
-    return Container(
-      width: double.infinity,
-      height: 30,
-      color: backgroundColor,
-      child: Center(
-        child: Text(
-          title,
-          style: TextStyle(
-            fontSize: 10,
-            fontWeight: FontWeight.bold,
-            color: titleColor,
-          ),
-        ),
-      ),
-    );
-  }
-
-  /// Custom widget to build stat value text with specific colors for each theme
-  Widget _buildStatValue(BuildContext context, ValueNotifier<int> notifier) {
-    /// Get the text color based on the current theme
-    final textColor = _getTextColor(context);
-
-    /// Use ValueListenableBuilder to listen to changes in the stat value (int)
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5),
-      child: ValueListenableBuilder<int>(
-        valueListenable: notifier,
-        builder: (_, value, __) => Text(
-          value.toString(),
-          style: TextStyle(fontSize: 10, color: textColor),
-        ),
-      ),
-    );
-  }
-
-  /// Custom widget to build each stat column (for Interstitial, Rewarded, etc.)
-  Widget _buildStatColumn(
-    BuildContext context,
-    String title,
-    ValueNotifier<int> load,
-    ValueNotifier<int> imp,
-    ValueNotifier<int> fail,
-  ) {
-    return Expanded(
-      child: Column(
-        children: [
-          /// Title cell with the given title (like "Inter")
-          _buildTitleCell(context, title),
-
-          /// Stat values for Load, Imp, and Failed
-          _buildStatValue(context, load),
-          const Divider(height: 1),
-          _buildStatValue(context, imp),
-          const Divider(height: 1),
-          _buildStatValue(context, fail),
-        ],
-      ),
-    );
-  }
-
-  /// Custom widget to build the label column (e.g., 'LOAD', 'SHOW', 'FAILED')
-  Widget _buildLabelColumn(BuildContext context) {
-    final labels = ['LOAD', 'SHOW', 'FAILED'];
-
-    /// Get the text color based on the current theme
-    final textColor = _getTextColor(context);
-
-    return Expanded(
-      child: Column(
-        children: [
-          /// Title cell for the 'STATES' label
-          _buildTitleCell(context, 'STATES'),
-
-          /// Loop through the labels and build corresponding text with dividers
-          ...List.generate(labels.length, (index) {
-            return Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5),
-                  child: Text(
-                    labels[index],
-                    style: TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold,
-                      color: textColor,
-                    ),
-                  ),
-                ),
-
-                /// Add divider between each label except the last one
-                if (index < labels.length - 1) const Divider(height: 1),
-              ],
-            );
-          }),
-        ],
-      ),
-    );
-  }
+class _AdCounterWidgetState extends State<AdCounterWidget> {
+  Offset _position = const Offset(20, 140);
+  bool _showOverlay = false;
 
   @override
   Widget build(BuildContext context) {
-    /// Skip widget rendering in release mode
     if (kReleaseMode) return const SizedBox.shrink();
 
-    /// Get the border and background colors based on the current theme
-    final borderColor = _getBorderColor(context);
-    final backgroundColor = _getBackgroundColor(context);
+    return ValueListenableBuilder<bool>(
+      valueListenable: widget.showCounter,
+      builder: (_, shouldShow, __) {
+        if (!shouldShow) return const SizedBox.shrink();
 
-    return Material(
-      child: Container(
-        margin: const EdgeInsets.all(5),
-        clipBehavior: Clip.hardEdge,
-        decoration: BoxDecoration(
-          color: backgroundColor,
-          borderRadius: BorderRadius.circular(5),
-          border: Border.all(color: borderColor),
+        final stats = AdStats.instance;
+
+        return Stack(
+          children: [
+            // Popup Overlay Card when floating button is tapped
+            if (_showOverlay)
+              Positioned(
+                left: (_position.dx + 65 > MediaQuery.of(context).size.width - 270)
+                    ? MediaQuery.of(context).size.width - 280
+                    : _position.dx,
+                top: (_position.dy + 65 > MediaQuery.of(context).size.height - 350)
+                    ? _position.dy - 340
+                    : _position.dy + 60,
+                child: Material(
+                  elevation: 0,
+                  borderRadius: BorderRadius.circular(16),
+                  color: Colors.transparent,
+                  child: Container(
+                    width: 270,
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? const Color(0xFF1E293B)
+                          : Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? Colors.blueGrey.withValues(alpha: 0.5)
+                            : const Color(0xFF6366F1).withValues(alpha: 0.4),
+                        width: 1.5,
+                      ),
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        // Header Title with close button
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Row(
+                              children: [
+                                Icon(
+                                  Icons.analytics_rounded,
+                                  size: 16,
+                                  color: Color(0xFF6366F1),
+                                ),
+                                SizedBox(width: 6),
+                                Text(
+                                  "Ad Metrics Lab",
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            GestureDetector(
+                              onTap: () => setState(() => _showOverlay = false),
+                              child: const Icon(
+                                Icons.close_rounded,
+                                size: 18,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const Divider(height: 12),
+                        // Column Headers
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 4),
+                          child: Row(
+                            children: [
+                              const Expanded(
+                                flex: 3,
+                                child: Text(
+                                  "FORMAT",
+                                  style: TextStyle(
+                                    fontSize: 9.5,
+                                    fontWeight: FontWeight.w900,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ),
+                              _headerCell("LOAD", Colors.blue),
+                              _headerCell("IMPRESSION", Colors.green),
+                              _headerCell("FAILED", Colors.red),
+                            ],
+                          ),
+                        ),
+                        const Divider(height: 8),
+                        // Vertical Format Table
+                        _buildRowItem("Interstitial", stats.interLoad, stats.interImp, stats.interFailed, const Color(0xFF3B82F6)),
+                        _buildRowItem("Rewarded", stats.rewardedLoad, stats.rewardedImp, stats.rewardedFailed, const Color(0xFFF59E0B)),
+                        _buildRowItem("Reward Inter", stats.rewardedInterLoad, stats.rewardedInterImp, stats.rewardedInterFailed, const Color(0xFF8B5CF6)),
+                        _buildRowItem("Banner", stats.bannerLoad, stats.bannerImp, stats.bannerFailed, const Color(0xFF10B981)),
+                        _buildRowItem("Small Native", stats.nativeLoadS, stats.nativeImpS, stats.nativeFailedS, const Color(0xFF14B8A6)),
+                        _buildRowItem("Medium Native", stats.nativeLoadM, stats.nativeImpM, stats.nativeFailedM, const Color(0xFF6366F1)),
+                        _buildRowItem("App Open", stats.openAppLoad, stats.openAppImp, stats.openAppFailed, const Color(0xFFEC4899)),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+
+            // Floating Draggable Action Button
+            Positioned(
+              left: _position.dx,
+              top: _position.dy,
+              child: GestureDetector(
+                onPanUpdate: (details) {
+                  setState(() {
+                    _position += details.delta;
+                    _showOverlay = false;
+                  });
+                },
+                onTap: () {
+                  setState(() {
+                    _showOverlay = !_showOverlay;
+                  });
+                },
+                child: Material(
+                  elevation: 0,
+                  shape: const CircleBorder(),
+                  color: Colors.transparent,
+                  child: Container(
+                    width: 52,
+                    height: 52,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: LinearGradient(
+                        colors: [Color(0xFF6366F1), Color(0xFF4F46E5)],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                    ),
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Icon(
+                          _showOverlay ? Icons.close_rounded : Icons.analytics_rounded,
+                          color: Colors.white,
+                          size: 24,
+                        ),
+                        Positioned(
+                          right: 10,
+                          top: 10,
+                          child: Container(
+                            width: 8,
+                            height: 8,
+                            decoration: const BoxDecoration(
+                              color: Color(0xFF22C55E),
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _headerCell(String title, Color color) {
+    return Expanded(
+      flex: 2,
+      child: Text(
+        title,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontSize: 8.5,
+          fontWeight: FontWeight.w900,
+          color: color,
         ),
-        child: ValueListenableBuilder<bool>(
-          valueListenable: showCounter,
-          builder: (_, shouldShow, __) {
-            /// If the counter should not be shown, return an empty widget
-            if (!shouldShow) return const SizedBox.shrink();
+      ),
+    );
+  }
 
-            final stats = AdStats.instance;
-
-            return Row(
+  Widget _buildRowItem(
+    String label,
+    ValueNotifier<int> load,
+    ValueNotifier<int> imp,
+    ValueNotifier<int> fail,
+    Color color,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        children: [
+          Expanded(
+            flex: 3,
+            child: Row(
               children: [
-                /// Build the label column (e.g., LOAD, SHOW, FAILED)
-                _buildLabelColumn(context),
-
-                /// Build stat columns for various ad types (Inter, Reward, etc.)
-                _buildStatColumn(
-                  context,
-                  "Inter",
-                  stats.interLoad,
-                  stats.interImp,
-                  stats.interFailed,
+                Container(
+                  width: 6,
+                  height: 6,
+                  decoration: BoxDecoration(
+                    color: color,
+                    shape: BoxShape.circle,
+                  ),
                 ),
-                _buildStatColumn(
-                  context,
-                  "Reward",
-                  stats.rewardedLoad,
-                  stats.rewardedImp,
-                  stats.rewardedFailed,
-                ),
-                _buildStatColumn(
-                  context,
-                  "Banner",
-                  stats.bannerLoad,
-                  stats.bannerImp,
-                  stats.bannerFailed,
-                ),
-                _buildStatColumn(
-                  context,
-                  "SNative",
-                  stats.nativeLoadS,
-                  stats.nativeImpS,
-                  stats.nativeFailedS,
-                ),
-                _buildStatColumn(
-                  context,
-                  "MNative",
-                  stats.nativeLoadM,
-                  stats.nativeImpM,
-                  stats.nativeFailedM,
-                ),
-                _buildStatColumn(
-                  context,
-                  "OpenApp",
-                  stats.openAppLoad,
-                  stats.openAppImp,
-                  stats.openAppFailed,
+                const SizedBox(width: 6),
+                Expanded(
+                  child: Text(
+                    label,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontSize: 10.5,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                 ),
               ],
-            );
-          },
+            ),
+          ),
+          _badge(load, Colors.blue),
+          _badge(imp, Colors.green),
+          _badge(fail, Colors.red),
+        ],
+      ),
+    );
+  }
+
+  Widget _badge(ValueNotifier<int> notifier, Color color) {
+    return Expanded(
+      flex: 2,
+      child: ValueListenableBuilder<int>(
+        valueListenable: notifier,
+        builder: (_, count, __) => Center(
+          child: Text(
+            count.toString(),
+            style: TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.bold,
+              color: color,
+            ),
+          ),
         ),
       ),
     );
