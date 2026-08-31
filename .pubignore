@@ -1,5 +1,6 @@
 # Exclude large assets not needed for the package
 *.gif
+!doc/assets/*.gif
 # Allow PNGs in example/assets for pub.dev screenshots
 !example/assets/*.png
 

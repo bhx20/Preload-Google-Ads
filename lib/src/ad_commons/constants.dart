@@ -78,3 +78,13 @@ enum NativeADType {
   /// Small-sized native ad.
   small
 }
+
+/// Anchor position for collapsible banner ads.
+enum CollapsibleBannerPosition {
+  /// Collapsible banner anchored to bottom.
+  bottom,
+
+  /// Collapsible banner anchored to top.
+  top,
+}
+

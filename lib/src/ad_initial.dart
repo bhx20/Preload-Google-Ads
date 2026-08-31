@@ -1,70 +1,127 @@
 import 'ad_internal.dart';
 
-/// Singleton wrapper class to manage ad interactions via [AdManager].
+/// **PreloadGoogleAds**: The primary singleton entrypoint for managing AdMob preloading and ad display.
+///
+/// Use `PreloadGoogleAds.instance` to initialize ad configuration, show preloaded ads, and query stats.
 class PreloadGoogleAds {
-  /// Private constructor for singleton pattern
+  /// Private constructor for singleton pattern.
   PreloadGoogleAds._privateConstructor();
 
-  /// Singleton instance
+  /// The global singleton instance of [PreloadGoogleAds].
   static final PreloadGoogleAds instance =
       PreloadGoogleAds._privateConstructor();
 
-  /// Reference to the internal AdManager instance
+  /// Reference to the internal [AdManager] instance handling preloading tasks.
   final AdManager _adManager = AdManager.instance;
 
-  /// Initializes the ad system with optional [adConfig].
-  /// Loads and prepares ads if configuration allows.
+  /// Initializes the Google Mobile Ads SDK and preloading queues with optional custom [adConfigData].
+  ///
+  /// ```dart
+  /// await PreloadGoogleAds.instance.initialize(
+  ///   adConfigData: AdConfigData(
+  ///     adIDs: AdIDS(bannerId: 'your-ad-unit-id'),
+  ///   ),
+  /// );
+  /// ```
   Future<void> initialize({AdConfigData? adConfigData}) async {
     await AdManager.instance.initialize(adConfigData);
   }
 
-  /// Sets the splash ad callback.
-  /// This should be set before calling initialize if you want a callback
-  /// when splash ad loads or fails.
-  void setSplashAdCallback(Function(AppOpenAd? ad, AdError? error) callback) {
-    _adManager.setSplashAdCallback(callback);
+  /// Dynamically updates the active ad theme mode ([AdThemeMode.system], [AdThemeMode.light], or [AdThemeMode.dark]).
+  /// Synchronizes native platform ad styles immediately.
+  Future<void> setThemeMode(AdThemeMode mode, {BuildContext? context}) async {
+    await _adManager.setThemeMode(mode, context: context);
   }
 
-  /// Displays a preloaded native ad in the UI.
+  /// Static shortcut helper to initialize the ad system.
+  static Future<void> init({AdConfigData? adConfigData}) async {
+    await instance.initialize(adConfigData: adConfigData);
+  }
+
+  /// Force reloads native ad instances for [nativeADType] (Small or Medium).
+  Future<void> reloadNativeAd({NativeADType? nativeADType, BuildContext? context}) async {
+    await _adManager.reloadNativeAd(nativeADType: nativeADType, context: context);
+  }
+
+  /// Triggers background re-fetching of any missing or failed ads (e.g. after network connection returns).
+  void reloadUnloadedAds() {
+    _adManager.reloadUnloadedAds();
+  }
+
+  /// Static shortcut to trigger background reloading of all missing or unloaded ads.
+  static void reloadAllUnloadedAds() {
+    instance.reloadUnloadedAds();
+  }
+
+  /// Displays a preloaded native ad widget.
   ///
-  /// Specify [nativeADType] as [NativeADType.small] or [NativeADType.medium].
-  /// Returns a [Widget] that contains the ad, or an empty [SizedBox] if no ad is available.
-  Widget showNativeAd({NativeADType nativeADType = NativeADType.medium}) {
-    return _adManager.showNativeAd(nativeADType: nativeADType);
+  /// Accepts an optional [key] for subtree identity preservation during dynamic style rebuilds,
+  /// and [nativeADType] ([NativeADType.medium] or [NativeADType.small]).
+  Widget showNativeAd({
+    Key? key,
+    NativeADType nativeADType = NativeADType.medium,
+  }) {
+    return KeyedSubtree(
+      key: key,
+      child: _adManager.showNativeAd(nativeADType: nativeADType),
+    );
   }
 
-  /// Displays the open app ad (not the splash ad).
+  /// Displays the preloaded App Open ad on demand.
   void showOpenApp() {
     return _adManager.showOpenApp();
   }
 
-  /// Displays a banner ad if available.
+  /// Displays a standard anchored adaptive banner ad inside a responsive container.
   Widget showBannerAd() {
     return _adManager.showBannerAd();
   }
 
-  /// Shows the ad counter, typically for debugging or development.
-  /// Defaults to showing the counter.
+  /// Displays a collapsible banner ad anchored to [CollapsibleBannerPosition.bottom] or [CollapsibleBannerPosition.top].
+  Widget showCollapsibleBannerAd({
+    Key? key,
+    CollapsibleBannerPosition collapsiblePosition = CollapsibleBannerPosition.bottom,
+  }) {
+    return ShowCollapsibleBannerAd(
+      key: key,
+      collapsiblePosition: collapsiblePosition,
+    );
+  }
+
+  /// Toggles the diagnostic real-time ad counter overlay widget.
   Widget showAdCounter({bool? showCounter}) {
     return _adManager.showAdCounter(showCounter: showCounter);
   }
 
-  /// Displays an interstitial ad.
-  /// Returns the [InterstitialAd] or [AdError] through the [callBack].
+  /// Displays a preloaded full-screen Interstitial ad based on configured click frequency.
+  ///
+  /// [callBack] is invoked when the ad closes or fails to present.
   void showInterstitialAd({
     required Function(InterstitialAd? ad, AdError? error) callBack,
   }) {
     return _adManager.showInterstitialAd(callBack: callBack);
   }
 
-  /// Displays a rewarded ad.
+  /// Displays a preloaded Rewarded ad based on click counter rules.
   ///
-  /// Provide a [callBack] to receive the [RewardedAd] or [AdError] when the ad is shown or fails.
-  /// The [onReward] function is called when the user successfully earns the reward.
+  /// [onReward] is invoked when the user earns a reward item.
   void showRewardedAd({
     required void Function(RewardedAd? ad, AdError? error) callBack,
     required void Function(AdWithoutView ad, RewardItem reward) onReward,
   }) {
     return _adManager.showRewardedAd(callBack: callBack, onReward: onReward);
+  }
+
+  /// Displays a preloaded Rewarded Interstitial ad.
+  ///
+  /// [onReward] is invoked when the user earns a reward item.
+  void showRewardedInterstitialAd({
+    required void Function(RewardedInterstitialAd? ad, AdError? error) callBack,
+    required void Function(AdWithoutView ad, RewardItem reward) onReward,
+  }) {
+    return _adManager.showRewardedInterstitialAd(
+      callBack: callBack,
+      onReward: onReward,
+    );
   }
 }
