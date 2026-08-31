@@ -35,7 +35,7 @@ class LoadBannerAd extends BaseAdLoader {
   ///
   /// Specify [isCollapsible] as 'bottom' or 'top' for collapsible banner ads.
   Future<void> loadAd({String? isCollapsible}) async {
-    if (bannerAdObject.length >= 1 || !prepareLoad()) return;
+    if (bannerAdObject.isNotEmpty || !prepareLoad()) return;
 
     BannerAd? bannerAd;
 

@@ -2,7 +2,7 @@
 ///
 /// Deliver a zero-latency ad experience by fetching App Open, Interstitial, Rewarded, Rewarded Interstitial,
 /// Native (Small/Medium), and Banner ads in the background before they are shown to users.
-library preload_google_ads;
+library;
 
 export 'package:flutter/foundation.dart';
 export 'package:flutter/material.dart';

@@ -5,15 +5,11 @@ class ShowCollapsibleBannerAd extends StatefulWidget {
   /// Collapsible position: [CollapsibleBannerPosition.bottom] or [CollapsibleBannerPosition.top]. Defaults to [CollapsibleBannerPosition.bottom].
   final CollapsibleBannerPosition collapsiblePosition;
 
-  /// Optional key override.
-  @override
-  final Key? key;
-
   /// Creates a [ShowCollapsibleBannerAd] widget.
   const ShowCollapsibleBannerAd({
-    this.key,
+    super.key,
     this.collapsiblePosition = CollapsibleBannerPosition.bottom,
-  }) : super(key: key);
+  });
 
   @override
   State<ShowCollapsibleBannerAd> createState() => _ShowCollapsibleBannerAdState();

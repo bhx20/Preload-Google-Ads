@@ -1,5 +1,9 @@
 ## v1.0.7
 
+- **Network Interruption & Auto-Recovery**:
+  - Implemented continuous background auto-recovery retry (15s periodic cycle) when initial backoff retries are exhausted due to network loss.
+  - Ads automatically recover and preload into memory as soon as network connectivity is restored without requiring manual re-initialization.
+  - Added robust exception handling across all ad format catch blocks (`RewardAd`, `InterAd`, `RewardInterAd`, `AppOpenAdManager`, `LoadBannerAd`, `BaseNativeAdLoader`).
 - **Rewarded Interstitial Format Integration**:
   - Added full preloading and management support for **Rewarded Interstitial Ads** via `RewardInterAd` and `showRewardedInterstitialAd(...)`.
 - **Collapsible & Standard Banner Modularization**:
@@ -10,6 +14,8 @@
   - Fixed native ad disappearance on dynamic color selections by updating MethodChannel state without clearing active loaded ad instances.
   - Expanded `CustomNativeADStyle` to support title, body, button, tag foreground/background colors, radius sliders, and button gradient tokens.
   - Added optional `Key? key` parameter to `showNativeAd(...)` and `showCollapsibleBannerAd(...)` for instant subtree key identity updates.
+- **Streamlined Library Exports**:
+  - Exported all models, enums, constants, widgets, and singletons directly via `package:preload_google_ads/preload_google_ads.dart`.
 - **Comprehensive Unit Testing Suite**:
   - Modularized unit tests into dedicated files under `test/`: `ad_commons_test.dart`, `banner_ad_test.dart`, `native_ad_test.dart`, `inter_ad_test.dart`, `rewarded_ad_test.dart`, `app_open_ad_test.dart`, and `preload_google_ads_test.dart`.
 - **Showcase Example App Redesign**:

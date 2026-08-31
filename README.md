@@ -1,28 +1,31 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/bhx20/Preload-Google-Ads/main/docs/assets/Preload%20Google%20Ad%20Logo.png" alt="Preload Google Ads Logo" width="300" />
+  <img src="https://raw.githubusercontent.com/bhx20/Preload-Google-Ads/main/doc/assets/Preload%20Google%20Ad%20Logo.png" alt="Preload Google Ads Logo" width="300" />
 </p>
 
 <p align="center">
-  <a href="https://pub.dev/packages/preload_google_ads"><img src="https://img.shields.io/pub/v/preload_google_ads.svg?color=blue" alt="pub package"></a>
-  <a href="https://pub.dev/packages/preload_google_ads"><img src="https://img.shields.io/pub/publisher/preload_google_ads.svg?color=blue" alt="Publisher"></a>
-  <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
+  <a href="https://pub.dev/packages/preload_google_ads"><img src="https://img.shields.io/pub/v/preload_google_ads.svg" alt="Pub Version"></a>
+  <a href="https://pub.dev/packages/preload_google_ads/score"><img src="https://img.shields.io/pub/points/preload_google_ads" alt="Pub Points"></a>
+  <a href="https://pub.dev/packages/preload_google_ads"><img src="https://img.shields.io/pub/likes/preload_google_ads" alt="Pub Likes"></a>
+  <a href="https://pub.dev/packages/preload_google_ads"><img src="https://img.shields.io/pub/popularity/preload_google_ads" alt="Popularity"></a>
+  <a href="https://github.com/bhx20/Preload-Google-Ads/blob/main/LICENSE"><img src="https://img.shields.io/github/license/bhx20/Preload-Google-Ads" alt="License"></a>
 </p>
 
 ---
 
-A high-performance Flutter plugin for **background preloading** of Google Mobile Ads (AdMob). Deliver a seamless, zero-latency experience by fetching ads before your users even need them.
+## 🚀 Overview
+
+**Preload Google Ads** is a high-performance Flutter plugin designed to eliminate ad latency and provide a seamless, non-intrusive user experience. It background-preloads **App Open**, **Interstitial**, **Rewarded**, **Rewarded Interstitial**, **Native (Small & Medium)**, and **Banner (Anchored Adaptive & Collapsible)** ads before they need to be displayed.
 
 ---
 
-## Key Features
+## ⚡ Key Features
 
-- **Zero Latency**: Preload ads during app startup for immediate display.
-- **All Formats Supported**: App Open, Interstitial, Rewarded, Native (Small/Medium), and Banner.
-- **Auto-Reloading**: Automatically fetches fresh ads after display or failure.
-- **Click Counter Logic**: Customizable frequency control (e.g., show every 3rd click).
-- **Deep Customization**: Style native ads via Kotlin (Android) or Flutter views.
-- **Developer Friendly**: Built-in Ad Counter for real-time tracking and debugging.
-- **Fallback Ready**: Defaults to test ad IDs for safe and easy development.
+- 🏎️ **Zero-Latency Ad Delivery**: Background preloading queues ads before user navigation.
+- 📱 **All Major Formats**: App Open, Interstitial, Rewarded, Rewarded Interstitial, Native, and Banner ads.
+- 🎨 **Adaptive & Collapsible Banners**: Built-in anchored adaptive and collapsible banner support.
+- 🌙 **Light & Dark Mode**: Dynamic native ad style sync with system/app theme.
+- 📊 **Match-Rate Optimization (>95%)**: Intelligent click counter gating and 4-hour TTL caching.
+- 🛠️ **Diagnostic Ad Counter**: Live visual stats widget tracking loads and impressions.
 
 ---
 
@@ -31,10 +34,10 @@ A high-performance Flutter plugin for **background preloading** of Google Mobile
 Below are some previews showing ad preloading in action. Notice the instant display!
 
 <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
-  <img src="https://raw.githubusercontent.com/bhx20/Preload-Google-Ads/main/docs/assets/1.gif" alt="Demo 1" width="22%" />
-  <img src="https://raw.githubusercontent.com/bhx20/Preload-Google-Ads/main/docs/assets/2.gif" alt="Demo 2" width="22%" />
-  <img src="https://raw.githubusercontent.com/bhx20/Preload-Google-Ads/main/docs/assets/3.gif" alt="Demo 3" width="22%" />
-  <img src="https://raw.githubusercontent.com/bhx20/Preload-Google-Ads/main/docs/assets/4.gif" alt="Demo 4" width="22%" />
+  <img src="https://raw.githubusercontent.com/bhx20/Preload-Google-Ads/main/doc/assets/1.gif" alt="Demo 1" width="22%" />
+  <img src="https://raw.githubusercontent.com/bhx20/Preload-Google-Ads/main/doc/assets/2.gif" alt="Demo 2" width="22%" />
+  <img src="https://raw.githubusercontent.com/bhx20/Preload-Google-Ads/main/doc/assets/3.gif" alt="Demo 3" width="22%" />
+  <img src="https://raw.githubusercontent.com/bhx20/Preload-Google-Ads/main/doc/assets/4.gif" alt="Demo 4" width="22%" />
 </div>
 
 ---

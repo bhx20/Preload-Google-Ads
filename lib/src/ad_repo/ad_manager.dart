@@ -20,8 +20,6 @@ class AdManager {
   /// Initializes the AdManager with the provided ad configuration.
   /// It also initializes mobile ads and loads the required ads based on the configuration.
   Future<void> initialize(AdConfigData? adConfig) async {
-    final isFirstInit = config == preData;
-
     // Set the ad configuration data
     config = await setConfigData(adConfig);
 
@@ -101,13 +99,7 @@ class AdManager {
     }
   }
 
-  /// Loads native ads (both small and medium) if enabled in the ad configuration.
-  void _loadNativeAd() {
-    if (shouldShowNativeAd) {
-      PlugAd.getInstance().loadMediumNative();
-      PlugAd.getInstance().loadSmallNative();
-    }
-  }
+
 
   /// Below methods are used to show various types of ads
 

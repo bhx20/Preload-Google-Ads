@@ -37,7 +37,7 @@ abstract class BaseNativeAdLoader extends BaseAdLoader {
 
   /// Loads a native ad.
   Future<void> loadAd() async {
-    if (ads.length >= 1 || !prepareLoad()) return;
+    if (ads.isNotEmpty || !prepareLoad()) return;
 
     try {
       NativeAd? nativeAd;
