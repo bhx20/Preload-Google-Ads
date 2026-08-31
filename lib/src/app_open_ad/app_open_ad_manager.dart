@@ -22,12 +22,6 @@ class AppOpenAdManager extends BaseAdLoader {
     loadAd();
   }
 
-  /// Maximum duration allowed between loading and showing the ad.
-  final Duration maxCacheDuration = const Duration(hours: 4);
-
-  /// Keep track of load time so we don't show an expired ad.
-  DateTime? _appOpenLoadTime;
-
   /// The ad object to hold the loaded app open ad.
   AppOpenAd? _appOpenAd;
 
@@ -47,7 +41,6 @@ class AppOpenAdManager extends BaseAdLoader {
           /// Callback when the ad is successfully loaded.
           onAdLoaded: (ad) {
             AdStats.instance.openAppLoad.value++;
-            _appOpenLoadTime = DateTime.now();
             _appOpenAd = ad;
             handleLoadSuccess();
           },
@@ -92,11 +85,11 @@ class AppOpenAdManager extends BaseAdLoader {
     }
 
     /// Check if the cached ad has expired based on the max cache duration.
-    if (_appOpenLoadTime != null &&
-        DateTime.now().subtract(maxCacheDuration).isAfter(_appOpenLoadTime!)) {
+    if (isExpired) {
       AppLogger.warn('Maximum cache duration exceeded. Loading another ad.');
       _appOpenAd!.dispose();
       _appOpenAd = null;
+      loadTime = null;
       loadAd();
       return;
     }
@@ -141,7 +134,7 @@ class AppOpenAdManager extends BaseAdLoader {
   void reset() {
     _appOpenAd?.dispose();
     _appOpenAd = null;
-    _appOpenLoadTime = null;
+    loadTime = null;
     super.reset();
   }
 }

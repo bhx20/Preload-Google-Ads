@@ -28,7 +28,6 @@ AdConfigData preData = AdConfigData(
     showOpenApp: true,
     showRewarded: true,
     showRewardedInterstitial: true,
-    showSplashAd: false,
   ),
   nativeADLayout: NativeADLayout(
     padding: EdgeInsets.all(5),
@@ -85,8 +84,6 @@ Future<AdConfigData> setConfigData(AdConfigData? adConfig) async {
           adConfig?.adFlag?.showRewarded ?? preData.adFlag?.showRewarded,
       showRewardedInterstitial: adConfig?.adFlag?.showRewardedInterstitial ??
           preData.adFlag?.showRewardedInterstitial,
-      showSplashAd:
-          adConfig?.adFlag?.showSplashAd ?? preData.adFlag?.showSplashAd,
     ),
     themeMode: adConfig?.themeMode ?? preData.themeMode,
     nativeADLayout: NativeADLayout(
@@ -284,10 +281,6 @@ String get unitIDRewardedInter =>
 
 /// Determines if any ads should be shown based on flags.
 bool get shouldShowAd => config.adFlag?.showAd == true;
-
-/// Determines if the splash ad should be shown.
-bool get shouldShowSplashAd =>
-    config.adFlag?.showSplashAd == true && config.adFlag?.showAd == true;
 
 /// Determines if native ads should be shown.
 bool get shouldShowNativeAd =>

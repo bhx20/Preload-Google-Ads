@@ -18,7 +18,6 @@ export 'ad_repo/ad_repo.dart';
 export 'ad_repo/ad_repo_impl.dart';
 export 'app_open_ad/app_open_ad_manager.dart';
 export 'app_open_ad/life_cycle_manager.dart';
-export 'app_open_ad/on_splash_ad_manager.dart';
 export 'banner_ad/load_banner_ad.dart';
 export 'banner_ad/show_banner_ad.dart';
 export 'banner_ad/show_collapsible_banner_ad.dart';

@@ -53,13 +53,6 @@ class PreloadGoogleAds {
     instance.reloadUnloadedAds();
   }
 
-  /// Registers a callback to execute when the Splash App Open ad loads or fails.
-  ///
-  /// Must be called prior to [initialize].
-  void setSplashAdCallback(Function(AppOpenAd? ad, AdError? error) callback) {
-    _adManager.setSplashAdCallback(callback);
-  }
-
   /// Displays a preloaded native ad widget.
   ///
   /// Accepts an optional [key] for subtree identity preservation during dynamic style rebuilds,

@@ -60,16 +60,6 @@ class AdRepoImpl extends AdRepo {
     return ShowNative(nativeADType: nativeADType);
   }
 
-  /// Displays the app open ad on splash screen using GoogleAppOpenOnSplash instance
-  @override
-  Future<void> showOpenAppOnSplash({
-    required Function({AppOpenAd? ad, AdError? error}) callBack,
-  }) {
-    return GoogleAppOpenOnSplash.instance.loadAndShowSplashAd(
-      callBack: callBack,
-    );
-  }
-
   /// Displays the app open ad using AppOpenAdManager instance if available
   @override
   void showOpenAppAd() {

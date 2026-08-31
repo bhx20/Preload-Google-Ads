@@ -37,7 +37,7 @@ abstract class BaseNativeAdLoader extends BaseAdLoader {
 
   /// Loads a native ad.
   Future<void> loadAd() async {
-    if (ads.length >= 2 || !prepareLoad()) return;
+    if (ads.length >= 1 || !prepareLoad()) return;
 
     try {
       NativeAd? nativeAd;
@@ -52,9 +52,6 @@ abstract class BaseNativeAdLoader extends BaseAdLoader {
             }
             loadStats.value++;
             handleLoadSuccess();
-            if (ads.length < 2) {
-              scheduleReload(const Duration(seconds: 1), () => loadAd());
-            }
           },
           onAdImpression: (ad) {
             impStats.value++;

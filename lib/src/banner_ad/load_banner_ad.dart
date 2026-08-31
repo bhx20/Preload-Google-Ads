@@ -35,7 +35,7 @@ class LoadBannerAd extends BaseAdLoader {
   ///
   /// Specify [isCollapsible] as 'bottom' or 'top' for collapsible banner ads.
   Future<void> loadAd({String? isCollapsible}) async {
-    if (bannerAdObject.length >= 2 || !prepareLoad()) return;
+    if (bannerAdObject.length >= 1 || !prepareLoad()) return;
 
     BannerAd? bannerAd;
 
@@ -89,10 +89,6 @@ class LoadBannerAd extends BaseAdLoader {
             }
             AdStats.instance.bannerLoad.value++;
             handleLoadSuccess();
-            // Load another ad if there are fewer than 2 loaded ads.
-            if (bannerAdObject.length < 2) {
-              scheduleReload(const Duration(seconds: 2), () => loadAd(isCollapsible: isCollapsible));
-            }
           },
           onAdImpression: (ad) {
             // Track ad impressions.

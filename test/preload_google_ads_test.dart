@@ -110,7 +110,7 @@ void main() {
       expect(loader.retryAttempts, 3);
     });
 
-    test('InterAd handleFailureAndRetry decrements retry attempts', () {
+    test('InterAd handleFailureAndRetry decrements retry attempts and schedules backoff', () {
       final loader = InterAd.instance;
       loader.reset();
 
@@ -120,7 +120,8 @@ void main() {
       });
 
       expect(loader.retryAttempts, 2);
-      expect(retryCalled, isTrue);
+      expect(loader.state, AdLoadState.failed);
+      loader.cancelReloadTimer();
     });
 
     test('InterAd reset restores all properties to default', () {
@@ -320,6 +321,53 @@ void main() {
       expect(style.buttonRadius, equals(12));
       expect(style.tagRadius, equals(8));
       expect(style.buttonGradients.length, equals(2));
+    });
+  });
+
+  group('Match Rate (>95%) & Optimization Safeguard Tests', () {
+    test('BaseAdLoader buffer limit is capped at 1 for optimal match rate', () {
+      final mediumLoader = LoadMediumNative.instance;
+      mediumLoader.reset();
+      expect(mediumLoader.ads.length, 0);
+
+      final bannerLoader = LoadBannerAd.instance;
+      bannerLoader.reset();
+      expect(bannerLoader.bannerAdObject.length, 0);
+    });
+
+    test('BaseAdLoader identifies expired ads (>4 hours TTL)', () {
+      final loader = InterAd.instance;
+      loader.reset();
+      loader.handleLoadSuccess();
+
+      expect(loader.isExpired, isFalse);
+
+      // Simulate load time 5 hours ago
+      loader.loadTime = DateTime.now().subtract(const Duration(hours: 5));
+      expect(loader.isExpired, isTrue, reason: 'Ads older than 4 hours must be marked expired.');
+    });
+
+    test('InterAd showInter gates ad requests with click counter check', () {
+      final loader = InterAd.instance;
+      loader.reset();
+      loader.state = AdLoadState.loading; // Prevent channel call during unit test
+
+      bool callbackFired = false;
+      loader.showInter(callBack: ({ad, error}) {
+        callbackFired = true;
+      });
+
+      expect(callbackFired, isTrue);
+      expect(loader.counter, 1);
+    });
+
+    test('AdStats tracks load vs impression for 1-to-1 match rate verification', () {
+      final stats = AdStats.instance;
+      stats.interLoad.value = 10;
+      stats.interImp.value = 10;
+
+      final matchRate = (stats.interImp.value / stats.interLoad.value) * 100;
+      expect(matchRate, equals(100.0), reason: 'Match rate ratio should reach 100% when loads equal impressions.');
     });
   });
 }

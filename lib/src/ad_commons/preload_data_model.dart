@@ -141,9 +141,6 @@ class AdFlag {
   /// Show native ads.
   final bool? showNative;
 
-  /// Show splash screen ad.
-  final bool? showSplashAd;
-
   /// Show open app ad.
   final bool? showOpenApp;
 
@@ -159,7 +156,6 @@ class AdFlag {
     this.showBanner,
     this.showInterstitial,
     this.showNative,
-    this.showSplashAd,
     this.showOpenApp,
     this.showRewarded,
     this.showRewardedInterstitial,

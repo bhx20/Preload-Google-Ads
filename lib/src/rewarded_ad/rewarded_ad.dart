@@ -57,7 +57,25 @@ class RewardAd extends BaseAdLoader {
     required Function({RewardedAd? ad, AdError? error}) callBack,
     required Function(AdWithoutView ad, RewardItem reward) onReward,
   }) {
+    incrementCounter();
+    if (counter < getRewardedCounter) {
+      callBack();
+      return;
+    }
+
     if (shouldShowRewardedAd && _rewardedAd != null && isAdLoaded) {
+      // Check if ad expired (AdMob 4-hour TTL rule)
+      if (isExpired) {
+        AppLogger.warn('Rewarded ad expired. Fetching fresh ad.');
+        _rewardedAd?.dispose();
+        _rewardedAd = null;
+        loadTime = null;
+        state = AdLoadState.initial;
+        load();
+        callBack();
+        return;
+      }
+
       resetCounter(); // Reset the counter after showing the ad.
       state = AdLoadState.showing;
 
@@ -92,6 +110,9 @@ class RewardAd extends BaseAdLoader {
         },
       );
     } else {
+      if (!isAdLoaded && state != AdLoadState.loading) {
+        load();
+      }
       callBack(); // Callback if ads shouldn't be shown or limit not reached.
     }
   }

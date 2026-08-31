@@ -46,7 +46,8 @@ void main() {
       });
 
       expect(loader.retryAttempts, 2);
-      expect(retryCalled, isTrue);
+      expect(loader.state, AdLoadState.failed);
+      loader.cancelReloadTimer();
     });
 
     test('InterAd reset restores all properties to default', () {

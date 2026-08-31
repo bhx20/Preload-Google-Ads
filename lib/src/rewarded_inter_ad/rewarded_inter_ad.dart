@@ -55,6 +55,18 @@ class RewardInterAd extends BaseAdLoader {
     required Function(AdWithoutView ad, RewardItem reward) onReward,
   }) {
     if (shouldShowRewardedInterAd && _rewardedInterstitialAd != null && isAdLoaded) {
+      // Check if ad expired (AdMob 4-hour TTL rule)
+      if (isExpired) {
+        AppLogger.warn('Rewarded Interstitial ad expired. Fetching fresh ad.');
+        _rewardedInterstitialAd?.dispose();
+        _rewardedInterstitialAd = null;
+        loadTime = null;
+        state = AdLoadState.initial;
+        load();
+        callBack();
+        return;
+      }
+
       resetCounter();
       state = AdLoadState.showing;
 

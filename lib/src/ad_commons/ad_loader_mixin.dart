@@ -29,7 +29,19 @@ abstract class BaseAdLoader with AdLoaderMixin {
   /// Human readable label for logging.
   String get adLabel;
 
+  /// Maximum duration allowed between loading and showing an ad (AdMob 4-hour rule).
+  final Duration maxCacheDuration = const Duration(hours: 4);
+
+  /// Timestamp when the ad was successfully loaded into memory.
+  DateTime? loadTime;
+
   Timer? _reloadTimer;
+
+  /// Checks if the cached ad has passed the max cache duration.
+  bool get isExpired {
+    if (loadTime == null) return false;
+    return DateTime.now().subtract(maxCacheDuration).isAfter(loadTime!);
+  }
 
   /// Cancels any scheduled background reload timer to prevent memory leaks.
   void cancelReloadTimer() {
@@ -63,21 +75,29 @@ abstract class BaseAdLoader with AdLoaderMixin {
   /// Handles successful load events across all ad types.
   void handleLoadSuccess() {
     AppLogger.log("$adLabel loaded successfully.");
+    loadTime = DateTime.now();
     state = AdLoadState.ready;
     retryAttempts = maxRetries;
   }
 
-  /// Centralized retry handling when ad fails to load.
+  /// Centralized retry handling with exponential backoff strategy when ad fails to load.
   void handleFailureAndRetry(dynamic error, {VoidCallback? onRetry}) {
     handleLoadError(adLabel, error);
+    loadTime = null;
     if (retryAttempts > 1) {
       retryAttempts--;
-      AppLogger.log("Retrying $adLabel load (Remaining attempts: $retryAttempts)");
-      if (onRetry != null) {
-        onRetry();
-      } else {
-        load();
-      }
+      // Exponential backoff: 2s, 4s, 8s delay before retrying
+      final backoffSeconds = (maxRetries - retryAttempts) * 2;
+      AppLogger.log(
+        "Retrying $adLabel load in $backoffSeconds seconds (Remaining attempts: $retryAttempts)",
+      );
+      scheduleReload(Duration(seconds: backoffSeconds), () {
+        if (onRetry != null) {
+          onRetry();
+        } else {
+          load();
+        }
+      });
     } else {
       retryAttempts = maxRetries;
     }

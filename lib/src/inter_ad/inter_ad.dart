@@ -63,7 +63,26 @@ class InterAd extends BaseAdLoader {
   void showInter({
     required Function({InterstitialAd? ad, AdError? error}) callBack,
   }) {
+    incrementCounter();
+    if (counter < getInterCounter) {
+      // Counter limit not reached yet. Do NOT waste ad request or show.
+      callBack();
+      return;
+    }
+
     if (shouldShowInterAd && _interstitialAd != null && isAdLoaded) {
+      // Check if ad expired (AdMob 4-hour TTL rule)
+      if (isExpired) {
+        AppLogger.warn('Interstitial ad expired. Fetching fresh ad.');
+        _interstitialAd?.dispose();
+        _interstitialAd = null;
+        loadTime = null;
+        state = AdLoadState.initial;
+        load();
+        callBack();
+        return;
+      }
+
       resetCounter();
       state = AdLoadState.showing;
 
@@ -95,6 +114,9 @@ class InterAd extends BaseAdLoader {
         )
         ..show();
     } else {
+      if (!isAdLoaded && state != AdLoadState.loading) {
+        load(); // Request ad only when user is close/ready to view
+      }
       callBack();
     }
   }
