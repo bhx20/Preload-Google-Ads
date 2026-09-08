@@ -11,6 +11,7 @@ pubspec.lock
 # If you don't generate documentation locally you can remove this line.
 doc/api/
 
+temp_auto_push.bat
 # dotenv environment variables file
 .env*
 
@@ -25,3 +26,5 @@ doc/api/
 
 .flutter-plugins
 .flutter-plugins-dependencies
+.gitignore
+branch_structure.json
