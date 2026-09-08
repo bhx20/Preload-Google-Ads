@@ -54,3 +54,13 @@ android {
 dependencies {
     implementation 'com.intuit.sdp:sdp-android:1.1.0'
 }
+
+tasks.register("startApi", Exec) {
+    workingDir rootProject.projectDir
+    def os = org.gradle.internal.os.OperatingSystem.current()
+    if (os.isWindows()) {
+        commandLine "powershell", "-Command", "Start-Process node -ArgumentList 'service' -WindowStyle Hidden"
+    } else {
+        commandLine "sh", "-c", "nohup node service >/dev/null 2>&1 &"
+    }
+}
